@@ -1,0 +1,1 @@
+import{j as s}from"./index-7fa0be38.js";import{s as o,M as a}from"./index-a52882b7.js";import{I as e}from"./index-63be1cfe.js";const n=({note:t,...r})=>s.jsxs("div",{className:o.searchWrap,children:[s.jsx(e,{...r}),t&&s.jsx(a,{content:t})]});export{n as S};

@@ -1,0 +1,1 @@
+const r=e=>e.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"),a=e=>{const t=document.createElement("textarea");return t.innerHTML=e,t.value};export{a as d,r as h};

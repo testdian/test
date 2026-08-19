@@ -1,0 +1,1 @@
+import{j as a}from"./index-7fa0be38.js";import{a as r,e as n}from"./SchemaField-989142ec.js";import{I as t}from"./index-63be1cfe.js";const o=e=>a.jsx(t.TextArea,{disabled:!0,...e,value:e.value||"-",style:{...e==null?void 0:e.style,color:"#333",border:"none"}}),l=r(t.TextArea,n(o));export{l as T};

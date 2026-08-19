@@ -1,0 +1,1 @@
+import{g as n,a}from"./index-90d2b5b2.js";import{g as r}from"./PurePanel-d1f60155.js";const e=n(a),i=r(e,"popupAlign",void 0,"picker");e._InternalPanelDoNotUseOrYouWillBeFired=i;const o=r(e.RangePicker,"popupAlign",void 0,"picker");e._InternalRangePanelDoNotUseOrYouWillBeFired=o;e.generatePicker=n;const P=e;export{P as D};
