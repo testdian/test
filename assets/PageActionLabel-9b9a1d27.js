@@ -1,0 +1,1 @@
+import{j as s}from"./index-7d109af7.js";import{s as a}from"./styles.module-868a2587.js";function i({icon:e,children:n}){return s.jsxs("div",{className:a.pageActionLabel,children:[s.jsx("span",{className:a.pageActionIcon,children:e}),s.jsx("span",{children:n})]})}export{i as P};

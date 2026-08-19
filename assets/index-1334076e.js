@@ -1,0 +1,1 @@
+import{r as e}from"./index-7d109af7.js";import{c as p}from"./service-5f3312d2.js";import{U as u}from"./constant-2ddae6dd.js";const i=r=>{const[t,o]=e.useState([]);return e.useEffect(()=>{p({userType:u.INTERNAL,...r}).then(({data:s})=>{o((s==null?void 0:s.data)||[])})},[]),t};export{i as u};

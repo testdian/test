@@ -1,0 +1,1 @@
+import{k as a}from"./index-7d109af7.js";const D={USER:1,ROLE:2},E={REQUIRED:1,NOT_REQUIRED:2},{REQUIRED:R,NOT_REQUIRED:o}=E,s=[{label:a.dashborad.approvalRequired,value:R},{label:a.dashborad.noApprovalRequired,value:o}];export{E as A,s as a,D as b};
