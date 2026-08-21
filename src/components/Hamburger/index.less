@@ -1,0 +1,27 @@
+@import url('@/styles/var.less');
+
+.layout {
+  &__nav-bar {
+    &__hamburger {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      // justify-content: end;
+      height: @headerHeight;
+      padding: 0 15px;
+      color: @text-color-secondary;
+      font-size: 14px;
+      line-height: @headerHeight;
+      cursor: pointer;
+      transition: background 0.3s;
+
+      &:hover {
+        background: @controlItemBgHover;
+      }
+
+      &__tip {
+        margin-left: 10px;
+      }
+    }
+  }
+}

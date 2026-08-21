@@ -1,0 +1,178 @@
+.batchModal {
+  :global {
+    .ant-modal-content {
+      padding: 0;
+      overflow: hidden;
+      border-radius: 6px;
+    }
+
+    .ant-modal-header {
+      margin: 0;
+      padding: 20px 24px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .ant-modal-title {
+      color: #333;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .ant-modal-body {
+      padding: 0;
+    }
+
+    .ant-modal-footer {
+      margin: 0;
+      padding: 0;
+      border-top: 1px solid #f0f0f0;
+    }
+  }
+}
+
+.content {
+  max-height: 528px;
+  overflow-y: auto;
+  background: #fff;
+}
+
+.record {
+  padding: 18px 24px 22px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.record:last-child {
+  border-bottom: 0;
+}
+
+.metaRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 24px;
+  row-gap: 8px;
+  margin-bottom: 16px;
+  color: #999;
+  font-size: 14px;
+}
+
+.metaValue {
+  margin-left: 6px;
+  color: #333;
+  font-weight: 600;
+}
+
+.factorRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.factorCard {
+  min-height: 118px;
+  padding: 14px 14px 16px;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.recommendCard {
+  border-color: #ffb28e;
+  background: #fff9f5;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  color: #999;
+  font-size: 14px;
+}
+
+.cardActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+
+  :global {
+    .ant-btn {
+      height: 18px;
+      padding: 0;
+      color: #ff6a35;
+      font-size: 12px;
+      line-height: 18px;
+    }
+  }
+}
+
+.factorInfoRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+  color: #666;
+  font-size: 14px;
+}
+
+.factorInfoRow span {
+  min-width: 0;
+}
+
+.factorInfoRow strong {
+  margin-left: 5px;
+  color: #333;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.factorMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  color: #666;
+  font-size: 14px;
+}
+
+.factorMeta strong {
+  margin-left: 5px;
+  color: #333;
+  font-weight: 600;
+}
+
+.checkboxRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+  color: #666;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 64px;
+  padding: 0 24px;
+  background: #fff;
+}
+
+.footerText {
+  color: #999;
+}
+
+.footerActions {
+  display: flex;
+  gap: 12px;
+
+  :global {
+    .ant-btn {
+      min-width: 94px;
+    }
+
+    .ant-btn-primary {
+      min-width: 120px;
+    }
+  }
+}

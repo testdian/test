@@ -1,0 +1,79 @@
+@import url('@styles/var.less');
+.treeWrapperMain {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 145px);
+  :global {
+    .ant-collapse-expand-icon {
+      margin-right: 4px;
+      width: 16px;
+    }
+  }
+  .treeWrapperLeft,
+  .treeSourceTable {
+    display: flex;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    /* 隐藏滚动条 - Firefox */
+    scrollbar-width: none;
+    /* 隐藏滚动条 - IE/Edge */
+    -ms-overflow-style: none;
+    /* 隐藏滚动条 - Chrome/Safari/Edge (Chromium) */
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  .treeSourceTable > div {
+    width: 100%;
+  }
+}
+.treeSourceTable {
+  flex: 1;
+  height: 100%;
+  background: #fff;
+}
+
+.tableWrapper {
+  margin-top: 24px;
+}
+
+.progressListWrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .progressItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2px;
+
+    .progressWrapper {
+      width: 196px;
+    }
+  }
+}
+
+.detailWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  /* 隐藏滚动条 - Firefox */
+  scrollbar-width: none;
+  /* 隐藏滚动条 - IE/Edge */
+  -ms-overflow-style: none;
+  /* 隐藏滚动条 - Chrome/Safari/Edge (Chromium) */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  background: #fff;
+  z-index: 10;
+
+  padding-left: 40px;
+}

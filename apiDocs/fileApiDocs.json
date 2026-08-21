@@ -1,0 +1,661 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "file模块",
+    "description": "file模块",
+    "contact": {
+      "name": "carbonstop",
+      "email": "admin@carbonstop.com"
+    },
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://geekvape-gateway-api-dev.carbonstop.com",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/fileapi/upload": {
+      "post": {
+        "tags": ["file-controller"],
+        "summary": "上传文件",
+        "operationId": "upload",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "query",
+            "description": "文件名。无值则使用上传文件自身文件名",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": ["file"],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResultFileUpload"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/fileapi/uploadNoLogin": {
+      "post": {
+        "tags": ["file-controller"],
+        "summary": "上传文件-免登录",
+        "operationId": "uploadNoLogin",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "query",
+            "description": "文件名。无值则使用上传文件自身文件名",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key",
+            "in": "query",
+            "description": "key",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": ["file"],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "key": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResultFileUpload"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/fileapi/upload/today": {
+      "post": {
+        "tags": ["file-controller"],
+        "summary": "上传文件-path增加今日时间",
+        "operationId": "uploadToday",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "query",
+            "description": "文件名。无值则使用上传文件自身文件名",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": ["file"],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResultFileUpload"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/fileapi/upload/randomPath": {
+      "post": {
+        "tags": ["file-controller"],
+        "summary": "上传文件-path增加随机路径",
+        "operationId": "uploadRandomPath",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "query",
+            "description": "文件名。无值则使用上传文件自身文件名",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": ["file"],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResultFileUpload"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/fileapi/upload/randomName": {
+      "post": {
+        "tags": ["file-controller"],
+        "summary": "上传文件-随机文件名",
+        "operationId": "uploadRandomName",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": ["file"],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResultFileUpload"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/fileapi/token/upload": {
+      "post": {
+        "tags": ["file-controller"],
+        "summary": "上传文件token",
+        "operationId": "uploadToken",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "query",
+            "description": "文件名。无值则使用上传文件自身文件名",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": ["file"],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResultFileUpload"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/fileapi/token/upload/randomPath": {
+      "post": {
+        "tags": ["file-controller"],
+        "summary": "上传文件token-path增加随机路径",
+        "operationId": "uploadRandomPathToken",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "query",
+            "description": "文件名。无值则使用上传文件自身文件名",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": ["file"],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResultFileUpload"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/fileapi/token/upload/randomName": {
+      "post": {
+        "tags": ["file-controller"],
+        "summary": "上传文件token-随机文件名",
+        "operationId": "uploadRandomNameToken",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": ["file"],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResultFileUpload"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/fileapi/downloadFilePost": {
+      "post": {
+        "tags": ["file-controller"],
+        "summary": "导出文件流",
+        "operationId": "downloadFile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FileReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/template/download": {
+      "get": {
+        "tags": ["模版文件"],
+        "summary": "下载模板",
+        "operationId": "downloadTemplate",
+        "parameters": [
+          {
+            "name": "templateType",
+            "in": "query",
+            "description": "模板类型",
+            "required": true,
+            "schema": {
+              "type": "int"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/fileapi/downloadFile": {
+      "get": {
+        "tags": ["file-controller"],
+        "summary": "导出文件流",
+        "operationId": "downloadFile_1",
+        "parameters": [
+          {
+            "name": "file",
+            "in": "query",
+            "description": "file",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fileName",
+            "in": "query",
+            "description": "文件名。不传则使用自身文件名",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/enums/{enumName}": {
+      "get": {
+        "tags": ["枚举"],
+        "summary": "查询枚举值（忽略大小写）",
+        "description": "TemplateType - 模版类型; \t\n",
+        "operationId": "enums",
+        "parameters": [
+          {
+            "name": "enumName",
+            "in": "query",
+            "description": "枚举名",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResultListEnumResp"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiResultFileUpload": {
+        "required": ["code", "data", "msg"],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "结果码",
+            "format": "int32",
+            "example": 200
+          },
+          "msg": {
+            "type": "string",
+            "description": "返回信息",
+            "example": "success"
+          },
+          "data": {
+            "$ref": "#/components/schemas/FileUpload"
+          }
+        },
+        "description": "通用接口返回对象"
+      },
+      "FileUpload": {
+        "type": "object",
+        "properties": {
+          "fileName": {
+            "type": "string",
+            "description": "文件名"
+          },
+          "filePath": {
+            "type": "string",
+            "description": "filePath"
+          },
+          "url": {
+            "type": "string",
+            "description": "外网url"
+          },
+          "internalUrl": {
+            "type": "string",
+            "description": "内网url"
+          }
+        },
+        "description": "FileUpload"
+      },
+      "FileReq": {
+        "required": ["file"],
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "文件url"
+          },
+          "fileName": {
+            "type": "string",
+            "description": "文件名。不传则使用url自身文件名"
+          }
+        },
+        "description": "FileReq"
+      },
+      "ApiResultListEnumResp": {
+        "required": ["code", "data", "msg"],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "结果码",
+            "format": "int32",
+            "example": 200
+          },
+          "msg": {
+            "type": "string",
+            "description": "返回信息",
+            "example": "success"
+          },
+          "data": {
+            "type": "array",
+            "description": "返回数据",
+            "items": {
+              "$ref": "#/components/schemas/EnumResp"
+            }
+          }
+        },
+        "description": "通用接口返回对象"
+      },
+      "EnumResp": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "subList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EnumResp"
+            }
+          },
+          "score": {
+            "type": "string"
+          }
+        },
+        "description": "返回数据"
+      }
+    },
+    "securitySchemes": {
+      "Authorization": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  }
+}

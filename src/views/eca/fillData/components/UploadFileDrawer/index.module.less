@@ -1,0 +1,174 @@
+@import url('@styles/var.less');
+@import url('@styles/variable.less');
+.fileList {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 8px;
+  align-items: center;
+  flex-direction: column;
+}
+.fileListItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  gap: 5px;
+}
+.name {
+  display: inline-block;
+  width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-all;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text-gray-8-primary, #343a40);
+  font-weight: 400;
+  cursor: pointer;
+}
+.name:hover {
+  color: #002855;
+  text-decoration: underline;
+  transition: all 0.3s ease-in-out;
+}
+
+.fileUploadDrawer {
+  display: block;
+  height: 152px;
+
+  :global {
+    .ant-upload {
+      background: #fff;
+    }
+  }
+}
+
+.drawerFooter {
+  display: flex;
+  justify-content: center;
+}
+
+.uploadText {
+  .body-m-b();
+
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+.uploadHighlightText {
+  color: @green7;
+}
+
+.tipText {
+  .caption-s();
+}
+
+.uploadingContent {
+  padding: 16px 0;
+}
+
+.uploadTip {
+  .body-m();
+
+  display: flex;
+  align-items: center;
+  color: @gray6;
+}
+
+.fileItem {
+  .body-m();
+
+  margin-top: 8px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: #f7f8f9;
+  }
+}
+
+.fileItemLeft {
+  display: flex;
+  flex: 1;
+}
+
+.fileName {
+  width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fileItemPercentRight {
+  display: flex;
+}
+.percent {
+  color: @green7;
+}
+
+.percentLoading {
+  margin-right: 4px;
+}
+
+.fileOperate {
+  display: flex;
+}
+
+.fileOperateBtn {
+  margin-left: 8px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background: #eeeff0;
+  }
+}
+
+.fileIcon {
+  margin-right: 4px;
+  font-size: 16px;
+}
+
+.checkbox {
+  margin-right: 8px;
+}
+
+.batchOperate {
+  display: flex;
+  column-gap: 8px;
+}
+.batchOperateBtn {
+  height: 22px;
+  padding: 0;
+}
+
+.uploadTipWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  :global {
+    .ant-btn-link {
+      color: @primary-link-color;
+    }
+
+    :where(
+        .css-dev-only-do-not-override-73n3pb
+      ).ant-btn-color-link.ant-btn-variant-link:not(:disabled):not(
+        .ant-btn-disabled
+      ):hover {
+      color: @primary-link-color-hover;
+    }
+  }
+}

@@ -1,0 +1,38 @@
+.projectTable {
+  width: 100%;
+  :global {
+    .ant-pro-card-body {
+      padding: 0;
+    }
+    .ant-table {
+      border: 1px solid #e8eded;
+      border-bottom: none;
+    }
+    a > span {
+      color: @primary-color;
+    }
+  }
+}
+.projectPublicityTable {
+  width: 100%;
+  :global {
+    .ant-col {
+      max-width: 240px;
+      margin-right: 0px;
+      margin-left: 0;
+      padding: 0;
+    }
+    .ant-pro-table-search {
+      margin-bottom: 0;
+    }
+    .ant-pro-query-filter {
+      padding: 0;
+    }
+    .ant-pro-query-filter-actions {
+      text-align: left;
+      .ant-form-item-row.ant-form-item-row {
+        flex-direction: column-reverse;
+      }
+    }
+  }
+}

@@ -1,0 +1,95 @@
+@import url('@styles/var.less');
+
+.wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+  background: url('../../../../public/img_bg.png') center center;
+  background-color: @white;
+  background-size: 100% 100%;
+  .logoContainer {
+    position: absolute;
+    top: 64px;
+    left: 120px;
+  }
+  .main {
+    width: 452px;
+    margin: 0 auto;
+    max-width: 1000px;
+    padding: 48px 34px;
+    font-size: 24px;
+    background: @whiteBg;
+    border-radius: 12px;
+    box-sizing: border-box;
+
+    .inner {
+      width: 100%;
+      margin: 0 auto;
+
+      .tip {
+        margin-top: 8px;
+        color: @thirdDark;
+        font-size: 12px;
+        line-height: 18px;
+        letter-spacing: 0;
+      }
+    }
+
+    header {
+      font-weight: bold;
+    }
+
+    .form {
+      margin-top: 24px;
+
+      :global(.ant-form-item) {
+        margin-bottom: 40px;
+      }
+    }
+  }
+
+  .submit {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+    gap: 8px;
+    position: relative;
+    min-width: 0;
+    height: 48px;
+    padding: 12px 20px 12px 20px;
+    background: #002855;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-bottom: 32px;
+  }
+}
+
+.paswordText {
+  margin-top: 5px;
+  .paswordTextTitle {
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+
+  p {
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+  }
+}
+
+.selectLangBox {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}

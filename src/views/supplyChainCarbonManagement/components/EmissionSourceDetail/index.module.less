@@ -1,0 +1,39 @@
+@import url('@styles/var.less');
+
+.wrapper {
+  && {
+    flex: 1 1 auto;
+    margin-bottom: @GlobalFormActionsHeight;
+    background-color: @backgroudGray;
+  }
+
+  .card {
+    padding: 16px 16px 0;
+    background-color: @whiteBg;
+
+    & + .card {
+      margin-top: 12px;
+    }
+
+    &:nth-child(2) {
+      border-bottom: 1px solid transparent;
+    }
+
+    h3 {
+      margin-bottom: 16px;
+    }
+
+    .btnContainer {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 16px;
+
+      .columnCount {
+        position: relative;
+        top: 80px;
+        z-index: 9999;
+      }
+    }
+  }
+}

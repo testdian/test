@@ -1,0 +1,43 @@
+@import url('@styles/var.less');
+
+.normalSelectButtonWrapper {
+  .normalSelectButton {
+    position: relative;
+    box-sizing: border-box;
+    padding: 12px 0;
+    text-align: center;
+    border: 1px solid var(--line, #ebedf0);
+    border-radius: 4px;
+    cursor: pointer;
+
+    .name {
+      height: 18px;
+      margin: 6px 0 0;
+      color: var(--text, #343a40);
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .checkedWrap {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 16px;
+      background: var(--brand-green-7-normal, #0cbf9f);
+      border-radius: 8px 0 0;
+    }
+  }
+
+  .selected {
+    background: var(--brand-brand-1, @Tagground);
+    border: 1px solid var(--brand-brand-7, @primary-color);
+    border-radius: 4px;
+  }
+}

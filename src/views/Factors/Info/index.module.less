@@ -1,0 +1,33 @@
+@import url('@styles/var.less');
+
+.gridWrapper {
+  :global {
+    .ant-formily-item-feedback-layout-loose {
+      margin-bottom: 0 !important;
+    }
+  }
+}
+
+.wrapper {
+  && {
+    flex: 1 1 auto;
+    margin-bottom: @GlobalFormActionsHeight;
+  }
+
+  .card {
+    padding: 16px 16px 0;
+    background-color: @whiteBg;
+
+    & + .card {
+      margin-top: 12px;
+    }
+
+    &:nth-child(2) {
+      border-bottom: 1px solid transparent;
+    }
+
+    h3 {
+      margin-bottom: 16px;
+    }
+  }
+}

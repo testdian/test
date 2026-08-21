@@ -1,0 +1,23 @@
+.downloadIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  text-align: center;
+  border: 1px solid var(--line, #d2d6da);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.svgIcon path {
+  fill: #999ea4;
+}
+
+.downloadIcon:hover {
+  border: 1px solid @primary-color;
+
+  .svgIcon path {
+    fill: @primary-color;
+  }
+}

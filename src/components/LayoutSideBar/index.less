@@ -1,0 +1,192 @@
+@import url('@/styles/var.less');
+
+/** 侧边栏样式修改 */
+.ant-menu.sidebar-menu {
+  &&& {
+    min-width: auto;
+
+    /*** 修改菜单间距start */
+    &:first-child {
+      padding-top: 6px;
+    }
+
+    .ant-menu-item,
+    .ant-menu-submenu-title {
+      margin: 4px 0 0;
+    }
+    .ant-menu-item:active,
+    .ant-menu-submenu-title:active {
+      color: #fff;
+    }
+
+    /*** 修改菜单间距end */
+
+    /*** 防止出现横向滚动条 */
+    .ant-menu-item,
+    .ant-menu-submenu-title {
+      max-width: 100%;
+    }
+  }
+
+  // &::after {
+  //   content: '';
+  //   display: block;
+  //   width: 12px;
+  //   height: 12px;
+  //   background-color: @whiteBg;
+  //   overflow: hidden;
+  //   position: absolute;
+  //   top: 10px;
+  //   left: 0;
+  //   transform: translateX(-50%) rotate(45deg);
+  // }
+  &&& .ant-menu-item-selected {
+    color: @primary-color;
+    background-color: fade(@primary-color, 6);
+
+    &::after {
+      display: none;
+    }
+  }
+}
+.layout {
+  &__side-bar {
+    position: relative;
+    /** 侧边栏层级遮盖导航问题， */
+    z-index: 8;
+    flex: 0 0 @sideBarWidth;
+    width: @sideBarWidth;
+    transition: all 0.2s;
+    height: calc(100% - @headerHeight - 16px);
+
+    /** todo antdv5 隐藏禁用的菜单 'p-name' 只针对父级菜单才添加此条件 */
+    // &&& .layout-menu-item-group.p-name > div:first-child {
+    //   display: none;
+    // }
+    /* antd v4 */
+    &&& .ant-menu-root {
+      .p-name > .ant-menu-item-group-title {
+        display: none;
+      }
+
+      .portal-menu-group > .ant-menu-item-group-title {
+        display: block;
+        padding: 12px 16px 4px;
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 20px;
+      }
+
+      .portal-menu-group + .portal-menu-group {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      &.ant-menu-inline-collapsed {
+        .portal-menu-group > .ant-menu-item-group-title {
+          display: none;
+        }
+      }
+    }
+
+    &--dark {
+      background: @menuDarkColor;
+
+      .layout__side-bar-title {
+        color: #fff;
+      }
+    }
+
+    &--light {
+      background-color: #fff;
+      box-shadow: 2px 0 8px 0 rgb(29 35 41 / 5%);
+    }
+
+    &--close {
+      flex: 0 0 @sideBarCloseWidth;
+      // width: @sideBa-closerCloseWidth;
+    }
+
+    &--side {
+      display: flex;
+      flex-flow: column;
+      ::-webkit-scrollbar {
+        width: 0px;
+      }
+      .layout__side-bar__menu {
+        flex: 1 1 auto;
+
+        &-note {
+          display: flex;
+          justify-content: flex-end;
+          padding: 4px 12px 0;
+        }
+
+        .ant-menu-item-icon {
+          width: 16px;
+          height: 16px;
+        }
+
+        .ant-menu-sub.ant-menu-inline > .ant-menu-item {
+          color: #b5b8bb;
+        }
+      }
+    }
+
+    &--top {
+      display: flex;
+      align-items: center;
+      box-shadow: none;
+
+      .ant-menu,
+      .ant-menu-submenu {
+        height: @headerHeight;
+        line-height: @headerHeight - 1;
+      }
+    }
+
+    .ant-menu,
+    .ant-menu-submenu {
+      border: none;
+    }
+
+    &__menu {
+      overflow: auto;
+      // padding: 0 8px;
+    }
+  }
+}
+
+.ant-menu-inline.ant-menu-root .ant-menu-item > .ant-menu-title-content,
+.ant-menu-inline.ant-menu-root
+  .ant-menu-submenu-title
+  > .ant-menu-title-content {
+  overflow: visible;
+  white-space: wrap;
+  word-wrap: break-word;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+}
+
+.ant-menu-sub.ant-menu-inline > .ant-menu-item,
+.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title {
+  height: auto;
+  line-height: 22px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+}
+
+/* 自定义菜单悬浮框样式 */
+.layout-menu-submenu-popup {
+  .layout-menu-vertical.layout-menu-sub {
+    min-width: auto;
+  }
+
+  span[role='img'].anticon {
+    display: none;
+  }
+}

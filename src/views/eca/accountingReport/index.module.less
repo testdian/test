@@ -1,0 +1,32 @@
+.wrapper {
+}
+
+.fileItem {
+  //   max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  .fileHref {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    .name {
+      display: inline-block;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: bottom;
+      text-decoration: underline;
+      color: @primary-link-color;
+    }
+
+    .name:hover {
+      color: @primary-link-color-hover;
+    }
+  }
+}

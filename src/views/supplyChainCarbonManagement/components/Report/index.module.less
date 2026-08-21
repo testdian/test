@@ -1,0 +1,58 @@
+.uploadWrapper {
+  .uploadBtn {
+    color: #999;
+  }
+
+  .fileListWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    .fileListItemWrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 45%;
+      margin-top: 8px;
+      margin-right: 24px;
+      padding: 8px 0;
+
+      &:hover {
+        background: #f7f8f9ff;
+        border-radius: 4px;
+
+        .fileContent {
+          color: #0cbf9f;
+          font-weight: 400;
+        }
+
+        .delBtn {
+          display: block;
+          color: #0cbf9f;
+          font-weight: 400;
+        }
+      }
+
+      .fileContent {
+        max-width: 350px;
+        margin-right: 122px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        cursor: pointer;
+      }
+
+      .delBtn {
+        position: absolute;
+        right: 8px;
+        display: none;
+      }
+
+      .icon {
+        display: inline-block;
+        margin-right: 8px;
+        font-size: 16px;
+      }
+    }
+  }
+}

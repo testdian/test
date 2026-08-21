@@ -1,0 +1,66 @@
+@import '../../../../../styles/var.less';
+
+.resizable-container {
+  height: 100%;
+  min-height: 160px;
+}
+
+.drag-handle {
+  div {
+    position: relative;
+    right: 2px !important;
+    width: 10px !important;
+    border-left: 1px solid #EBEDF0;
+    transition: all .3s;
+  }
+
+  div:hover {
+    border-left: 1px solid #0CBF9F !important;
+  }
+
+  div:hover.drag-line {
+    background: url('../../../../../image/drag-line-act-icon.png') no-repeat;
+    background-size: 100% 100%;
+  }
+}
+
+// .close-style {
+//   position: relative;
+//   left: -20px;
+// }
+.hidden-handle {
+  display: none;
+}
+
+.close-icon {
+  position: absolute;
+  top: 160px;
+  right: 4px;
+  z-index: 2;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  transition: all 1.3s;
+}
+
+.closeable {
+  transform: rotateZ(180deg);
+  transition: all 1.3s;
+}
+
+.drag-line {
+  position: absolute;
+  top: 0;
+  right: -5px;
+  bottom: 0;
+  width: 16px;
+  margin: auto;
+  background: url('../../../../../image/drag-line-act-icon.png') no-repeat center;
+  background-size: 16px 16px;
+  transition: all .3s;
+}
+
+.drag-line:hover {
+  background: url('../../../../../image/drag-line-act-icon.png') no-repeat center;
+  background-size: 16px 16px;
+}

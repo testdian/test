@@ -1,0 +1,109 @@
+.base14TextColor333 {
+  color: #333;
+
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 157.143% */
+}
+.base24TextColor666 {
+  color: #333;
+
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+}
+.forecastYear {
+  align-items: baseline;
+  display: flex;
+  gap: 16px;
+  span {
+    color: var(--, #04252b);
+
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px; /* 157.143% */
+    display: flex;
+  }
+  .forecastYearSel {
+    width: 244px;
+  }
+}
+.refreshText {
+  display: flex;
+  padding: 16px;
+  align-items: center;
+  gap: 16px;
+  align-self: stretch;
+  background: #f7f8f9;
+  > span {
+    color: var(--, #04252b);
+
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 14px; /* 100% */
+  }
+}
+.forecastInfo {
+  margin-top: 16px;
+}
+.forecastInfoItem {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 24px 24px 16px 24px;
+  gap: 12px;
+  flex: 1 0 0;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+.forecastInfoItemTitle {
+  .base14TextColor333;
+}
+.forecastInfoItemValue {
+  .base24TextColor666;
+}
+.forecastInfoRatio {
+  display: flex;
+  gap: 24px;
+  > div {
+    width: 80% !important;
+  }
+  .forecastInfoRatioRight {
+    display: flex;
+    width: calc(100% - 80% - 24px) !important;
+    font-weight: bold;
+    flex-direction: column;
+    height: 400px;
+    justify-content: space-between;
+    padding: 20px 0px;
+    align-items: center;
+  }
+  .ratioTitle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .ratio {
+    font-size: 24px;
+  }
+  .year {
+    font-size: 14px;
+    font-style: italic;
+  }
+  .greenText {
+    color: rgba(73, 190, 165, 1);
+  }
+  .orangeText {
+    color: rgba(250, 145, 88, 1);
+  }
+  .forecastInfoUpIcon {
+    width: 10px;
+    height: 194px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='194' viewBox='0 0 10 194' fill='none'%3E %3Cpath d='M5 194L9.33013 186.5H0.669873L5 194ZM5 0H4.25V187.25H5H5.75V0H5Z' fill='%23999999'/%3E %3C/svg%3E");
+    background-size: 100% 100%;
+  }
+}

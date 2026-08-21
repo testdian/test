@@ -1,0 +1,51 @@
+.wrapper {
+  padding: 0 !important;
+  margin-top: 42px;
+}
+.tabs {
+  padding: 0 !important;
+  padding-left: 16px !important;
+  margin: 0 !important;
+  max-width: calc(100% - @sideBarCloseWidth - 400px);
+  :global(.ant-tabs-nav) {
+    margin: 0 !important;
+  }
+  :global(.ant-tabs-tab + .ant-tabs-tab) {
+    margin-left: 12px !important;
+  }
+}
+
+.unTopWrapper > div:first-of-type {
+  border: none;
+}
+
+.affix {
+  position: fixed;
+  top: 50px;
+  left: @sideBarCloseWidth;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  width: calc(100% - @sideBarCloseWidth);
+  // padding: 12px 16px 16px 26px;
+  padding-bottom: 0;
+  padding-left: 12px;
+  padding-right: 12px;
+
+  background: #fff;
+  box-shadow: 2px 0 8px 0 rgb(0 0 0 / 4%);
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+
+  &.sideOpen {
+    left: @sideBarWidth;
+    width: calc(100% - @sideBarWidth);
+    // padding: 12px 26px 12px 16px;
+  }
+}
+
+.picker {
+  width: 192px;
+  margin-right: 12px;
+}

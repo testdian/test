@@ -1,0 +1,50 @@
+.treeWrapperMain {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 80px);
+  :global {
+    .ant-collapse-expand-icon {
+      margin-right: 4px;
+      width: 16px;
+    }
+  }
+  .treeWrapperLeft,
+  .treeSourceTable {
+    display: flex;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+  .treeSourceTable > div {
+    width: 100%;
+  }
+}
+
+.treeSourceTable {
+  flex: 1;
+  height: 100%;
+  padding: 0 16px;
+  background: #fff;
+}
+.treeItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+
+  .treeImgAndName {
+    display: flex;
+    align-items: center;
+
+    .treeDataImg {
+      width: 16px;
+      height: 16px;
+      margin-right: 4px;
+    }
+  }
+
+  .treeItemCount {
+    color: #b5b8bb;
+  }
+}

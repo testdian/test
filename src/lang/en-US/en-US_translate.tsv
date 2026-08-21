@@ -1,0 +1,107 @@
+dashborad.valro	{val1}{val2}
+eca.englishVersion	English version
+eca.chineseVersion	Chinese version
+eca.language	Language
+eca.editFactors	Edit factors
+eca.rawData2	"The original data task has been created. Click ""OK"" to jump to ""Download Management"" for downloading"
+eca.doYouWantToDownloadTheOriginal	Do you want to download the original data?
+eca.pleaseSaveOr	Please save or cancel the edited lines before switching templates
+eca.saveFailed	Save failed
+eca.fileUploaded	File uploaded（
+eca.uploading	Uploading（
+eca.bauFullName	"*BAU stands for Business As Usual; BAP stands for Business As Planned; SBT stands for Science 
+ Based Target."
+eca.bapEmissions3	BAP emissions (tCO₂e) - Scope 3 3.4
+eca.bapEmissions4	BAP emissions (tCO₂e) - Scope Three
+eca.bapEmissions5	BAP emissions (tCO₂e) - Scope 1 and Scope 2
+eca.bapEmissions6	BAP emissions (tCO₂e) - total
+eca.bauEmissions3	BAU emissions (tCO₂e) - Scope 3 3.4
+eca.bauEmissions4	BAU Emissions (tCO₂e) - Scope Three
+eca.bauEmissions5	BAU emissions (tCO₂e) - Scope 1 and Scope 2
+eca.bauEmissions6	BAU emissions (tCO₂e) - total
+eca.sbtEmissions3	SBT emissions (tCO₂e) - Scope 3 3.4
+eca.sbtEmissions4	SBT emissions (tCO₂e) - Scope Three
+eca.sbtEmissions5	SBT emissions (tCO₂e) - Scope 1 and Scope 2
+eca.sbtEmissions6	SBT emissions (tCO₂e) - total
+eca.actualEmissionReduction	Actual emission reduction (tCO₂e)
+eca.predictAnnualNetSales	Predicted annual net sales revenue (yuan)
+eca.actualAnnualNetSales	Actual annual net sales revenue (yuan)
+eca.targetEmissions	Target emissions (tCO₂e)
+eca.targetEmissionReduction	Target emission reduction (tCO₂e)
+eca.obtainPredictedNumbers	Failed to obtain prediction data:
+eca.first	First
+eca.estimatedCost2	Estimated cost:
+eca.reach2	Scope of Impact:
+eca.emissionReductionType	Emission reduction type:
+eca.theFirstYearOfAnEra	Yuan/year
+eca.expectedAnnualBenefits2	Expected annual benefits
+eca.tcOeYear	TCO₂e/year
+eca.formatRequirementP	Format requirements: PNG, JPEG, JPG, 1920 * 1080, not exceeding 5MB
+eca.imageAddressIncorrect	Image address error, unable to preview
+eca.upload	Upload
+eca.banne	Banner image format requirements: PNG, JPEG, JPG, 1920 * 1080, not exceeding 5MB
+eca.pleaseEnterAnEstimate	Please enter the expected annual benefits
+eca.expectedAnnualBenefits3	The expected annual benefit must be greater than or equal to 0
+eca.pleaseEnterAnEstimate2	Please enter the estimated cost
+eca.expectedCostMust	The estimated cost must be greater than or equal to 0
+eca.year	%/Year by year
+eca.pleaseEnterEmissionReduction	Please enter the emission reduction amount
+eca.pleaseSelectTheImpact	Please select the year of influence
+eca.affectedYear	Affected year
+eca.pleaseChooseEmissionReduction	Please select the type of emission reduction
+eca.emissionReductionType2	Emission reduction type
+eca.pleaseSelectTheImpact2	Please select the scope of influence
+eca.addInfluence	Add influence
+eca.annualEmissionReduction	Annual emission reduction
+eca.emissionReductionEffect	Emission reduction effect
+eca.pleaseChooseFeasibleOption	Please choose feasibility
+eca.pleaseSelectMeasures	Please select the type of measure
+eca.theDescriptionCannotExceed	The description cannot exceed 200 words
+eca.theMeasureNameIsNot	The name of the measure cannot exceed 200 words
+eca.pleaseInputMeasures	Please enter the name of the measure
+eca.pleaseSelectAPlan	Please select the planned completion time
+eca.whenThePlanIsCompleted	Planned completion time
+eca.pleaseSelectAPlan2	Please select the planned start time
+eca.atTheBeginningOfThePlan	Scheduled Start Time
+eca.pleaseUploadPictures	Please upload pictures
+eca.uploadFailed	Upload failed
+eca.viewEmissionReductionMeasures	View emission reduction measures
+eca.editEmissionReductionMeasures	Edit emission reduction measures
+eca.newIncreaseOrDecreaseMeasures	New emission reduction measures added
+eca.overviewOfEmissionReductionMeasures	Overview of emission reduction measures
+eca.whenExpectedToReduceEmissions	When the expected emission reduction is in percentage type, this value cannot be calculated and displayed temporarily.
+eca.absoluteValue2	Absolute value
+eca.range	Scope 3.4
+eca.scopeOneScope	Scope 1&Scope 2
+eca.low	Low
+eca.centre	Centre
+eca.tall	Tall
+eca.recycling	Recycling
+eca.supplyChainEmissionsReduction	Supply chain emissions reduction
+eca.substitutionOfEmissionSources	Substitution of emission sources
+eca.energyEfficiencyImprovement	Energy efficiency improvement
+eca.category	Category
+eca.stage	Stage
+eca.categoryEmissionReduction	15 categories of emission reduction ratios
+eca.pleaseEnterTheRange	Please enter a range of 3 proportions
+eca.rangeReductionRatio	Scope 3 Emission Reduction Ratio
+eca.pleaseEnterTheRange2	Please enter range 2 ratio
+eca.rangeReductionRatio2	Scope 2 Emission Reduction Ratio
+eca.pleaseEnterTheRange3	Please enter range 1 proportion
+eca.rangeReductionRatio3	Scope 1 Emission Reduction Ratio
+eca.pleaseSelectASuitableOption	Please select tags that align with ambitious goals
+eca.inLineWithXiongsHeart	Compliant with ambitious goal labels
+eca.pleaseSelectFiscalYear	Please select fiscal year
+eca.pleaseSelectTheTarget	Please select the target year
+eca.targetYear2	Target Year
+eca.categoryInd	Category
+eca.targetLabelCalculation	Target label calculation failed
+eca.initializedData	Initialization data acquisition failed
+eca.netZero	Net zero
+eca.beBetterThan	Better than 2 ℃
+eca.notApplicable	Not Applicable
+eca.editingStage	Editing stage
+carbonFootPrint.error	{val1}
+carbonAccount.number	{val1}
+carbonAccount.error	{val1}
+carbonAccount.statu	{val1}

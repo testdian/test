@@ -1,0 +1,30 @@
+@import url('@styles/var.less');
+
+.datePicker {
+  :global(.ant-picker-range-wrapper.ant-picker-date-range-wrapper) {
+    min-width: auto !important;
+    margin-left: 5px;
+  }
+}
+
+.gridWrapper {
+  :global {
+    .ant-formily-item-feedback-layout-loose {
+      margin-bottom: 0 !important;
+    }
+  }
+}
+
+.wrapper {
+  width: 1024px;
+  height: 100%;
+  margin: 12px auto;
+  padding: 16px 0 24px;
+  overflow-y: scroll;
+  background-color: @whiteBg;
+
+  .container {
+    height: 100%;
+    padding: 0 24px;
+  }
+}

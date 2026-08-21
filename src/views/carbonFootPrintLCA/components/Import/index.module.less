@@ -1,0 +1,50 @@
+@import url('@styles/var.less');
+
+.importFilewrapper {
+  margin-bottom: @GlobalFormActionsHeight;
+
+  h4 {
+    margin-bottom: 16px;
+  }
+
+  .header {
+    margin-bottom: 24px;
+
+    .section {
+      padding: 16px;
+      background: #f7f8f9;
+
+      .fileTips {
+        color: #333f;
+        font-weight: 400;
+        font-size: 14px;
+      }
+
+      .fileListBack {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+
+        .fileListBackFile {
+          .fileIcon {
+            margin-right: 4px;
+            color: rgb(15 193 153);
+            font-size: 16px;
+          }
+        }
+
+        .uploadWrapper {
+          margin-left: 24px;
+
+          .upload {
+            margin-right: 12px;
+          }
+        }
+      }
+    }
+
+    // .section + .section {
+    //   margin-left: 24px;
+    // }
+  }
+}

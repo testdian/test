@@ -1,0 +1,31 @@
+.modalContent {
+  width: 100%;
+  padding: 0 0;
+
+  .tableWrapper {
+    height: 100%;
+
+    .tableTitle {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 12px;
+      color: rgba(0, 0, 0, 0.85);
+    }
+
+    :global {
+      .ant-pro-table {
+        .ant-pro-card-body {
+          padding: 0;
+        }
+      }
+
+      .ant-pro-table-alert {
+        display: none;
+      }
+
+      .ant-pro-query-filter {
+        padding: 0;
+      }
+    }
+  }
+}

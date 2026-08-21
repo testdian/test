@@ -1,0 +1,37 @@
+@import url('@styles/var.less');
+
+.wrapper {
+  margin-bottom: @GlobalFormActionsHeight;
+
+  h1 {
+    margin: 0;
+    color: @textColor2;
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .changePwd {
+    transform: translateX(-36px);
+  }
+
+  .gridWrapper {
+    :global(.ant-formily-grid-layout) {
+      grid-template-columns: repeat(3, minmax(400px, 400px)) !important;
+    }
+  }
+
+  .grid {
+    max-width: 400px;
+  }
+
+  .grid1Row {
+    max-width: 800px + 26px;
+
+    :global(
+        :where(.css-dev-only-do-not-override-5cjbhk).ant-checkbox-wrapper
+          + :where(.css-dev-only-do-not-override-5cjbhk).ant-checkbox-wrapper
+      ) {
+      margin-inline-start: 22px;
+    }
+  }
+}

@@ -1,0 +1,36 @@
+@import url('@styles/var.less');
+
+.wrapper {
+  position: relative;
+  margin-bottom: @GlobalFormActionsHeight;
+
+  header {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: auto;
+    z-index: 1;
+  }
+
+  .search {
+    padding-right: 100px;
+  }
+
+  /* override xrender title */
+  :global(.tr-table-top) {
+    height: auto;
+  }
+
+  .title {
+    display: flex;
+    flex-wrap: wrap;
+    color: @text-color-2;
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 0;
+
+    span {
+      margin-right: 40px;
+    }
+  }
+}

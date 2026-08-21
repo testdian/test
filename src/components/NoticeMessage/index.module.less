@@ -1,0 +1,110 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  margin-top: 10px;
+  padding-top: 12px;
+  background: var(--fill, #fff);
+  border-radius: 4px;
+
+  /* 投影/下拉选基础投影 */
+  box-shadow: 0 4px 16px 0 rgb(0 0 0 / 8%), 0 1px 4px 0 rgb(0 0 0 / 4%);
+
+  h5 {
+    padding-left: 16px;
+    color: #333;
+    font-weight: 600;
+    font-size: 14px;
+    font-style: normal;
+    line-height: 22px; /* 157.143% */
+  }
+
+  .messageList {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+    padding: 8px 16px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border-bottom: 1px solid #ebedf0;
+    cursor: pointer;
+
+    &_noClick {
+      color: @primary-color;
+    }
+
+    &:hover {
+      background: @primary-colorbackground;
+      border-bottom: 1px solid #ebedf0;
+      .messageTitle {
+        color: @primary-color;
+      }
+    }
+    .messageTitle {
+      margin: 0;
+      overflow: hidden;
+      color: #333;
+      font-weight: 400;
+      font-size: 14px;
+      width: 100%;
+
+      /* Body 内容/Regular-常规 */
+      font-style: normal;
+      line-height: 20px; /* 142.857% */
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      &_noClick {
+        color: @primary-color;
+      }
+
+      // &:hover {
+      //   color: @primary-color;
+      // }
+    }
+
+    span {
+      margin-top: 4px;
+      color: #999;
+      font-weight: 400;
+      font-size: 12px;
+      font-style: normal;
+      line-height: 20px; /* 166.667% */
+    }
+  }
+
+  :global(.ant-radio-group) {
+    display: flex;
+
+    label {
+      display: flex;
+      flex: 0 0 50%;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      border: 1px solid #ebedf0;
+      border-left: 0;
+      border-radius: 0;
+
+      &:focus-within {
+        box-shadow: none;
+      }
+    }
+
+    label + label {
+      border-right: 0;
+    }
+
+    span {
+      color: #666;
+      font-weight: 400;
+      font-size: 14px;
+      font-style: normal;
+      line-height: 20px; /* 142.857% */
+      &:hover {
+        color: @primary-color;
+      }
+    }
+  }
+}

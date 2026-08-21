@@ -1,0 +1,82 @@
+/**
+ * 本页主要为定义全局变量使用，不要添加变量无关代码
+ * antd v5 使用 styled-component 编写组件，less modify var 不再支持，需要在APP 页面内通过props注入
+*/
+/**
+ * 以下为UI提供的色号
+ * UI 提供的色号不可以直接使用，在下面**使用区域**引用UI色号变量
+ * 当 UI 色号修改前，确定后面定义的使用场景是否同时更改！！
+ */
+/* 状态色 */
+/* 警示、提醒 rgba(248, 162, 49, 1) */
+/* 危险、错误 rgba(237, 85, 85, 1) */
+/* 主要应用于标签，表示完成状态 */
+/* 主要应用于重点数字、标题、重要信息、主要文字颜色  之前是 #333  rgba(52, 58, 64, 1) */
+/* 主要应用于常规信息、次要文字、导航icon颜色、 之前是 #666 rgba(108, 117, 125, 1) */
+/* 辅助色、按钮icon颜色 之前是 #999 rgba(153, 158, 164, 1) */
+/* 主要应用于弹窗背景蒙层，#000000不透明度60% */
+/* 主要应用于背景色、表格及控件悬停颜色 rgba(247, 248, 249, 1) */
+/* 分割线 rgba(235, 237, 240, 1) */
+/* 禁用  rgba(218, 221, 224, 1) */
+/* 控件边框 rgba(210, 214, 218, 1) */
+/* 主要应用于控件占位文字、禁用颜色 */
+/* 主要应用于控件禁用颜色 */
+/**
+ * 以下为正常使用的色号
+ * 根据使用场景不同，定义不同的变量名
+*/
+/* 主色调  rgba(12, 191, 159, 1) */
+/** 用于 标题、表单label */
+/** 主展示区padding */
+/* 全局表单提交框高度 */
+/** ant message success 背景色 */
+.resizable-container {
+  height: 100%;
+  min-height: 160px;
+}
+.drag-handle div {
+  position: relative;
+  right: 2px !important;
+  width: 10px !important;
+  border-left: 1px solid #EBEDF0;
+  transition: all 0.3s;
+}
+.drag-handle div:hover {
+  border-left: 1px solid #0CBF9F !important;
+}
+.drag-handle div:hover.drag-line {
+  background: url('../../../../../image/drag-line-act-icon.png') no-repeat;
+  background-size: 100% 100%;
+}
+.hidden-handle {
+  display: none;
+}
+.close-icon {
+  position: absolute;
+  top: 160px;
+  right: 4px;
+  z-index: 2;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  transition: all 1.3s;
+}
+.closeable {
+  transform: rotateZ(180deg);
+  transition: all 1.3s;
+}
+.drag-line {
+  position: absolute;
+  top: 0;
+  right: -5px;
+  bottom: 0;
+  width: 16px;
+  margin: auto;
+  background: url('../../../../../image/drag-line-act-icon.png') no-repeat center;
+  background-size: 16px 16px;
+  transition: all 0.3s;
+}
+.drag-line:hover {
+  background: url('../../../../../image/drag-line-act-icon.png') no-repeat center;
+  background-size: 16px 16px;
+}

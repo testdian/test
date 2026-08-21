@@ -1,0 +1,58 @@
+.dataOverContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  align-self: stretch;
+}
+
+.cardGrid {
+  width: 100%;
+  align-items: stretch;
+  display: flex;
+  justify-content: space-between;
+}
+
+.predictCard {
+  width: calc(100% - 530px);
+}
+
+.predictCard .cardContent div {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.predictCard .cardContent div > div:last-child {
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  display: flex;
+}
+
+.chartContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: var(--White, #fff);
+  padding: 24px;
+  box-sizing: border-box;
+  > div {
+    margin-bottom: 40px;
+  }
+}
+
+.totalCell {
+  background: #ffd700;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border: none;
+  padding: 0;
+}

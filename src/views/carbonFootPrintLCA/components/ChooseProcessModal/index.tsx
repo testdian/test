@@ -1,0 +1,134 @@
+/**
+ * @description 选择过程集弹窗
+ */
+import I18N from '@src/lang/I18N';
+import { Modal, Button } from 'antd';
+import { useState } from 'react';
+
+import { CustomTableRender } from '@/components/x-render/TableRender';
+import { useTableRef } from '@/components/x-render/TableRender/hook/useTableRef';
+import { CustomSearchProps } from '@/components/x-render/TableRender/types';
+import { useOrgs } from '@/views/dashborad/organizations/OrgManage/hooks';
+
+import { columns } from './columns';
+import style from './index.module.less';
+import { searchSchema } from './schemas';
+import { getChooseProcessList } from './service';
+import { ChooseProcessLibrary, ChooseProcessLibraryRequest } from './type';
+
+interface ChooseProcessModalProps {
+  /** 弹窗显隐 */
+  open: boolean;
+  /** 点击取消按钮的方法 */
+  handleCancel: () => void;
+  /** 点击确定按钮的方法 */
+  handleOk: (data?: {
+    selectRows?: ChooseProcessLibrary[];
+    selectedRowKeys?: React.Key[];
+  }) => void;
+  /** 排除的过程库id-过程库用 */
+  neLibId?: number;
+}
+const ChooseProcessModal = ({
+  open,
+  handleCancel,
+  handleOk,
+  neLibId,
+}: ChooseProcessModalProps) => {
+  const { tableRef } = useTableRef();
+  /** 所属组织枚举 */
+  const orgList = useOrgs();
+
+  /** 表格选中项 */
+  const [selectRows, setSelectRows] = useState<ChooseProcessLibrary[]>();
+
+  /** 选中的数据Key */
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+
+  /** 是否禁用 */
+  const disabled = selectedRowKeys.length === 0;
+
+  /** 选中表格 */
+  const onSelectChange = (
+    newSelectedRowKeys: React.Key[],
+    selectedRows: ChooseProcessLibrary[],
+  ) => {
+    setSelectedRowKeys(newSelectedRowKeys);
+    setSelectRows(selectedRows);
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+    preserveSelectedRowKeys: true,
+  };
+
+  const searchApi: CustomSearchProps<
+    ChooseProcessLibrary,
+    ChooseProcessLibraryRequest
+  > = args =>
+    getChooseProcessList({ ...args, neLibId }).then(({ data }) => {
+      return data?.data;
+    });
+
+  return (
+    <Modal
+      wrapClassName={`${style.wrapper}`}
+      centered
+      title={I18N.carbonFootPrintLCA.selectedAssociated}
+      open={open}
+      width='70%'
+      maskClosable={false}
+      destroyOnClose
+      onCancel={() => {
+        /** 关闭弹窗取消弹窗表格选中 */
+        setSelectedRowKeys([]);
+        handleCancel();
+      }}
+      footer={[
+        <Button
+          onClick={() => {
+            /** 关闭弹窗取消弹窗表格选中 */
+            setSelectedRowKeys([]);
+            handleCancel();
+          }}
+        >
+          {I18N.Factors.cancel}
+        </Button>,
+        <Button
+          disabled={disabled}
+          onClick={async () => {
+            handleOk({ selectRows, selectedRowKeys });
+            /** 关闭弹窗取消弹窗表格选中 */
+            setSelectedRowKeys([]);
+          }}
+          type='primary'
+        >
+          {I18N.carbonFootPrintLCA.nextStep}
+        </Button>,
+      ]}
+    >
+      <div className={style.tableModalWrapper}>
+        <CustomTableRender<ChooseProcessLibrary, ChooseProcessLibraryRequest>
+          tableRef={tableRef}
+          searchProps={{
+            schema: searchSchema(orgList),
+            api: searchApi,
+            searchOnMount: false,
+          }}
+          tableProps={{
+            columns: columns(),
+            rowSelection: {
+              type: 'radio',
+              columnWidth: 48,
+              ...rowSelection,
+            },
+            scroll: { y: 500 },
+          }}
+          autoFixNoText
+        />
+      </div>
+    </Modal>
+  );
+};
+export default ChooseProcessModal;

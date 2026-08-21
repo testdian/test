@@ -1,0 +1,74 @@
+.wrapper {
+  padding: 12px 16px 16px;
+  background: #fff;
+  min-height: calc(100vh - 120px);
+}
+
+.embedded {
+  padding: 0;
+  background: transparent;
+  min-height: auto;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.toolbarLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toolbarRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolbarRightOnly {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  width: 100%;
+}
+
+.yearSelect {
+  width: 160px;
+}
+
+.readonlyCell {
+  display: inline-block;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.compactInput {
+  width: 100% !important;
+  min-width: 108px;
+
+  :global(.ant-input-number-input) {
+    padding: 0 4px;
+    font-size: 12px;
+  }
+}
+
+.table {
+  :global(.ant-table-thead > tr > th),
+  :global(.ant-table-tbody > tr > td) {
+    padding: 4px 8px;
+  }
+
+  :global(.ant-table-tbody > tr > td:first-child) {
+    font-weight: 500;
+    background: #fafafa;
+  }
+
+  :global(.ant-table-thead > tr > th:first-child) {
+    background: #fafafa;
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@src/*": [
+        "./src/*"
+      ],
+      "@api/*": [
+        "./src/api/*"
+      ],
+      "@sdks/*": [
+        "./src/sdks/*"
+      ],
+      "@components/*": [
+        "./src/components/*"
+      ],
+      "@views/*": [
+        "./src/views/*"
+      ],
+      "@utils/*": [
+        "./src/utils/*"
+      ],
+      "@store/*": [
+        "./src/store/*"
+      ],
+      "@styles/*": [
+        "./src/styles/*"
+      ],
+      "@image/*": [
+        "./src/image/*"
+      ]
+    }
+  }
+}

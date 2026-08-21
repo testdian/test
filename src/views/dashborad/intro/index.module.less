@@ -1,0 +1,59 @@
+.container {
+  position: relative;
+  min-height: 500px;
+  padding: 24px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.content {
+  max-width: 85%;
+  margin: 0 auto;
+  min-height: 400px;
+  padding-top: 24px;
+}
+
+.title {
+  color: #333;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.richText {
+  line-height: 1.8;
+  font-size: 16px;
+  color: #333;
+
+  img {
+    max-width: 100%;
+    margin: 16px 0;
+  }
+}
+
+.pagination {
+  position: fixed;
+  top: 50%;
+  left: 208px;
+  transform: translateY(-50%);
+  width: calc(100% - 208px);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 38px;
+}
+
+.arrow {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #002855;
+  cursor: pointer;
+  // transition: all 0.3s;
+}
+
+.pageInfo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #666;
+}

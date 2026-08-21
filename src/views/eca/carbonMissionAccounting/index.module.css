@@ -1,0 +1,25 @@
+.wrap {
+  margin-bottom: ;
+}
+.flex {
+  display: flex;
+}
+.flex .flex_left {
+  width: 160px;
+}
+.flex .flex_left .flex_left_tabs {
+  height: auto;
+}
+.flex .flex_right {
+  width: calc(100% - 160px);
+}
+.flex_data {
+  display: flex;
+}
+.flex_data .flex_left {
+  float: left;
+}
+.flex_data .flex_right {
+  float: left;
+  width: 100%;
+}

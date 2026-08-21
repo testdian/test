@@ -1,0 +1,39 @@
+.managementListWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  && {
+    margin-bottom: @GlobalFormActionsHeight;
+  }
+
+  .managementListPageWrapper {
+    flex: 1;
+    padding-right: 16px;
+    background-color: #fff;
+
+    .headerWrapper {
+      padding-left: 16px;
+    }
+
+    .tableWrapper {
+      padding-left: 16px;
+    }
+
+    :global {
+      header {
+        display: flex;
+        align-items: center;
+        margin: 6px 0;
+
+        h3 {
+          flex: 1;
+        }
+
+        .ant-btn {
+          margin-left: 12px;
+        }
+      }
+    }
+  }
+}

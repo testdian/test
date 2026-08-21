@@ -1,0 +1,72 @@
+@import url('@/styles/var.less');
+
+.wrap {
+  margin-bottom: @GlobalFormActionsHeight;
+}
+
+.productManagementDropdown {
+  :global {
+    .ant-dropdown-menu-item {
+      padding: 7px 15px;
+      text-align: center;
+    }
+  }
+}
+
+.businessAccountExpandAdd {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  min-height: 600px;
+  margin-bottom: 60px;
+  padding: 0 !important;
+
+  .left_box {
+    margin-left: 6px;
+    padding-top: 10px;
+
+    li {
+      width: 132px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      padding-left: 9px;
+      color: #333;
+      font-weight: 400;
+      font-size: 14px;
+      list-style: none;
+      cursor: pointer;
+    }
+
+    li.active {
+      width: 132px;
+      color: @primary-color;
+      background: rgb(0 159 171 / 6%);
+      border-radius: 4px;
+    }
+  }
+
+  .addBtn {
+    position: absolute;
+    top: 6px;
+    right: 16px;
+  }
+
+  .mainHead {
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+
+  .businessAccountTree {
+    padding-top: 16px;
+  }
+
+  .rightMain {
+    padding: 16px;
+  }
+
+  .remarkModal {
+    :global(.ant-modal-body) {
+      padding: 4px 24px 20px;
+    }
+  }
+}

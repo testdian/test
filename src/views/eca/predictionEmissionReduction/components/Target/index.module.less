@@ -1,0 +1,470 @@
+@accent: #ff5500;
+@blue: #1677ff;
+@green: #16a34a;
+@t1: rgba(0, 0, 0, 88%);
+@t2: rgba(0, 0, 0, 65%);
+@t3: rgba(0, 0, 0, 45%);
+@border: #e8e8e8;
+@card: #fff;
+@r4: 4px;
+@r8: 8px;
+@r12: 12px;
+@shadow: 0 1px 4px rgba(0, 0, 0, 8%);
+
+.scopeYear {
+  align-items: center;
+  display: flex;
+  gap: 4px;
+  span {
+    color: var(--, #04252b);
+
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px; /* 157.143% */
+    display: flex;
+  }
+  .scopeSel {
+    width: 244px;
+  }
+}
+
+.scope {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  align-self: stretch;
+  margin-top: 16px;
+}
+
+.scopeItem {
+  display: flex;
+  padding: 24px 24px 16px 24px;
+  gap: 12px;
+  flex: 1 0 0;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  flex-direction: column;
+}
+
+.scopeTitle {
+  color: #333;
+
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 157.143% */
+}
+
+.scopeTitleRight {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.scopeValue {
+  color: #333;
+
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+}
+
+.scopeCategory {
+  color: #002855;
+
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 157.143% */
+}
+
+.chartInfo {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+
+.chart {
+  width: 100%;
+  height: 400px;
+}
+
+.stageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ══ 目标阶段区块（对齐 HTML goal-section） ══ */
+.goalSection {
+  background: @card;
+  border-radius: @r12;
+  box-shadow: @shadow;
+  margin-bottom: 16px;
+  margin-top: 16px;
+  padding: 18px 20px;
+}
+
+.goalSectionEditing {
+  box-shadow: 0 0 0 2px rgba(22, 119, 255, 12%);
+}
+
+.sectionHead {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.sectionHeadLeft {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.sectionHeadRight {
+  display: flex;
+  gap: 8px;
+}
+
+.sectionTitle {
+  color: @t1;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.scopeBtnGroup {
+  border: 1px solid @border;
+  border-radius: @r4;
+  display: flex;
+  overflow: hidden;
+}
+
+.scopeBtn {
+  background: @card;
+  border: none;
+  color: @t2;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  height: 26px;
+  padding: 0 14px;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.scopeBtn:hover:not(.scopeBtnActive) {
+  background: #f5f5f5;
+}
+
+.scopeBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.scopeBtnActive {
+  background: @accent;
+  color: #fff;
+}
+
+.btn {
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: @r4;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 500;
+  gap: 4px;
+  height: 30px;
+  justify-content: center;
+  padding: 0 16px;
+  transition: all 0.15s;
+}
+
+.btnPrimary {
+  background: @accent;
+  border-color: @accent;
+  color: #fff;
+}
+
+.btnPrimary:hover {
+  background: #e04b00;
+  border-color: #e04b00;
+}
+
+.btnDefault {
+  background: @card;
+  border-color: @border;
+  color: @t1;
+}
+
+.btnDefault:hover {
+  border-color: #aaa;
+}
+
+.btnSm {
+  font-size: 12px;
+  height: 26px;
+  padding: 0 10px;
+}
+
+.stageCards {
+  column-gap: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 14px;
+  row-gap: 16px;
+}
+
+.stageMetricsBlock {
+  margin-top: 16px;
+}
+
+.stageCard {
+  background: #fafbff;
+  border: 1px solid @border;
+  border-radius: @r8;
+  padding: 16px 18px;
+}
+
+.stageBadge {
+  border-radius: 10px;
+  display: inline-flex;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  padding: 2px 10px;
+}
+
+.stageBadge1 {
+  background: rgba(22, 119, 255, 10%);
+  color: @blue;
+}
+
+.stageBadge2 {
+  background: rgba(22, 163, 74, 10%);
+  color: @green;
+}
+
+.stageRow {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.stageRow:last-of-type {
+  margin-bottom: 0;
+}
+
+.stageFieldLbl {
+  color: @t3;
+  flex-shrink: 0;
+  font-size: 12px;
+  width: 100px;
+}
+
+.stageFieldVal {
+  color: @t1;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* 阶段卡片内：年份下拉、比例数字 + 外侧 % */
+.stageFieldInputWrap {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 1 auto;
+  gap: 2px;
+}
+
+.stageYearSelect {
+  flex-shrink: 0;
+  min-width: 0;
+  width: 96px;
+}
+
+.stageRatioNum {
+  flex-shrink: 0;
+  width: 72px;
+}
+
+.stagePctSuffix {
+  color: @t1;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 22px;
+}
+
+.stageHint {
+  color: @t3;
+  font-size: 11px;
+  margin-top: 10px;
+}
+
+.tblWrap {
+  margin-top: 16px;
+  overflow-x: auto;
+}
+
+.goalTable {
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 13px;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.colYear {
+  width: 22%;
+}
+
+.colRatio {
+  width: 39%;
+}
+
+.colEmission {
+  width: 39%;
+}
+
+.goalTable thead th {
+  background: #fafafa;
+  border-bottom: 1px solid @border;
+  box-sizing: border-box;
+  color: @t2;
+  font-weight: 600;
+  padding: 9px 12px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.goalTable thead th.thYear {
+  text-align: left;
+}
+
+.goalTable thead th.thCenter {
+  text-align: center;
+}
+
+.thYear {
+  width: 22%;
+}
+
+.goalTable tbody td {
+  border-bottom: 1px solid #f5f5f5;
+  box-sizing: border-box;
+  color: @t1;
+  padding: 9px 12px;
+  vertical-align: middle;
+}
+
+.tdCenter {
+  text-align: center;
+}
+
+.goalTable tbody tr:hover td {
+  background: #fafcff;
+}
+
+.goalTable tbody tr.stage1Row td {
+  background: rgba(22, 119, 255, 2.5%);
+}
+
+.goalTable tbody tr.stage2Row td {
+  background: #fafdfb;
+  color: @green;
+}
+
+.goalTable tbody tr.stage2Row .yrTag,
+.goalTable tbody tr.stage2Row .autoVal {
+  background: #fafdfb;
+  color: @green;
+}
+
+.goalTable tbody tr.stage2Row .goalDetailPct {
+  color: @green;
+}
+
+.goalTable tbody tr.stage2Row:hover td {
+  background: #f3faf6;
+}
+
+.goalTable tbody tr.stage2Row :global(.ant-input-number) {
+  background: #fafdfb;
+  border-color: rgba(22, 163, 74, 32%);
+}
+
+.goalTable tbody tr.stage2Row :global(.ant-input-number-input) {
+  color: @green;
+}
+
+.yrTag {
+  background: #f0f5ff;
+  border-radius: 8px;
+  color: #1d4ed8;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+}
+
+.yrBase {
+  background: rgba(255, 85, 0, 8%);
+  border-radius: 8px;
+  color: @accent;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+}
+
+.autoVal {
+  background: #f0f5ff;
+  border-radius: @r4;
+  color: #1d4ed8;
+  display: inline-block;
+  padding: 1px 6px;
+}
+
+.tdEmpty {
+  color: @t3;
+  font-size: 13px;
+  padding: 32px;
+  text-align: center;
+}
+
+.detailCellEdit {
+  align-items: center;
+  display: inline-flex;
+  gap: 2px;
+  justify-content: center;
+}
+
+.goalDetailRatioNum {
+  flex-shrink: 0;
+  width: 72px;
+}
+
+.goalDetailEmissionNum {
+  flex-shrink: 0;
+  width: 100px;
+}
+
+.goalDetailPct {
+  color: @t1;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 22px;
+}
+
+.goalChartWrap {
+  background: @card;
+  border-radius: @r12;
+  box-shadow: @shadow;
+  padding: 18px 20px;
+}

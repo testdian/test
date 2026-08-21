@@ -1,0 +1,152 @@
+.emissionSourceWrapper {
+  padding: 0;
+  background: #ffff;
+
+  && {
+    margin-bottom: @GlobalFormActionsHeight;
+  }
+
+  .emissionSourceHeader {
+    padding: 0 16px;
+    border-bottom: 1px solid #ebedf0ff;
+
+    p {
+      max-width: 300px;
+      margin-bottom: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    p + p {
+      margin-left: 32px;
+    }
+  }
+
+  .emissionSourceMain {
+    .empty {
+      width: 100%;
+      height: 10px;
+      background: #f7f8f9;
+    }
+
+    .emissionSourceCard {
+      margin-bottom: 12px;
+      padding: 16px;
+
+      .title {
+        margin-bottom: 16px;
+        color: #333f;
+        font-weight: 500;
+        font-size: 14px;
+      }
+
+      .btnWrapper {
+        display: flex;
+        align-items: center;
+
+        .selectorFactorBtn {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+
+          :global {
+            .ant-formily-item-control
+              .ant-formily-item-control-content
+              .ant-formily-item-control-content-component {
+              min-height: 0;
+            }
+          }
+
+          .requireTips {
+            color: #ff4d4f;
+            font-size: 14px;
+          }
+        }
+      }
+
+      .factorRadioBtn {
+        flex: 1;
+        margin-bottom: 16px;
+      }
+    }
+  }
+
+  .fileWrapper {
+    padding: 16px;
+
+    .title {
+      margin-bottom: 8px;
+      color: #333f;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .tips {
+      margin-bottom: 8px;
+      color: #999f;
+      font-weight: 400;
+      font-size: 12px;
+    }
+
+    .uploadWrapper {
+      .uploadBtn {
+        color: #999;
+      }
+
+      .fileListWrapper {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+
+        .fileListItemWrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
+          width: 45%;
+          margin-top: 8px;
+          margin-right: 24px;
+          padding: 8px 0;
+
+          &:hover {
+            background: #f7f8f9ff;
+            border-radius: 4px;
+
+            .fileContent {
+              color: #0cbf9f;
+              font-weight: 400;
+            }
+
+            .delBtn {
+              display: block;
+              color: #0cbf9f;
+              font-weight: 400;
+            }
+          }
+
+          .fileContent {
+            max-width: 350px;
+            margin-right: 122px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            cursor: pointer;
+          }
+
+          .delBtn {
+            position: absolute;
+            right: 8px;
+            display: none;
+          }
+
+          .icon {
+            display: inline-block;
+            margin-right: 8px;
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+}

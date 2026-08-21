@@ -1,0 +1,138 @@
+.dataCard {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  align-items: center;
+  align-self: stretch;
+  justify-content: center;
+  background: #fff;
+  border: 1px solid #ebedf0;
+
+  .dataPart {
+    display: flex;
+    flex: 1 0 0;
+    gap: 8px;
+    align-items: center;
+    align-self: stretch;
+    padding: 8px 0;
+
+    .divider {
+      height: 24px;
+      color: #ebedf0;
+    }
+
+    .data {
+      display: flex;
+      flex: 1 0 0;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      .label {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        color: #999ea4;
+        font-weight: 400;
+        font-size: 12px;
+
+        font-style: normal;
+        line-height: 18px;
+      }
+
+      .value {
+        color: #343a40;
+        font-weight: 500;
+        font-size: 14px;
+        font-style: normal;
+        line-height: 22px;
+        text-align: center;
+      }
+    }
+  }
+
+  .percent {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    align-self: stretch;
+    justify-content: center;
+    height: 24px;
+    color: #999ea4;
+    font-weight: 400;
+    font-size: 12px;
+
+    font-style: normal;
+    line-height: 18px;
+    border-top: 1px solid #ebedf0;
+
+    .percentValue {
+      font-weight: 500;
+    }
+
+    .percentRed {
+      color: #ed5555;
+    }
+
+    .percentGreen {
+      color: #0cbf9f;
+    }
+  }
+}
+
+.flexCards {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-start;
+  align-self: stretch;
+  padding: 16px 0;
+  background-color: rgb(255 255 255);
+  margin-top: 60px;
+
+  .ghgCard {
+    display: flex;
+    min-width: 330px;
+    // flex: 1 0 0;
+    align-items: center;
+    overflow: hidden;
+    background-color: #fff;
+    border-radius: 2px;
+
+    .ghgTitle {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      align-self: stretch;
+      justify-content: center;
+      // width: 20px;
+      padding: 8px 4px;
+      color: #fff;
+      font-weight: 500;
+      font-size: 12px;
+
+      font-style: normal;
+      line-height: 18px;
+      text-align: center;
+      background: #0cbf9f;
+      border-radius: 2px 0 0 2px;
+    }
+  }
+}
+
+.isoTitle {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  padding: 3px 8px;
+  color: #fff;
+  font-weight: 500;
+  font-size: 12px;
+
+  font-style: normal;
+  line-height: 18px;
+  background: #0cbf9f;
+  border-radius: 4px 4px 0 0;
+}

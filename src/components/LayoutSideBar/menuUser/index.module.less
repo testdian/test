@@ -1,0 +1,100 @@
+.menuUser {
+  display: flex;
+  padding-top: 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  align-self: stretch;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.profileContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 8px 8px 14px;
+  color: #fff;
+  white-space: nowrap;
+  font-size: 16px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.userInfo {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: space-between;
+}
+.userInfoContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logoutAction {
+  width: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 8px;
+  color: #fff;
+  white-space: nowrap;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  background: @primary-color;
+  /* Shadow/lg */
+  box-shadow: 0px 12px 16px -4px rgba(16, 24, 40, 0.08),
+    0px 4px 6px -2px rgba(16, 24, 40, 0.03);
+}
+.logoutAction:active,
+.logoutAction:hover {
+  span {
+    color: #b6b6b6;
+  }
+}
+
+.rolePopover {
+  min-width: 160px;
+}
+
+.rolePopoverTitle {
+  padding: 4px 8px 8px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.roleOption {
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #262626;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.roleOption:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.roleOptionActive {
+  color: @primary-color;
+  font-weight: 500;
+  background: fade(@primary-color, 8%);
+}
+
+.rolePopoverDivider {
+  height: 1px;
+  margin: 8px 0;
+  background: #f0f0f0;
+}
+
+.rolePopover .logoutAction {
+  width: 100%;
+  box-sizing: border-box;
+}
+// .logoutAction:active {
+//   background: rgba(255, 255, 255, 0.1);
+//   transition: all 0.3s;
+// }

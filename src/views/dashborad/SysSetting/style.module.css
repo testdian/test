@@ -1,0 +1,59 @@
+.accountsModelMain {
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+}
+.accountsModelMain .accountsModelLeft {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 140px;
+  height: 100%;
+  padding: 16px;
+  background: #ffff;
+  border-right: 1px solid #ebedf0ff;
+}
+.accountsModelMain .accountsModelLeft .accountsModelMenu {
+  flex: 1;
+  width: 100%;
+}
+.accountsModelMain .accountsModelLeft .accountsModelMenu .accountsModelMenuItem {
+  display: flex;
+  align-items: center;
+  height: 34px;
+  margin-bottom: 8px;
+  padding: 0 16px;
+  text-align: left;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.accountsModelMain .accountsModelLeft .accountsModelMenu .menuItemSelected {
+  color: #0cbf9fff;
+  font-weight: 400;
+  font-size: 14px;
+  background: #0cbf9f0f;
+}
+.accountsModelMain .accountsModelLeft .accountsModelExportBtn {
+  display: flex;
+  justify-content: center;
+}
+.accountsModelMain .accountsModelLeft .accountsModelExportBtn .exportBtn {
+  width: 100%;
+}
+.accountsModelMain .accountsModelRight {
+  flex: 1;
+  height: 100%;
+  padding: 16px;
+  overflow: hidden;
+  background: #ffff;
+}
+.accountsModelMain .accountsModelRight .accountsModelRightBtn {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+.accountsModelMain .accountsModelRight .accountsModelRightBtn .importBtn {
+  margin-left: 10px;
+}

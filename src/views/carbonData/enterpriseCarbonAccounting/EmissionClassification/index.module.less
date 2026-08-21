@@ -1,0 +1,48 @@
+.card {
+  padding: 0 16px 16px;
+  border-top: 16px solid #f6f7f8;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 0;
+}
+
+.cardTitle {
+  color: var(--text, #343a40);
+  font-weight: 500;
+  font-size: 14px;
+
+  font-style: normal;
+  line-height: 22px;
+}
+
+.mulletLine {
+  align-self: stretch;
+  width: 100%;
+  height: 292px;
+}
+
+.lineChart {
+  width: 100%;
+  height: 292px !important;
+}
+
+.chart {
+  padding-bottom: 16px;
+}
+
+.fixed-last-row {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  height: 80px;
+
+  & td {
+    background: #fafafa;
+  }
+}

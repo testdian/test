@@ -1,0 +1,64 @@
+@import url('@styles/var.less');
+
+.importFilewrapper {
+  .header {
+    .section {
+      height: 100%;
+      padding: 16px;
+      background: var(--fill-gray-1-bghover, #f7f8f9);
+      border-radius: 4px;
+
+      .fileTips {
+        margin-bottom: 16px;
+        color: var(--text-gray-8-primary, #343a40);
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 22px;
+      }
+
+      .fileListBack {
+        display: flex;
+        align-items: center;
+
+        .fileListBackFile {
+          max-width: 238px;
+
+          .fileIcon {
+            margin-right: 4px;
+            color: #22bbe6;
+            font-size: 16px;
+          }
+
+          .fileName {
+            width: calc(100% - 20px);
+          }
+        }
+
+        .uploadWrapper {
+          margin-left: 16px;
+
+          .upload {
+            margin-right: 16px;
+          }
+        }
+      }
+    }
+  }
+
+  .tableWrapper {
+    .tabelHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 10px 0;
+
+      .tableTitle {
+        margin: 16px 0 8px;
+        color: var(--text-gray-8-primary, #343a40);
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 22px;
+      }
+    }
+  }
+}

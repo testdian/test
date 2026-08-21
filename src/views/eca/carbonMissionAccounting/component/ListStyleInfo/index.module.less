@@ -1,0 +1,29 @@
+@import url('@styles/var.less');
+.treeWrapperMain {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 145px);
+  :global {
+    .ant-collapse-expand-icon {
+      margin-right: 4px;
+      width: 16px;
+    }
+  }
+  .treeWrapperLeft,
+  .treeSourceTable {
+    display: flex;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+  .treeSourceTable > div {
+    width: 100%;
+  }
+}
+.treeSourceTable {
+  flex: 1;
+  height: 100%;
+  padding: 0 16px;
+  background: #fff;
+}

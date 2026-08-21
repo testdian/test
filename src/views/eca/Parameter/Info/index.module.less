@@ -1,0 +1,51 @@
+@import url('@styles/var.less');
+
+.gridWrapper {
+  :global {
+    .ant-formily-item-feedback-layout-loose {
+      margin-bottom: 0 !important;
+    }
+  }
+}
+
+.wrapper {
+  .closeIcon {
+    cursor: pointer;
+  }
+
+  .section {
+    .title {
+      margin-bottom: 16px;
+      color: #343a40;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 22px;
+    }
+  }
+
+  :global {
+    .ant-drawer-close {
+      display: none;
+    }
+
+    .ant-drawer-header {
+      padding: 20px 24px;
+      border-bottom: none;
+    }
+
+    .ant-drawer-body {
+      padding: 0 24px 24px;
+    }
+
+    .ant-drawer-footer {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      align-self: stretch;
+      justify-content: center;
+      padding: 12px 24px;
+      background: @whiteBg;
+      box-shadow: 0 -4px 8px 0 rgb(0 0 0 / 4%);
+    }
+  }
+}

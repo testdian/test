@@ -1,0 +1,59 @@
+@import url('@styles/var.less');
+
+.stepWrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: @whiteBg;
+
+  .step {
+    width: 352px;
+    margin: 0 auto;
+  }
+}
+.wrapper {
+  display: flex;
+  flex: 1 1 auto;
+  flex-flow: column;
+  height: 100%;
+
+  .container {
+    display: flex;
+    flex: 1 0 auto;
+    flex-direction: column;
+    height: calc(100% - @GlobalFormActionsHeight);
+    margin-bottom: @GlobalFormActionsHeight;
+    overflow: hidden;
+
+    .headerWrapper {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 0 24px;
+      background: @whiteBg;
+      border-bottom: 1px solid @lineGray;
+
+      .commonHeaderWrapper {
+        flex: 1;
+      }
+
+      .flowChartBtn {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        .flowChartIcon {
+          margin-right: 8px;
+        }
+
+        .flowButton {
+          color: var(--text-gray-8-primary, #343a40);
+          font-weight: 400;
+          font-size: 14px;
+          font-style: normal;
+          line-height: 22px;
+        }
+      }
+    }
+  }
+}

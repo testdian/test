@@ -1,0 +1,9 @@
+/lambda/
+/scripts/*
+.history
+serviceWorker.ts
+/config/*
+/public/*
+*.js
+src/sdks/*
+sdk-template/*

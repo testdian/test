@@ -1,0 +1,113 @@
+@import url('@/styles/var.less');
+
+.resizable-container {
+  height: 100%;
+  min-height: 160px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.drag-handle {
+  div {
+    position: relative;
+    right: 2px !important;
+    width: 10px !important;
+    border-left: 1px solid #ebedf0;
+    transition: all 0.3s;
+  }
+
+  div:hover {
+    border-left: 1px solid @primary-color !important;
+  }
+
+  div:hover.drag-line {
+    background: url('@/image/drag-line-act-icon.png') no-repeat;
+    background-size: 100% 100%;
+  }
+}
+
+.hidden-handle {
+  display: none;
+}
+
+.close-icon {
+  position: absolute;
+  top: 160px;
+  right: 4px;
+  z-index: 2;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  transition: all 1.3s;
+}
+
+.closeable {
+  transform: rotateZ(180deg);
+  transition: all 1.3s;
+}
+
+.drag-line {
+  position: absolute;
+  top: 0;
+  right: -5px;
+  bottom: 0;
+  width: 16px;
+  margin: auto;
+  background: url('@/image//drag-line-icon.png') no-repeat center;
+  background-size: 16px 16px;
+  transition: all 0.3s;
+}
+
+.drag-line:hover {
+  background: url('@/image/drag-line-act-icon.png') no-repeat center;
+  background-size: 16px 16px;
+}
+
+.resizable-container-left-handle {
+  .resizable-drawer-panel {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .drawer-panel-inner {
+    display: flex;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .drawer-handle {
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    background: #fff;
+    border-right: 1px solid #ebedf0;
+    pointer-events: none;
+
+    .drawer-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      pointer-events: auto;
+    }
+
+    .close-icon {
+      position: static;
+      top: auto;
+      right: auto;
+      width: 16px;
+      height: 16px;
+      z-index: 2;
+    }
+  }
+
+  .drawer-body {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+}

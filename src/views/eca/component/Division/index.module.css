@@ -1,0 +1,16 @@
+.division {
+  position: relative;
+  height: 10px;
+  margin-bottom: 20px;
+}
+.division div {
+  position: absolute;
+  right: 0;
+  width: 100%;
+  height: 10px;
+  background-color: #f7f8f9;
+}
+.titleH4 {
+  color: #343a40;
+  font-size: 14px;
+}

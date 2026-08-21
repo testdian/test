@@ -1,0 +1,105 @@
+.fillDataDrawerHeader {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.fillDataDrawerHeaderBtn {
+  display: flex;
+  gap: 8px;
+}
+.fillDataDrawerHeaderBtnItem {
+  display: flex;
+  flex-direction: column;
+  .fileBtn {
+    font-size: 12px;
+  }
+}
+.fillDataDrawerTable {
+  margin-top: 24px;
+  position: relative;
+  :global(.ant-pro-card-body) {
+    padding-inline: 0;
+  }
+
+  :global {
+    // 普通行 hover 变白
+    .ant-table-tbody > tr .ant-table-cell-row-hover {
+      background-color: inherit !important;
+    }
+    // 高亮行 hover 依然高亮（主表+固定列）
+    .ant-table-tbody > tr.lightBlueRow > .ant-table-cell-row-hover,
+    .ant-table-tbody > tr.lightBlueRow > td.ant-table-cell-row-hover {
+      background-color: #e6f7ff !important;
+    }
+
+    .ant-table-tbody > .ant-table-row > td.ant-table-cell-fix-left,
+    .ant-table-tbody > .ant-table-row > td.ant-table-cell-fix-right {
+      background-color: #fff !important;
+    }
+  }
+}
+.fillDataDrawerTableContent {
+  padding: 0;
+  .ant-pro-card-body {
+    padding-inline: 0;
+  }
+}
+
+.disabledHover {
+  :global(.ant-radio-button-wrapper) {
+    cursor: not-allowed !important;
+    border: none;
+    color: black;
+
+    &:hover {
+      cursor: not-allowed !important;
+      color: black;
+    }
+  }
+}
+
+.lightBlueRow {
+  background-color: #e6f7ff !important;
+  background: #e6f7ff !important;
+}
+
+.fileItem {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  .fileHref {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    .name {
+      display: inline-block;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: bottom;
+      text-decoration: underline;
+      color: @primary-link-color;
+    }
+
+    .name:hover {
+      color: @primary-link-color-hover;
+    }
+  }
+}
+
+.fillDataDrawerTips {
+  margin-top: 6px;
+}
+
+.requiredSymbol {
+  color: #ff4d4f;
+  margin-inline-end: 4px;
+  display: inline-block;
+  font-family: SimSun, sans-serif;
+}

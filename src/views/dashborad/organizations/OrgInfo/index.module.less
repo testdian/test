@@ -1,0 +1,16 @@
+@import url('@styles/var.less');
+
+.wrapper {
+  margin-bottom: @GlobalFormActionsHeight;
+}
+
+.grid1Row {
+  max-width: 800px + 26px;
+
+  :global(
+      :where(.css-dev-only-do-not-override-5cjbhk).ant-checkbox-wrapper
+        + :where(.css-dev-only-do-not-override-5cjbhk).ant-checkbox-wrapper
+    ) {
+    margin-inline-start: 22px;
+  }
+}

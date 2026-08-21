@@ -1,0 +1,580 @@
+/**
+ * 全局默认样式，
+ * 也有覆盖 antd 的默认样式
+ */
+@import url('./var.less');
+@import url('./fonts.less');
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  color: @text-color;
+  font-family: @font-family-sans-serif;
+}
+
+.layout {
+  &__loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+  }
+}
+
+.align {
+  &--between {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &--left {
+    display: flex;
+  }
+
+  &--right {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &--around {
+    display: flex;
+    justify-content: space-around;
+  }
+}
+
+.vertical {
+  &--top {
+    display: flex;
+  }
+
+  &-middle {
+    display: flex;
+    align-items: center;
+  }
+
+  &-bottom {
+    display: flex;
+    align-items: flex-end;
+  }
+}
+
+/** 修改表单报错展示位置 */
+.ant-form-item .ant-form-item-explain-error {
+  text-align: right;
+}
+
+/* antd select 选中样式修改 */
+// body .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+//   color: @primary-color;
+// }
+
+/** 修改message 样式 */
+.ant-message-notice {
+  .ant-message-notice-content {
+    padding: 6px 20px;
+    border-radius: 4px;
+  }
+
+  &-error {
+    .ant-message-notice-content {
+      color: @dangerTextColor;
+      background: @errorMessageBg;
+      border: 1px solid @dangerBg;
+    }
+  }
+
+  &-success {
+    .ant-message-notice-content {
+      color: @primary-color;
+      background: @successMessageBg;
+      border: 1px solid @primary-color;
+    }
+  }
+}
+
+/** formily readonly style override */
+.ant-formily-layout {
+  /** 输入框样式重写 */
+  .ant-formily-item-control-content-component {
+    /** input override */
+    .ant-space,
+       /** select override */
+     .ant-form-text {
+      width: 100%;
+      padding: 0 12px;
+      background-color: @readonlyComponentBg;
+    }
+
+    /** select override */
+    .ant-form-text {
+      .ant-tag {
+        background-color: transparent;
+        border: none;
+      }
+    }
+  }
+
+  .ant-formily-item-label {
+    margin-bottom: 8px;
+  }
+
+  /* 修复详情查看时不会自动换行问题 */
+  .ant-space-item,
+  .ant-form-text {
+    word-break: break-all;
+  }
+}
+
+// .ant-modal {
+//   position: absolute;
+//   left: 50%;
+//   top: 50%;
+//   transform: translate(-50%, -50%);
+// }
+.modal_del {
+  .ant-modal-body {
+    padding: 20px;
+  }
+
+  .anticon-exclamation-circle {
+    display: none;
+  }
+}
+.modal_text {
+  color: #fba93e;
+}
+.list_showMobile {
+  float: right;
+  color: @primary-color;
+  cursor: pointer;
+}
+/**自定义tag样式****/
+.customTag {
+  display: inline-flex;
+  height: 20px;
+  padding: 10px 4px;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+
+  border-radius: 2px;
+  border: 1px solid #e5e7eb;
+
+  background-color: #fff;
+}
+.customTag.customTag-gold {
+  color: #f5ba1b;
+  border: 1px solid #f5ba1b !important;
+  text-align: center;
+  background: #fff;
+}
+.customTag.customTag-orange {
+  color: rgba(249, 135, 53, 1);
+  border: 1px solid rgba(249, 135, 53, 1);
+  text-align: center;
+  background: transparent;
+}
+
+.customTag.customTag-green {
+  color: #67b034;
+  border: 1px solid #67b034 !important;
+  text-align: center;
+  background: #fff;
+}
+
+.customTag.customTag-blue {
+  color: rgba(52, 145, 250, 1);
+  border: 1px solid rgba(52, 145, 250, 1) !important;
+  text-align: center;
+  background: #fff;
+}
+
+.customTag.customTag-cyan {
+  color: rgba(0, 192, 205, 1);
+  border: 1px solid rgba(0, 192, 205, 1) !important;
+  text-align: center;
+  background: #fff;
+}
+
+.customTag.customTag-red {
+  color: #e71e19;
+  border: 1px solid #e71e19 !important;
+  text-align: center;
+  // background: rgba(255, 242, 240, 1);
+  background: #fff;
+}
+
+.customTag.customTag-gray {
+  color: #666;
+  border: 1px solid #e5e7eb !important;
+  text-align: center;
+  background-color: #fff !important;
+}
+
+.customTag-geekblue {
+  color: #12b0eb;
+  border: 1px solid #12b0eb !important;
+  text-align: center;
+  background: #fff;
+}
+
+.customTag-undefined {
+  color: @text-color-2;
+  border: 1px solid @text-color-2 !important;
+  text-align: center;
+  background: #fff;
+}
+
+.customTabs {
+  // background: red;
+  .ant-tabs-tab {
+    padding-top: 0;
+    color: #999999;
+  }
+}
+.ant-formily-item-label {
+  label {
+    color: @textColor;
+    font-size: 14px;
+    font-weight: 400;
+    text-align: left;
+  }
+}
+.ant-input[disabled],
+.ant-input-number-[disabled],
+.ant-select[disable],
+// .ant-formily-layout .ant-formily-item-control-content-component .ant-space,
+.ant-formily-layout .ant-formily-item-control-content-component .ant-form-text,
+.ant-input-number-disabled,
+.ant-select-disabled.ant-select:not(.ant-select-customize-input)
+  .ant-select-selector,
+.ant-picker-input > input[disabled] {
+  background-color: #f7f8f9 !important;
+  color: @textColor !important;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: left;
+  border-radius: 4px;
+}
+
+.ant-input-affix-wrapper-disabled {
+  border: none;
+  border-radius: 4px;
+}
+
+.ant-modal {
+  .ant-modal-header {
+    padding: 20px 20px 0px;
+    border-bottom: none;
+  }
+
+  .ant-modal-body {
+    padding: 24px 20px 0px;
+    .ant-formily-item-feedback-layout-loose {
+      margin-bottom: 24px;
+    }
+    .ant-formily-item-feedback-layout-loose:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  .ant-modal-footer {
+    padding: 24px 20px 20px;
+    border-top: none;
+  }
+  .ant-modal-confirm-btns {
+    padding: 0px 0px 20px 0px;
+    border-top: none;
+  }
+  .codeLayout {
+    display: flex;
+    align-items: center;
+    .ant-formily-item-feedback-layout-loose {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.tr-search {
+  .fr-field-object .fr-field {
+    padding-right: 16px !important;
+    .fr-item-wrapper button.mr {
+      margin-right: 8px;
+    }
+  }
+}
+.margin0 {
+  margin: 0;
+}
+.padding0 {
+  padding: 0;
+}
+
+.inputNumberWrapper {
+  position: relative;
+
+  :global {
+    margin-left: 0;
+  }
+}
+
+.inputNumberWrapper::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 100%;
+  background: #fff;
+  border-radius: 4px;
+  content: '';
+}
+
+.ant-pro-form-light-filter-container {
+  gap: 12px;
+}
+
+.marginBottomFormActionsHeight {
+  margin-bottom: @GlobalFormActionsHeight;
+}
+.custom-menu {
+  min-width: 160px;
+  padding-left: 0 !important;
+  .ant-menu-submenu-title {
+    padding-left: 0 !important;
+  }
+  .ant-menu-item-selected {
+    &::after {
+      border-right: 0 !important;
+    }
+  }
+  .ant-menu-title-content {
+    padding-left: 20px;
+  }
+  .custom_ant_menu_item {
+    padding-left: 0 !important;
+  }
+  &&& .ant-menu-item-selected {
+    color: @primary-color;
+    background-color: fade(@primary-color, 6);
+
+    &::after {
+      display: none;
+    }
+  }
+}
+.classFormilyCustomTitle {
+  font-size: 16px;
+  font-weight: 500;
+  color: @text-color;
+  display: flex;
+  &::before {
+    content: '';
+    display: block;
+    width: 4px;
+    background: @primary-color;
+    margin-right: 10px;
+  }
+}
+
+.warnRed {
+  color: @danger;
+}
+.chooseReport_search {
+  flex: none !important;
+}
+.margin0 {
+  margin: 0 !important;
+}
+.padding0 {
+  padding: 0 !important;
+}
+.flex_right {
+  width: calc(100% - 160px);
+  margin-left: 10px;
+  :global(.ant-collapse) {
+    border: none;
+  }
+}
+.emissionListModal {
+  background: red;
+  .ant-modal-content {
+    height: 430px;
+  }
+}
+.centerTable {
+  .ant-table table {
+    width: 100%;
+    overflow: auto !important;
+  }
+}
+.testStyle {
+  // font-weight: bolder;
+  color: @primary-color;
+  text-indent: 2em;
+  white-space: normal;
+  word-wrap: break-word; /* 或者使用 overflow-wrap: break-word; */
+}
+.testStyleLayout {
+  .ant-formily-item-colon {
+    display: none;
+  }
+}
+.textSpan {
+  color: @primary-color;
+  font-weight: bolder;
+}
+.reportTextSpan {
+  // width: 200px;
+  color: @primary-color;
+  text-align: right;
+  font-size: 14px;
+  font-weight: bolder;
+}
+.displayFlex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.row-active {
+  background-color: #e6fff6;
+  .ant-table-cell-fix-left-last,
+  .ant-table-cell-fix-left,
+  .ant-table-cell-fix-right-first {
+    background-color: #e6fff6;
+  }
+}
+
+.row-inactive {
+  background-color: #fff;
+  .ant-table-cell-fix-left-last,
+  .ant-table-cell-fix-left,
+  .ant-table-cell-fix-right-first {
+    background-color: #fff;
+  }
+}
+.textAlignRight {
+  text-align: right;
+}
+
+.primaryColor {
+  color: @primary-color;
+}
+
+.iconTip {
+  font-size: 12px;
+  margin-left: 2px;
+  position: relative;
+  top: -4px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+// 表头换行显示
+.ant-table-thead tr .ant-table-cell {
+  white-space: normal;
+}
+
+// formily表单项标题过长换行显示，去掉下划点线和提示
+.ant-formily-item .ant-formily-item-label-content {
+  white-space: normal;
+}
+.ant-formily-item .ant-formily-item-label-tooltip {
+  label {
+    border-bottom: none;
+  }
+}
+
+.generate-mr-classes(@n: 30, @i: 1) when (@i =< @n) {
+  .mr-@{i} {
+    margin-right: @i * 1px;
+  }
+  .ml-@{i} {
+    margin-left: @i * 1px;
+  }
+  .mt-@{i} {
+    margin-top: @i * 1px;
+  }
+  .mb-@{i} {
+    margin-bottom: @i * 1px;
+  }
+  .generate-mr-classes(@n, (@i + 1));
+}
+.generate-mr-classes();
+
+.gap(@n: 30, @i: 1) when (@i =< @n) {
+  .gap-@{i} {
+    gap: @i * 1px;
+  }
+  .gap(@n, (@i + 1));
+}
+.gap();
+
+.flex {
+  display: flex;
+}
+.flex-end {
+  justify-content: end;
+}
+.flex-center {
+  justify-content: center;
+}
+.flex-between {
+  justify-content: space-between;
+}
+.flex-around {
+  justify-content: space-around;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.flex-column {
+  flex-direction: column;
+}
+.align-center {
+  align-items: center;
+}
+.align-end {
+  align-items: end;
+}
+.align-start {
+  align-items: start;
+}
+.align-baseline {
+  align-items: baseline;
+}
+.self-end {
+  align-self: end;
+}
+.baseText16Color666 {
+  color: @text-color-2;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 157.143% */
+}
+.baseText12Color666 {
+  .baseText16Color666;
+  font-size: 12px;
+}
+.baseText12ColorBlack {
+  .baseText16Color666;
+  font-size: 12px;
+  color: @textColor2;
+}
+.baseTextFontWeightBold {
+  font-weight: bold;
+}
+
+/* 隐藏但保留位置（推荐用于图表等需要保持布局的元素） */
+.hidden-keep-space {
+  visibility: hidden;
+  pointer-events: none;
+}

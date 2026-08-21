@@ -1,0 +1,343 @@
+.wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: row;
+  width: 100%;
+  min-height: 100vh;
+  flex-shrink: 0;
+  padding-right: min(10vw, 120px);
+  background-color: #87c8f5;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.bgImage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  user-select: none;
+}
+
+.logoContainer {
+  position: absolute;
+  top: 60px;
+  left: 70px;
+
+  img {
+    width: 240px;
+    height: 49px;
+    flex-shrink: 0;
+    aspect-ratio: 240/49;
+  }
+}
+
+@media (max-height: 900px) {
+  .logoContainer {
+    top: 30px;
+    left: 35px;
+  }
+}
+
+.leftLogoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .loginBgItem {
+    width: 580px;
+    height: 580px;
+    flex-shrink: 0;
+  }
+
+  @media (max-height: 900px) {
+    .loginBgItem {
+      width: 500px;
+      height: 500px;
+    }
+  }
+}
+
+.mainContainer,
+.mainContainer * {
+  box-sizing: border-box;
+}
+
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 32px;
+  position: relative;
+  z-index: 1;
+  width: 452px;
+  padding: 48px;
+  background: #ffffff;
+  border-radius: 12px;
+  backdrop-filter: blur(50px);
+}
+
+.backLoginBtn {
+  padding: 0;
+  color: #000 !important;
+  justify-content: flex-end;
+  min-width: 220px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-shrink: 0;
+  position: relative;
+  width: 100%;
+}
+
+.headerTitleRow {
+  display: flex;
+  align-items: center;
+}
+.createAccount {
+  color: #ff6b00;
+  font-family: Gotham-Bold;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 40px; /* 125% */
+}
+.logo {
+  width: 204px;
+  height: 41px;
+  aspect-ratio: 204/41;
+}
+.frame {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  gap: 4px;
+  position: relative;
+  width: 372px;
+  height: 48px;
+  padding: 4px 4px 4px 4px;
+  background: #f7f8f9;
+  border-radius: 8px;
+}
+.buttonBase1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex-wrap: nowrap;
+  flex-grow: 1;
+  flex-shrink: 0;
+  flex-basis: 0;
+  gap: 12px;
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  padding: 12px 12px 12px 12px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.passwordLogin {
+  flex-shrink: 0;
+  flex-basis: auto;
+  position: relative;
+  height: 22px;
+  color: #04252b;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.frame2 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  position: relative;
+  width: 356px;
+}
+
+.inputLabel5 {
+  width: 356px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  align-self: stretch;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  position: relative;
+  min-width: 0;
+  height: 44px;
+  padding: 12px 16px;
+  border: 1px solid #d5d7da;
+  border-radius: 8px;
+  box-sizing: border-box;
+
+  :global(.ant-input),
+  :global(.ant-input-affix-wrapper) {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  :global(.ant-input-affix-wrapper) {
+    padding: 0;
+  }
+}
+
+.inputWithNote {
+  position: relative;
+  width: 356px;
+
+  .inputLabel5 {
+    width: 100%;
+  }
+}
+
+.inputNote {
+  position: absolute;
+  top: 50%;
+  right: -28px;
+  transform: translateY(-50%);
+  line-height: 1;
+}
+.frame6 {
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  position: relative;
+  width: 356px;
+}
+
+.frame7 {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  gap: 8px;
+  position: relative;
+  width: 70px;
+}
+.terms {
+  flex-shrink: 0;
+  flex-basis: auto;
+  position: relative;
+  height: 22px;
+  color: #000;
+
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  text-align: left;
+  white-space: nowrap;
+}
+.terms:hover,
+.forgotPassword:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+.forgotPassword {
+  flex-shrink: 0;
+  flex-basis: auto;
+  position: relative;
+  height: 22px;
+  color: #000;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  text-align: left;
+  white-space: nowrap;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  position: relative;
+  width: 100%;
+
+  :global(.ant-form-item) {
+    margin-bottom: 0px;
+  }
+
+  :global(.ant-form-item:last-child) {
+    margin-bottom: 0;
+  }
+}
+.emailCode {
+  position: relative;
+  .getEmailCode {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    z-index: 11;
+    color: @primary-color;
+    font-size: 15px;
+    border: none;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+}
+.mainButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  gap: 8px;
+  position: relative;
+  min-width: 0;
+  width: 100%;
+  height: 48px;
+  padding: 12px 20px 12px 20px;
+  background: #ff4d00;
+  overflow: hidden;
+  border-radius: 8px;
+}
+.text8 {
+  flex-shrink: 0;
+  flex-basis: auto;
+  position: relative;
+  height: 24px;
+  color: #ffffff;
+
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.selectLangBox {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}

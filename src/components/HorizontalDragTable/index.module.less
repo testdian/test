@@ -1,0 +1,43 @@
+.wrap {
+  width: 100%;
+  max-width: 100%;
+
+  &.wrapDragging :global(.ant-table-content),
+  &.wrapDragging :global(.ant-table-body) {
+    cursor: grabbing;
+    user-select: none;
+  }
+}
+
+.table {
+  :global(.ant-table-content),
+  :global(.ant-table-body) {
+    cursor: grab;
+  }
+
+  :global(.ant-table-thead > tr > th) {
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.4;
+    vertical-align: middle;
+    overflow: visible;
+    background: #fafafa;
+  }
+
+  :global(.ant-table-tbody > tr > td) {
+    white-space: nowrap;
+  }
+
+  :global(.ant-table-thead > tr > th.ant-table-cell-fix-left),
+  :global(.ant-table-tbody > tr > td.ant-table-cell-fix-left) {
+    z-index: 3;
+  }
+
+  :global(.ant-table-tbody > tr > td.ant-table-cell-fix-left) {
+    background: #fff;
+  }
+}
+
+.wrapDragging {
+  /* used via styles.wrapDragging on .wrap */
+}

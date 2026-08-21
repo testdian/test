@@ -1,0 +1,64 @@
+@import url('@styles/var.less');
+
+.dataManageWrapper {
+  .header {
+    .section {
+      height: 100%;
+      padding: 16px;
+      background: var(--fill-gray-1-bghover, #f7f8f9);
+      border-radius: 4px;
+
+      .fileTips {
+        margin-bottom: 16px;
+        color: var(--text-gray-8-primary, #343a40);
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 22px;
+      }
+
+      .fileListBack {
+        display: flex;
+        align-items: center;
+
+        .fileListBackFile {
+          max-width: 238px;
+
+          .fileIcon {
+            margin-right: 4px;
+            color: #22bbe6;
+            font-size: 16px;
+          }
+
+          .fileName {
+            width: calc(100% - 20px);
+          }
+        }
+
+        .uploadWrapper {
+          margin-left: 16px;
+
+          .upload {
+            margin-right: 16px;
+          }
+        }
+      }
+    }
+  }
+
+  .fillTable {
+    margin-top: 24px;
+    position: relative;
+
+    .fillTableHeader {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 8px;
+    }
+
+    :global {
+      .ant-pro-card-body {
+        padding-inline: 0;
+      }
+    }
+  }
+}
