@@ -1,0 +1,1 @@
+import{a,m as o,e}from"./SchemaField-11c6a0d2.js";import"./index-6db3c538.js";import{P as t}from"./index-89626957.js";import{R as r}from"./index-e10cb682.js";var p=a(r,o({value:"checked",onInput:"onChange"})),i=a(r.Group,o({dataSource:"options"}),e(t.Select)),u=Object.assign(p,{__ANT_RADIO:!0,Group:i});export{u as R};

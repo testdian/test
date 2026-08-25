@@ -1,0 +1,1 @@
+import{eX as t,eY as u,eZ as c}from"./index-6db3c538.js";function r(e=t){const o=e===t?u:c(e);return function(){const{store:s}=o();return s}}const a=r();function i(e=t){const o=e===t?a:r(e);return function(){return o().dispatch}}const p=i();export{p as u};

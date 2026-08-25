@@ -1,1 +1,0 @@
-import{u as s,j as t,k as r,B as o,D as a}from"./index-7d109af7.js";import{R as u}from"./index-6bb339e2.js";function m(){const e=s();return t.jsx(u,{status:"404",title:"404",subTitle:r.error.theSystemPromptsYou2,extra:t.jsx(o,{type:"primary",onClick:()=>{e(a.home,{replace:!0})},children:r.error.returnToHomepage})})}export{m as default};

@@ -1,0 +1,1 @@
+import{r as s}from"./index-6db3c538.js";const l=()=>{const[r,e]=s.useState(!1),t=s.useCallback(()=>{e(!0)},[]),a=s.useCallback(()=>{e(!1)},[]);return{visible:r,showDrawer:t,onClose:a}};export{l as u};

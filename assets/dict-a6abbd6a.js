@@ -1,0 +1,1 @@
+import{r as s}from"./index-6db3c538.js";import{l as c}from"./systemV2ApiDocs-1c83302e.js";const i=t=>{const[o,r]=s.useState();return s.useEffect(()=>{t&&c({dictTypes:t}).then(({data:e})=>{r(e==null?void 0:e.data)})},[location.pathname,t]),o};export{i as u};

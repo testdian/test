@@ -1,1 +1,0 @@
-import{r as t}from"./index-7d109af7.js";import{b as m}from"./systemV2ApiDocs-9fc22354.js";const l=()=>{const[o,r]=t.useState([]);return t.useEffect(()=>{m({pageNum:1,pageSize:99999}).then(({data:e})=>{var s;r(((s=e==null?void 0:e.data)==null?void 0:s.list)||[])})},[]),o};export{l as u};
