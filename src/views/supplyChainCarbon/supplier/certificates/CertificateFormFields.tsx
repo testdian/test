@@ -19,16 +19,24 @@ import {
 type CertificateFormFieldsProps = {
   form: FormInstance<CertificateFormValues>;
   readOnly?: boolean;
+  showVersion?: boolean;
 };
 
 export function CertificateFormFields({
   form,
   readOnly = false,
+  showVersion = false,
 }: CertificateFormFieldsProps) {
   const categoryKind = Form.useWatch('category_kind', form);
 
   return (
     <>
+      {showVersion && (
+        <Form.Item name='version' label='版本号'>
+          <Input disabled />
+        </Form.Item>
+      )}
+
       <Form.Item
         name='category_kind'
         label={

@@ -11,6 +11,7 @@ export interface ExpiryInfo {
   level: 'expired' | 'soon' | 'valid';
   days: number;
   className: string;
+  color: 'error' | 'warning' | 'success';
 }
 
 export interface ExpiryNotification {
@@ -37,6 +38,7 @@ export function getExpiryInfo(date: string): ExpiryInfo {
       level: 'expired',
       days,
       className: STATUS_BADGE.danger,
+      color: 'error',
     };
   }
   if (days <= EXPIRY_SOON_DAYS) {
@@ -45,6 +47,7 @@ export function getExpiryInfo(date: string): ExpiryInfo {
       level: 'soon',
       days,
       className: STATUS_BADGE.warning,
+      color: 'warning',
     };
   }
   return {
@@ -52,6 +55,7 @@ export function getExpiryInfo(date: string): ExpiryInfo {
     level: 'valid',
     days,
     className: STATUS_BADGE.success,
+    color: 'success',
   };
 }
 

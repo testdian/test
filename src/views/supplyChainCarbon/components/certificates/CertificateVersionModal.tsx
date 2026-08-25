@@ -1,10 +1,10 @@
 /**
  * @description 证书版本历史弹窗（管理端 / 供应商端共用）
  */
-import { Modal, Table } from 'antd';
+import { Button, Modal, Space, Table, message } from 'antd';
 
 import { ModifyNote } from '@/components/ModifyNote';
-import { attachmentSummary } from '@/views/supplyChainCarbon/data/cert-attachments';
+import { downloadCertificateAttachment } from '@/views/supplyChainCarbon/data/cert-attachments';
 import type { CarbonCertificate } from '@/views/supplyChainCarbon/data/demo-data';
 import { SUPPLIER_CERT_VERSION_NOTE } from '@/views/supplyChainCarbon/supplier/certificates/certificate-form';
 import { formatDate } from '@/views/supplyChainCarbon/utils';
@@ -31,7 +31,7 @@ export function CertificateVersionModal({
       open={open}
       footer={null}
       onCancel={onClose}
-      width={720}
+      width={820}
       destroyOnClose
     >
       {cert ? (
@@ -55,7 +55,33 @@ export function CertificateVersionModal({
             },
             {
               title: '附件',
-              render: (_, record) => attachmentSummary(record.attachments),
+              width: 220,
+              render: (_, record) =>
+                record.attachments?.length ? (
+                  <Space direction='vertical' size={0}>
+                    {record.attachments.map(attachment => (
+                      <Button
+                        key={attachment.id}
+                        type='link'
+                        style={{ height: 'auto', padding: 0 }}
+                        onClick={async () => {
+                          try {
+                            await downloadCertificateAttachment(
+                              attachment,
+                              cert,
+                            );
+                          } catch {
+                            message.error('附件下载失败，请稍后重试');
+                          }
+                        }}
+                      >
+                        {attachment.name}
+                      </Button>
+                    ))}
+                  </Space>
+                ) : (
+                  '-'
+                ),
             },
           ]}
         />

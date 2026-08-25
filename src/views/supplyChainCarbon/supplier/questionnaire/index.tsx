@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { Page } from '@/components/Page';
 import { TableActions } from '@/components/Table/TableActions';
 import { SupplyChainSupplierRouteMaps } from '@/router/utils/supplyChainSupplierEnums';
-import { FormFieldPreview } from '@/views/supplyChainCarbon/components/FormFieldPreview';
+import { QuestionnaireFormPreview } from '@/views/supplyChainCarbon/components/QuestionnaireFormPreview';
 import { StatusTag } from '@/views/supplyChainCarbon/components/StatusTag';
 import {
   questionnaireDetail,
@@ -65,8 +65,15 @@ export default function SupplierQuestionnairePage() {
       .sort((a, b) => b.id - a.id);
   }, [data.questionnaires, supplierId, applied]);
 
-  const { paginatedItems, currentPage, pageSize, total, setCurrentPage, onPageSizeChange, resetPage } =
-    usePagination(questionnaires);
+  const {
+    paginatedItems,
+    currentPage,
+    pageSize,
+    total,
+    setCurrentPage,
+    onPageSizeChange,
+    resetPage,
+  } = usePagination(questionnaires);
 
   const viewDetail = useMemo(() => {
     if (viewTarget == null) return null;
@@ -170,7 +177,10 @@ export default function SupplierQuestionnairePage() {
             dataIndex: 'status',
             width: 100,
             render: s => (
-              <StatusTag status={s} map={SUPPLIER_QUESTIONNAIRE_STATUS_BADGES} />
+              <StatusTag
+                status={s}
+                map={SUPPLIER_QUESTIONNAIRE_STATUS_BADGES}
+              />
             ),
           },
           {
@@ -227,38 +237,21 @@ export default function SupplierQuestionnairePage() {
         open={viewTarget != null}
         onCancel={() => setViewTarget(null)}
         footer={null}
-        width={720}
+        width={880}
       >
-            {viewDetail && (
-          <>
-            <p style={{ color: 'rgba(0,0,0,0.65)' }}>
-              {viewDetail.description || '暂无任务说明'}
-            </p>
-            <FormFieldPreview
+        {viewDetail && (
+          <div className={styles.fieldEditorPreview}>
+            <QuestionnaireFormPreview
+              title={viewDetail.name}
+              organization={viewDetail.organization}
+              deadline={formatDate(viewDetail.deadline)}
+              description={viewDetail.description}
               fields={viewDetail.form_fields}
-              sections={
-                viewDetail.form_sections?.length
-                  ? viewDetail.form_sections.map(section => ({
-                      ...section,
-                      fields: viewDetail.form_fields.filter(
-                        field => field.sectionId === section.id,
-                      ),
-                    }))
-                  : undefined
-              }
+              sections={viewDetail.form_sections}
+              values={viewAnswers}
+              disabled
             />
-            {Object.keys(viewAnswers).length > 0 && (
-              <div style={{ marginTop: 16 }}>
-                <div style={{ fontWeight: 500, marginBottom: 8 }}>已提交内容</div>
-                {Object.entries(viewAnswers).map(([code, value]) => (
-                  <div key={code} style={{ marginBottom: 8 }}>
-                    <span style={{ color: 'rgba(0,0,0,0.45)' }}>{code}：</span>
-                    {String(value)}
-                  </div>
-                ))}
-              </div>
-            )}
-          </>
+          </div>
         )}
       </Modal>
     </Page>

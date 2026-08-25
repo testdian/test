@@ -23,7 +23,7 @@ import { FormLabelWithNote, ModifyNote } from '@/components/ModifyNote';
 import { useOrgTreeData } from '@/hooks/useOrgTreeData';
 import type { OrgTree } from '@/hooks/useOrgTreeData/type';
 import { SupplyChainRefRouteMaps } from '@/router/utils/supplyChainRefEnums';
-import { FormFieldInputs } from '@/views/supplyChainCarbon/components/FormFieldInputs';
+import { QuestionnaireFormPreview } from '@/views/supplyChainCarbon/components/QuestionnaireFormPreview';
 import { normalizeFormTemplate } from '@/views/supplyChainCarbon/data/demo-data';
 import {
   publishQuestionnaire,
@@ -474,52 +474,19 @@ export default function QuestionnaireCreatePage() {
               可填写体验，不会保存
             </div>
             <div className={styles.fieldEditorPreview}>
-              {previewFields.length === 0 ? (
-                <div className={styles.fieldEditorPreviewEmpty}>
-                  请选择表单模板后预览填报字段
-                </div>
-              ) : (
-                <>
-                  <div className={styles.questionnairePreviewTitle}>
-                    {watchedBasic?.name?.trim() || '-'}
-                  </div>
-                  <div className={styles.questionnairePreviewMeta}>
-                    <div className={styles.questionnairePreviewMetaRow}>
-                      <span className={styles.questionnairePreviewMetaLabel}>
-                        所属组织
-                      </span>
-                      <span className={styles.questionnairePreviewMetaValue}>
-                        {watchedBasic?.organization || '-'}
-                      </span>
-                    </div>
-                    <div className={styles.questionnairePreviewMetaRow}>
-                      <span className={styles.questionnairePreviewMetaLabel}>
-                        截止日期
-                      </span>
-                      <span className={styles.questionnairePreviewMetaValue}>
-                        {previewDeadline}
-                      </span>
-                    </div>
-                  </div>
-                  <div className={styles.questionnairePreviewDescription}>
-                    <div className={styles.questionnairePreviewMetaLabel}>
-                      任务说明
-                    </div>
-                    <div className={styles.questionnairePreviewDescriptionText}>
-                      {watchedBasic?.description?.trim() || '-'}
-                    </div>
-                  </div>
-                  <FormFieldInputs
-                    fields={previewFields}
-                    sections={previewSections}
-                    values={previewValues}
-                    labelInline
-                    onChange={(code, value) =>
-                      setPreviewValues(prev => ({ ...prev, [code]: value }))
-                    }
-                  />
-                </>
-              )}
+              <QuestionnaireFormPreview
+                title={watchedBasic?.name?.trim() || '-'}
+                organization={watchedBasic?.organization}
+                deadline={previewDeadline}
+                description={watchedBasic?.description}
+                fields={previewFields}
+                sections={previewSections}
+                values={previewValues}
+                emptyText='请选择表单模板后预览填报字段'
+                onChange={(code, value) =>
+                  setPreviewValues(prev => ({ ...prev, [code]: value }))
+                }
+              />
             </div>
           </div>
         </div>

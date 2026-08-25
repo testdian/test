@@ -29,6 +29,10 @@ function normalizePlanStatus(status: ReductionPlanStatus): ReductionPlanStatus {
   return status === 'draft' ? 'to_fill' : status;
 }
 
+function planUpdatedAt(plan: PlanWithSupplier) {
+  return plan.updated_at || plan.reviewed_at || plan.submitted_at || plan.created_at;
+}
+
 const SUPPLIER_PLAN_PAGE_NOTE =
   '当减排目标确认接收或修改后，则供应商端自动生成1-12月的减排计划，初始状态均为待填报。';
 
@@ -97,18 +101,28 @@ export default function SupplierPlansPage() {
 
   const plans = useMemo(() => {
     if (supplierId <= 0) return [];
-    return listPlans(data, { supplier_id: supplierId }).filter(plan => {
-      if (
-        applied.planName &&
-        !plan.plan_name.toLowerCase().includes(applied.planName.toLowerCase())
-      ) {
-        return false;
-      }
-      if (applied.status !== 'all' && normalizePlanStatus(plan.status) !== applied.status) {
-        return false;
-      }
-      return true;
-    });
+    return listPlans(data, { supplier_id: supplierId })
+      .filter(plan => {
+        if (
+          applied.planName &&
+          !plan.plan_name.toLowerCase().includes(applied.planName.toLowerCase())
+        ) {
+          return false;
+        }
+        if (
+          applied.status !== 'all' &&
+          normalizePlanStatus(plan.status) !== applied.status
+        ) {
+          return false;
+        }
+        return true;
+      })
+      .sort((a, b) => {
+        const timeDiff =
+          new Date(planUpdatedAt(b)).getTime() -
+          new Date(planUpdatedAt(a)).getTime();
+        return timeDiff || b.id - a.id;
+      });
   }, [data, supplierId, applied]);
 
   const { paginatedItems, currentPage, pageSize, total, setCurrentPage, onPageSizeChange, resetPage } =
@@ -209,10 +223,9 @@ export default function SupplierPlansPage() {
             ),
           },
           {
-            title: '提交时间',
-            dataIndex: 'submitted_at',
+            title: '更新时间',
             width: 120,
-            render: v => formatDate(v),
+            render: (_, record) => formatDate(planUpdatedAt(record)),
           },
           {
             title: (

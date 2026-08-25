@@ -79,6 +79,7 @@ export interface DemoReductionPlan {
   submitted_at?: string | null;
   reviewed_at?: string | null;
   created_at: string;
+  updated_at?: string;
 }
 
 export interface DemoProgressReport {
@@ -567,7 +568,13 @@ export function reviewReductionPlan(
     ...data,
     reductionPlans: data.reductionPlans.map(plan =>
       plan.id === planId
-        ? { ...plan, status, review_comment, reviewed_at: reviewedAt }
+        ? {
+            ...plan,
+            status,
+            review_comment,
+            reviewed_at: reviewedAt,
+            updated_at: reviewedAt,
+          }
         : plan,
     ),
   };
@@ -588,10 +595,13 @@ export function updateReductionPlan(
     Omit<DemoReductionPlan, 'id' | 'created_at' | 'supplier_id'>
   >,
 ): DemoData {
+  const updatedAt = new Date().toISOString().slice(0, 10);
   return {
     ...data,
     reductionPlans: data.reductionPlans.map(plan =>
-      plan.id === planId ? { ...plan, ...payload } : plan,
+      plan.id === planId
+        ? { ...plan, ...payload, updated_at: updatedAt }
+        : plan,
     ),
   };
 }
@@ -636,12 +646,18 @@ export function addReductionPlan(
   payload: Omit<DemoReductionPlan, 'id' | 'created_at'>,
 ): DemoData {
   const id = data.nextId.reductionPlan ?? data.reductionPlans.length + 1;
+  const createdAt = new Date().toISOString().slice(0, 10);
   return {
     ...data,
     nextId: { ...data.nextId, reductionPlan: id + 1 },
     reductionPlans: [
       ...data.reductionPlans,
-      { ...payload, id, created_at: new Date().toISOString().slice(0, 10) },
+      {
+        ...payload,
+        id,
+        created_at: createdAt,
+        updated_at: payload.updated_at || createdAt,
+      },
     ],
   };
 }

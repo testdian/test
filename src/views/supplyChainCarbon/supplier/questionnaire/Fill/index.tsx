@@ -1,14 +1,14 @@
 /**
  * @description 供应商 - 调研填报
  */
-import { Form, message } from 'antd';
+import { message } from 'antd';
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { FormActions } from '@/components/FormActions';
 import { Page } from '@/components/Page';
 import { SupplyChainSupplierRouteMaps } from '@/router/utils/supplyChainSupplierEnums';
-import { FormFieldInputs } from '@/views/supplyChainCarbon/components/FormFieldInputs';
+import { QuestionnaireFormPreview } from '@/views/supplyChainCarbon/components/QuestionnaireFormPreview';
 import {
   getQuestionnaireFields,
   resolveQuestionnaireStatus,
@@ -91,40 +91,21 @@ export default function SupplierQuestionnaireFillPage() {
   return (
     <Page title='专属数据填报' wrapperClass='marginBottomFormActionsHeight'>
       <div className={styles.pageSection}>
-        <div className={styles.sectionTitle}>{questionnaire.name}</div>
-        {questionnaire.description && (
-          <p className={styles.formHint}>{questionnaire.description}</p>
-        )}
-        <div className={styles.detailGrid} style={{ marginBottom: 24 }}>
-          <div className={styles.detailItem}>
-            <span className={styles.detailLabel}>所属组织</span>
-            <span className={styles.detailValue}>
-              {questionnaire.organization || '-'}
-            </span>
-          </div>
-          <div className={styles.detailItem}>
-            <span className={styles.detailLabel}>截止日期</span>
-            <span className={styles.detailValue}>
-              {formatDate(questionnaire.deadline)}
-            </span>
-          </div>
+        <div className={styles.fieldEditorPreview}>
+          <QuestionnaireFormPreview
+            title={questionnaire.name}
+            organization={questionnaire.organization}
+            deadline={formatDate(questionnaire.deadline)}
+            description={questionnaire.description}
+            fields={fields}
+            sections={questionnaire.form_sections}
+            values={values}
+            emptyText='请联系企业管理员配置专属表单模板。'
+            onChange={(code, value) =>
+              setValues(prev => ({ ...prev, [code]: value }))
+            }
+          />
         </div>
-
-        {fields.length === 0 ? (
-          <p style={{ color: 'rgba(0,0,0,0.45)' }}>
-            请联系企业管理员配置专属表单模板。
-          </p>
-        ) : (
-          <Form layout='vertical'>
-            <FormFieldInputs
-              fields={fields}
-              values={values}
-              onChange={(code, value) =>
-                setValues(prev => ({ ...prev, [code]: value }))
-              }
-            />
-          </Form>
-        )}
       </div>
 
       <FormActions

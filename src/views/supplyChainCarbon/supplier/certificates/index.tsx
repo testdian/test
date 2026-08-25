@@ -24,6 +24,7 @@ import {
   certToFormValues,
   createCertificateRecord,
   matchCertCategoryFilter,
+  persistCertificateAttachmentFiles,
   resolveCertCategory,
   SUPPLIER_CERT_FORM_NOTE,
   type CertificateFormValues,
@@ -122,7 +123,10 @@ export default function SupplierCertificatesPage() {
 
   const openEditModal = (cert: CarbonCertificate) => {
     setActiveCert(cert);
-    form.setFieldsValue(certToFormValues(cert));
+    form.setFieldsValue({
+      ...certToFormValues(cert),
+      version: `v${cert.version + 1}`,
+    });
     setModalMode('edit');
   };
 
@@ -143,6 +147,7 @@ export default function SupplierCertificatesPage() {
 
     setSubmitting(true);
     try {
+      await persistCertificateAttachmentFiles(values.attachments);
       const today = new Date().toISOString().slice(0, 10);
       const payload = buildCertPayload(values, supplierId, certCategory);
 
@@ -258,7 +263,7 @@ export default function SupplierCertificatesPage() {
             width: 110,
             render: (_, record) => {
               const info = getExpiryInfo(record.expired_at);
-              return <Tag className={info.className}>{info.label}</Tag>;
+              return <Tag color={info.color}>{info.label}</Tag>;
             },
           },
           {
@@ -318,7 +323,11 @@ export default function SupplierCertificatesPage() {
         destroyOnClose
       >
         <Form form={form} layout='vertical'>
-          <CertificateFormFields form={form} readOnly={false} />
+          <CertificateFormFields
+            form={form}
+            readOnly={false}
+            showVersion={modalMode === 'edit'}
+          />
         </Form>
       </Modal>
 

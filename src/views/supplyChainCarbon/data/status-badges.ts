@@ -24,7 +24,7 @@ export function statusBadge(
 export const PLAN_STATUS_BADGES: Record<string, StatusBadgeConfig> = {
   to_fill: statusBadge('warning', '待填报'),
   draft: statusBadge('warning', '待填报'),
-  pending: statusBadge('warning', '待审核'),
+  pending: statusBadge('info', '待审核'),
   approved: statusBadge('success', '已通过'),
   rejected: statusBadge('danger', '已驳回'),
 };

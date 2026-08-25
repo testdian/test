@@ -79,7 +79,7 @@ export default function CertificatesPage() {
         .join(','),
     );
     const csv = [
-      '供应商,证书类别,证书编号,签发机构,有效期至,有效期状态,附件,版本',
+      '供应商名称,证书类别,证书编号,签发机构,有效期至,有效期状态,附件,版本',
       ...rows,
     ].join('\n');
     const blob = new Blob([`\ufeff${csv}`], { type: 'text/csv;charset=utf-8' });
@@ -157,7 +157,7 @@ export default function CertificatesPage() {
         }}
         columns={[
           {
-            title: '供应商',
+            title: '供应商名称',
             dataIndex: 'supplier_id',
             width: 160,
             ellipsis: true,
@@ -191,7 +191,7 @@ export default function CertificatesPage() {
             width: 110,
             render: (_, record) => {
               const info = getExpiryInfo(record.expired_at);
-              return <Tag className={info.className}>{info.label}</Tag>;
+              return <Tag color={info.color}>{info.label}</Tag>;
             },
           },
           {
