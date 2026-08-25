@@ -1,1 +1,0 @@
-import{a7 as e}from"./index-cdb5e2d8.js";const s=t=>e({method:"GET",url:"/system/audit/page",params:t}),i=t=>e({method:"POST",url:"/system/audit/add",data:t}),u=t=>e({method:"POST",url:"/system/audit/edit",data:t}),o=t=>e({method:"GET",url:`/system/audit/detail/${t==null?void 0:t.auditType}`,params:t});export{u as a,s as b,o as g,i as p};

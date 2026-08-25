@@ -1,0 +1,1 @@
+import{j as a}from"./index-d2d8b863.js";import{T as m}from"./index-c8e05a38.js";const t=({text:s,color:r})=>!s||s==="-"?a.jsx("div",{children:"-"}):a.jsx(m,{className:`customTag customTag-${r}`,color:r,children:s});export{t as C};

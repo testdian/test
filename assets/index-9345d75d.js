@@ -1,1 +1,0 @@
-import{j as c,B as r,k as s}from"./index-cdb5e2d8.js";const u=({isView:i,onCancel:t,onOk:o,cancelText:e=s.Factors.cancel,okText:n=s.base.confirm,closeText:l=s.utils.close,defaultShowOk:a=!0})=>i?[c.jsx(r,{onClick:t,children:l},"cancel")]:[c.jsx(r,{onClick:t,children:e},"cancel"),a&&c.jsx(r,{type:"primary",onClick:o,children:n},"submit")];export{u as M};

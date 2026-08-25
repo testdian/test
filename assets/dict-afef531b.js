@@ -1,1 +1,0 @@
-import{r as s}from"./index-cdb5e2d8.js";import{l as c}from"./systemV2ApiDocs-953fc4ea.js";const i=t=>{const[o,r]=s.useState();return s.useEffect(()=>{t&&c({dictTypes:t}).then(({data:e})=>{r(e==null?void 0:e.data)})},[location.pathname,t]),o};export{i as u};
