@@ -32,6 +32,7 @@
     "form-render": "^2.5.1",
     "html2canvas": "^1.4.1",
     "jsencrypt": "^3.3.2",
+    "jszip": "3.10.1",
     "kiwi-clis": "^1.1.0",
     "kiwi-intl": "^1.2.6-beta.0",
     "lodash-es": "^4.17.21",

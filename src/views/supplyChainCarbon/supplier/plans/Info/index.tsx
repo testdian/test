@@ -10,14 +10,17 @@ import { ModifyNote } from '@/components/ModifyNote';
 import { Page } from '@/components/Page';
 import { SupplyChainSupplierRouteMaps } from '@/router/utils/supplyChainSupplierEnums';
 import { StatusTag } from '@/views/supplyChainCarbon/components/StatusTag';
-import { enrichPlan } from '@/views/supplyChainCarbon/data/demo-supply-chain';
+import {
+  enrichPlan,
+  formatTargetEmission,
+} from '@/views/supplyChainCarbon/data/demo-supply-chain';
 import { PLAN_STATUS_BADGES } from '@/views/supplyChainCarbon/data/status-badges';
 import { useDemoStore } from '@/views/supplyChainCarbon/hooks/useDemoStore';
 import { useUserRole } from '@/views/supplyChainCarbon/hooks/useUserRole';
 import styles from '@/views/supplyChainCarbon/styles.module.less';
 
-import { planToFormValues, SUPPLIER_PLAN_FORM_NOTE } from '../plan-form';
 import { SupplierPlanFormFields } from '../SupplierPlanFormFields';
+import { planToFormValues, SUPPLIER_PLAN_FORM_NOTE } from '../plan-form';
 
 export default function SupplierPlanInfoPage() {
   const { id } = useParams<{ id: string }>();
@@ -59,12 +62,18 @@ export default function SupplierPlanInfoPage() {
       </div>
 
       <div className={`${styles.formPage} ${styles.formReadOnly}`}>
-        <Form form={form} layout='vertical' disabled initialValues={planToFormValues(plan)}>
+        <Form
+          form={form}
+          layout='vertical'
+          disabled
+          initialValues={planToFormValues(plan)}
+        >
           <SupplierPlanFormFields
             form={form}
-            targetValue={plan.reduction_targets?.target_value || '-'}
+            targetEmission={formatTargetEmission(plan.reduction_targets)}
             targetYear={plan.reduction_targets?.baseline_year}
             reductionMonth={plan.reduction_month}
+            supplierName={plan.suppliers?.name}
             readOnly
           />
         </Form>

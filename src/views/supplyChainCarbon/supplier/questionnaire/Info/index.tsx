@@ -1,33 +1,37 @@
 /**
- * @description 管理员端 - 调研填报任务详情
+ * @description 供应商 - 调研填报任务详情
  */
 import { useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { FormActions } from '@/components/FormActions';
 import { Page } from '@/components/Page';
-import { SupplyChainRefRouteMaps } from '@/router/utils/supplyChainRefEnums';
+import { SupplyChainSupplierRouteMaps } from '@/router/utils/supplyChainSupplierEnums';
 import { QuestionnaireFormPreview } from '@/views/supplyChainCarbon/components/QuestionnaireFormPreview';
 import { getQuestionnaireFields } from '@/views/supplyChainCarbon/data/demo-questionnaires';
 import { useDemoStore } from '@/views/supplyChainCarbon/hooks/useDemoStore';
+import { useUserRole } from '@/views/supplyChainCarbon/hooks/useUserRole';
 import styles from '@/views/supplyChainCarbon/styles.module.less';
 import { formatDate } from '@/views/supplyChainCarbon/utils';
 
-export default function QuestionnaireDetailPage() {
+export default function SupplierQuestionnaireInfoPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const questionnaireId = Number(id);
+  const { supplierId, isLoaded } = useUserRole();
   const { data, ready } = useDemoStore();
 
   const questionnaire = data.questionnaires.find(
-    item => item.id === questionnaireId,
+    item =>
+      item.id === questionnaireId && item.supplier_ids.includes(supplierId),
   );
   const fields = useMemo(
     () => (questionnaire ? getQuestionnaireFields(data, questionnaire) : []),
     [data, questionnaire],
   );
+  const values = questionnaire?.supplier_answers?.[supplierId] || {};
 
-  if (!ready) return null;
+  if (!isLoaded || !ready) return null;
 
   if (!questionnaire) {
     return (
@@ -50,8 +54,8 @@ export default function QuestionnaireDetailPage() {
             description={questionnaire.description}
             fields={fields}
             sections={questionnaire.form_sections}
-            values={{}}
-            emptyText='请配置调研任务的专属表单模板。'
+            values={values}
+            emptyText='请联系企业管理员配置专属表单模板。'
             disabled
           />
         </div>
@@ -63,7 +67,7 @@ export default function QuestionnaireDetailPage() {
           {
             title: '返回',
             onClick: async () =>
-              navigate(SupplyChainRefRouteMaps.questionnaire),
+              navigate(SupplyChainSupplierRouteMaps.questionnaire),
           },
         ]}
       />

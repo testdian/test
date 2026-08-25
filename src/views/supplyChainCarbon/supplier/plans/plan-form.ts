@@ -4,7 +4,7 @@ import type {
 } from '@/views/supplyChainCarbon/data/demo-supply-chain';
 
 export const SUPPLIER_PLAN_FORM_NOTE =
-  '编辑、查看页面字段：目标值、目标年度、本月是否减排、当月实际排放量（tCO2e）、减排方案名称、减排类别、减排月份、减排措施、当月减排量（tCO2e）。目标值、目标年度关联减排目标，自动代入；本月是否减排，下拉选项，枚举值：是、否，如选择否，则需输入当月实际排放量（tCO2e），数值框，必填，需大于0；如选择是，则展示当月实际排放量（tCO2e）、减排方案名称、减排类别、减排月份、减排措施、当月减排量（tCO2e）这些字段：当月实际排放量（tCO2e），数值框，必填，需大于0；减排方案名称，必填，文本框，不超过100个字符；减排类别：单选框，枚举值：组织碳、产品碳；减排月份：自动代入外侧列表月份，不可编辑；减排措施：必填，文本框，不超过1000个字符；当月减排量（tCO2e），数值框，必填。';
+  '减排计划按目标中的减排类别和月份分别生成，计划所属减排类别固定不可切换。组织碳分别展示范围一、范围二的当月实际排放量和当月减排量；产品碳仅展示当月实际产品碳足迹。供应商填报页、查看页与管理员计划审核页使用同一字段布局。';
 
 export const MAX_PLAN_NAME_LENGTH = 100;
 export const MAX_PLAN_MEASURES_LENGTH = 1000;
@@ -14,11 +14,22 @@ export type ReduceThisMonth = 'yes' | 'no';
 export type SupplierPlanFormValues = {
   reduce_this_month?: ReduceThisMonth;
   actual_emission?: number;
+  scope1_actual_emission?: number;
+  scope1_monthly_reduction?: number;
+  scope2_actual_emission?: number;
+  scope2_monthly_reduction?: number;
+  actual_product_footprint?: number;
   plan_name?: string;
   reduction_category?: ReductionCategory;
   reduction_month?: number;
   measures?: string;
   monthly_reduction?: number;
+};
+
+type PlanFormSource = DemoReductionPlan & {
+  reduction_targets?: {
+    categories?: ReductionCategory[];
+  };
 };
 
 export const REDUCE_THIS_MONTH_OPTIONS = [
@@ -50,7 +61,10 @@ export function inferReduceThisMonth(
     plan.plan_name ||
     plan.measures ||
     plan.monthly_reduction != null ||
-    plan.reduction_category
+    plan.reduction_category ||
+    plan.scope1_actual_emission != null ||
+    plan.scope2_actual_emission != null ||
+    plan.actual_product_footprint != null
   ) {
     return 'yes';
   }
@@ -58,14 +72,27 @@ export function inferReduceThisMonth(
   return undefined;
 }
 
-export function planToFormValues(
-  plan: DemoReductionPlan,
-): SupplierPlanFormValues {
+export function planToFormValues(plan: PlanFormSource): SupplierPlanFormValues {
+  const targetCategories = plan.reduction_targets?.categories || [];
+  const inferredCategory =
+    plan.reduction_category ||
+    (targetCategories.length === 1 ? targetCategories[0] : undefined);
   return {
     reduce_this_month: inferReduceThisMonth(plan),
     actual_emission: plan.actual_emission,
     plan_name: plan.plan_name,
-    reduction_category: plan.reduction_category,
+    reduction_category: inferredCategory,
+    scope1_actual_emission:
+      plan.scope1_actual_emission ??
+      (inferredCategory === 'org' ? plan.actual_emission : undefined),
+    scope1_monthly_reduction:
+      plan.scope1_monthly_reduction ??
+      (inferredCategory === 'org' ? plan.monthly_reduction : undefined),
+    scope2_actual_emission: plan.scope2_actual_emission,
+    scope2_monthly_reduction: plan.scope2_monthly_reduction,
+    actual_product_footprint:
+      plan.actual_product_footprint ??
+      (inferredCategory === 'product' ? plan.actual_emission : undefined),
     reduction_month: plan.reduction_month,
     measures: plan.measures,
     monthly_reduction: plan.monthly_reduction,
@@ -78,21 +105,31 @@ export function formValuesToPlanPayload(
   if (values.reduce_this_month === 'no') {
     return {
       reduce_this_month: 'no',
-      actual_emission: values.actual_emission,
-      plan_name: '',
-      reduction_category: undefined,
+      actual_emission: undefined,
       monthly_reduction: undefined,
+      reduction_category: values.reduction_category,
+      scope1_actual_emission: values.scope1_actual_emission,
+      scope1_monthly_reduction: values.scope1_monthly_reduction,
+      scope2_actual_emission: values.scope2_actual_emission,
+      scope2_monthly_reduction: values.scope2_monthly_reduction,
+      actual_product_footprint: values.actual_product_footprint,
+      plan_name: '',
       measures: '',
     };
   }
 
   return {
     reduce_this_month: 'yes',
-    actual_emission: values.actual_emission,
+    actual_emission: undefined,
+    monthly_reduction: undefined,
     plan_name: values.plan_name?.trim() || '',
     reduction_category: values.reduction_category,
+    scope1_actual_emission: values.scope1_actual_emission,
+    scope1_monthly_reduction: values.scope1_monthly_reduction,
+    scope2_actual_emission: values.scope2_actual_emission,
+    scope2_monthly_reduction: values.scope2_monthly_reduction,
+    actual_product_footprint: values.actual_product_footprint,
     measures: values.measures?.trim() || '',
-    monthly_reduction: values.monthly_reduction,
   };
 }
 

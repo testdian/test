@@ -11,6 +11,7 @@ import { TableActions } from '@/components/Table/TableActions';
 import { SupplyChainSupplierRouteMaps } from '@/router/utils/supplyChainSupplierEnums';
 import { StatusTag } from '@/views/supplyChainCarbon/components/StatusTag';
 import {
+  formatTargetEmission,
   listPlans,
   type PlanWithSupplier,
   type ReductionPlanStatus,
@@ -21,6 +22,8 @@ import { useUserRole } from '@/views/supplyChainCarbon/hooks/useUserRole';
 import styles from '@/views/supplyChainCarbon/styles.module.less';
 import { formatDate, usePagination } from '@/views/supplyChainCarbon/utils';
 
+import { PLAN_CATEGORY_LABELS } from './plan-form';
+
 function formatReductionMonth(month?: number) {
   return month ? `${month}月` : '-';
 }
@@ -30,11 +33,13 @@ function normalizePlanStatus(status: ReductionPlanStatus): ReductionPlanStatus {
 }
 
 function planUpdatedAt(plan: PlanWithSupplier) {
-  return plan.updated_at || plan.reviewed_at || plan.submitted_at || plan.created_at;
+  return (
+    plan.updated_at || plan.reviewed_at || plan.submitted_at || plan.created_at
+  );
 }
 
 const SUPPLIER_PLAN_PAGE_NOTE =
-  '当减排目标确认接收或修改后，则供应商端自动生成1-12月的减排计划，初始状态均为待填报。';
+  '当减排目标确认接收或修改后，供应商端按“1-12月 × 减排类别”分别生成减排计划；目标同时包含组织碳和产品碳时，每个月分别生成一条组织碳计划和一条产品碳计划，初始状态均为待填报。';
 
 const SUPPLIER_PLAN_OPERATION_NOTE =
   '状态与操作对应：1、待填报：编辑、查看，2、待审核：查看，3、已通过：查看，4、已驳回：编辑、查看、查看驳回原因（弹窗展示管理员在管理端录入的驳回原因）。';
@@ -43,7 +48,9 @@ function showRejectReasonModal(reviewComment?: string | null) {
   const text = reviewComment?.trim() || '暂无驳回原因';
   Modal.info({
     title: '驳回原因',
-    content: <div style={{ whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>{text}</div>,
+    content: (
+      <div style={{ whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>{text}</div>
+    ),
     okText: '知道了',
     width: 520,
   });
@@ -125,8 +132,15 @@ export default function SupplierPlansPage() {
       });
   }, [data, supplierId, applied]);
 
-  const { paginatedItems, currentPage, pageSize, total, setCurrentPage, onPageSizeChange, resetPage } =
-    usePagination(plans);
+  const {
+    paginatedItems,
+    currentPage,
+    pageSize,
+    total,
+    setCurrentPage,
+    onPageSizeChange,
+    resetPage,
+  } = usePagination(plans);
 
   if (!isLoaded || !ready) return null;
 
@@ -194,9 +208,10 @@ export default function SupplierPlansPage() {
         }}
         columns={[
           {
-            title: '目标值',
-            render: (_, r) => r.reduction_targets?.target_value || '-',
+            title: '目标排放量',
+            width: 420,
             ellipsis: true,
+            render: (_, r) => formatTargetEmission(r.reduction_targets),
           },
           {
             title: '目标年度',
@@ -209,6 +224,13 @@ export default function SupplierPlansPage() {
             ellipsis: true,
           },
           {
+            title: '减排类别',
+            dataIndex: 'reduction_category',
+            width: 100,
+            render: (category: keyof typeof PLAN_CATEGORY_LABELS | undefined) =>
+              category ? PLAN_CATEGORY_LABELS[category] : '-',
+          },
+          {
             title: '减排月份',
             dataIndex: 'reduction_month',
             width: 100,
@@ -219,7 +241,10 @@ export default function SupplierPlansPage() {
             dataIndex: 'status',
             width: 100,
             render: s => (
-              <StatusTag status={normalizePlanStatus(s)} map={PLAN_STATUS_BADGES} />
+              <StatusTag
+                status={normalizePlanStatus(s)}
+                map={PLAN_STATUS_BADGES}
+              />
             ),
           },
           {
@@ -237,7 +262,9 @@ export default function SupplierPlansPage() {
             fixed: 'right',
             width: 240,
             render: (_, record) => (
-              <TableActions menus={buildSupplierPlanActions(record, navigate)} />
+              <TableActions
+                menus={buildSupplierPlanActions(record, navigate)}
+              />
             ),
           },
         ]}

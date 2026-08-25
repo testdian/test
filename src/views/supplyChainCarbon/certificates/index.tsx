@@ -3,6 +3,7 @@
  */
 import { DownloadOutlined } from '@ant-design/icons';
 import { Select, Table, Tag, message } from 'antd';
+import JSZip from 'jszip';
 import { useMemo, useState } from 'react';
 
 import { Page } from '@/components/Page';
@@ -11,25 +12,71 @@ import { TableActions } from '@/components/Table/TableActions';
 import { CertificateVersionModal } from '@/views/supplyChainCarbon/components/certificates/CertificateVersionModal';
 import { CertificateViewModal } from '@/views/supplyChainCarbon/components/certificates/CertificateViewModal';
 import { PageActionLabel } from '@/views/supplyChainCarbon/components/PageActionLabel';
-import { attachmentSummary } from '@/views/supplyChainCarbon/data/cert-attachments';
+import {
+  attachmentSummary,
+  getCertificateAttachmentBlob,
+} from '@/views/supplyChainCarbon/data/cert-attachments';
 import {
   supplierName,
   type CarbonCertificate,
 } from '@/views/supplyChainCarbon/data/demo-data';
 import { getExpiryInfo } from '@/views/supplyChainCarbon/data/expiry-notifications';
 import { useDemoStore } from '@/views/supplyChainCarbon/hooks/useDemoStore';
+import {
+  CERT_CATEGORY_KIND_OPTIONS,
+  certificateDisplayName,
+  getCertCategoryKind,
+  matchCertCategoryFilter,
+} from '@/views/supplyChainCarbon/supplier/certificates/certificate-form';
 import styles from '@/views/supplyChainCarbon/styles.module.less';
 import { formatDate, usePagination } from '@/views/supplyChainCarbon/utils';
 
 const CERTIFICATES_PAGE_NOTE =
   '碳资质认证模块，是供应商在供应商端上传的证书，管理员可查看，同时证书有有效期，当证书过期时需要邮件提醒供应商更新证书。';
 
-function escapeCsv(value: string) {
-  if (/[",\n]/.test(value)) return `"${value.replace(/"/g, '""')}"`;
-  return value;
+const CERT_TABLE_SCROLL_X = 1530;
+
+function safeZipSegment(value: string) {
+  return value.replace(/[\\/:*?"<>|]/g, '_').trim() || '未命名供应商';
 }
 
-const CERT_TABLE_SCROLL_X = 1330;
+function uniqueAttachmentName(name: string, usedNames: Set<string>) {
+  if (!usedNames.has(name)) {
+    usedNames.add(name);
+    return name;
+  }
+
+  const dotIndex = name.lastIndexOf('.');
+  const baseName = dotIndex > 0 ? name.slice(0, dotIndex) : name;
+  const extension = dotIndex > 0 ? name.slice(dotIndex) : '';
+  let index = 2;
+  let candidate = `${baseName}（${index}）${extension}`;
+  while (usedNames.has(candidate)) {
+    index += 1;
+    candidate = `${baseName}（${index}）${extension}`;
+  }
+  usedNames.add(candidate);
+  return candidate;
+}
+
+function latestCertificateVersion(cert: CarbonCertificate) {
+  const latestVersion = [...(cert.versions || [])].sort(
+    (a, b) => b.version - a.version,
+  )[0];
+  return {
+    version: latestVersion?.version ?? cert.version,
+    attachments: latestVersion?.attachments?.length
+      ? latestVersion.attachments
+      : cert.attachments || [],
+  };
+}
+
+function localDateString(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 
 export default function CertificatesPage() {
   const { data, ready } = useDemoStore();
@@ -39,11 +86,13 @@ export default function CertificatesPage() {
   const [versionCert, setVersionCert] = useState<CarbonCertificate | null>(
     null,
   );
+  const [exporting, setExporting] = useState(false);
 
   const list = useMemo(() => {
     return data.certificates.filter(c => {
-      if (category !== 'all' && c.cert_category !== category) return false;
+      if (!matchCertCategoryFilter(c.cert_category, category)) return false;
       const exp = getExpiryInfo(c.expired_at).label;
+      if (expiry === 'valid' && exp !== '有效') return false;
       if (expiry === 'soon' && exp !== '即将到期') return false;
       if (expiry === 'expired' && exp !== '已过期') return false;
       return true;
@@ -59,36 +108,71 @@ export default function CertificatesPage() {
     onPageSizeChange,
   } = usePagination(list);
 
-  const exportFiltered = () => {
+  const exportFiltered = async () => {
+    if (exporting) return;
     if (list.length === 0) {
       message.error('当前筛选条件下暂无数据可导出');
       return;
     }
-    const rows = list.map(c =>
-      [
-        supplierName(data, c.supplier_id),
-        c.cert_category,
-        c.cert_no,
-        c.issuer,
-        c.expired_at,
-        getExpiryInfo(c.expired_at).label,
-        attachmentSummary(c.attachments),
-        `v${c.version}`,
-      ]
-        .map(escapeCsv)
-        .join(','),
-    );
-    const csv = [
-      '供应商名称,证书类别,证书编号,签发机构,有效期至,有效期状态,附件,版本',
-      ...rows,
-    ].join('\n');
-    const blob = new Blob([`\ufeff${csv}`], { type: 'text/csv;charset=utf-8' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `证书台账_${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click();
-    URL.revokeObjectURL(a.href);
-    message.success(`已导出 ${list.length} 条记录`);
+
+    setExporting(true);
+    const messageKey = 'certificate-zip-export';
+    message.loading({ content: '正在生成证书 ZIP 包…', key: messageKey });
+    try {
+      const zip = new JSZip();
+      const usedNamesBySupplier = new Map<string, Set<string>>();
+      let attachmentCount = 0;
+
+      await Promise.all(
+        list.map(async cert => {
+          const folderName = safeZipSegment(
+            supplierName(data, cert.supplier_id),
+          );
+          const folder = zip.folder(folderName);
+          if (!folder) return;
+          const usedNames =
+            usedNamesBySupplier.get(folderName) || new Set<string>();
+          usedNamesBySupplier.set(folderName, usedNames);
+
+          const latest = latestCertificateVersion(cert);
+          attachmentCount += latest.attachments.length;
+          await Promise.all(
+            latest.attachments.map(async attachment => {
+              const fileName = uniqueAttachmentName(attachment.name, usedNames);
+              const blob = await getCertificateAttachmentBlob(attachment, cert);
+              folder.file(fileName, blob);
+            }),
+          );
+        }),
+      );
+
+      if (attachmentCount === 0) {
+        message.error({
+          content: '当前筛选结果中没有可导出的证书附件',
+          key: messageKey,
+        });
+        return;
+      }
+
+      const blob = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = `资质认证证书${localDateString()}.zip`;
+      anchor.click();
+      URL.revokeObjectURL(url);
+      message.success({
+        content: `已生成 ${usedNamesBySupplier.size} 个供应商、${attachmentCount} 个附件，请至下载管理查看`,
+        key: messageKey,
+      });
+    } catch {
+      message.error({
+        content: '证书 ZIP 包生成失败，请稍后重试',
+        key: messageKey,
+      });
+    } finally {
+      setExporting(false);
+    }
   };
 
   return (
@@ -102,7 +186,9 @@ export default function CertificatesPage() {
       actionBtnChildArr={[
         {
           button: (
-            <PageActionLabel icon={<DownloadOutlined />}>导出</PageActionLabel>
+            <PageActionLabel icon={<DownloadOutlined />}>
+              {exporting ? '生成中…' : '导出'}
+            </PageActionLabel>
           ),
           click: exportFiltered,
           buttonType: 'default',
@@ -119,10 +205,7 @@ export default function CertificatesPage() {
           style={{ width: 176 }}
           options={[
             { label: '全部类别', value: 'all' },
-            { label: '组织碳核查', value: '组织碳核查' },
-            { label: '产品碳足迹', value: '产品碳足迹' },
-            { label: 'ISO认证', value: 'ISO认证' },
-            { label: '客户指定', value: '客户指定' },
+            ...CERT_CATEGORY_KIND_OPTIONS,
           ]}
         />
         <Select
@@ -134,6 +217,7 @@ export default function CertificatesPage() {
           style={{ width: 176 }}
           options={[
             { label: '全部到期状态', value: 'all' },
+            { label: '有效', value: 'valid' },
             { label: '即将到期', value: 'soon' },
             { label: '已过期', value: 'expired' },
           ]}
@@ -164,9 +248,17 @@ export default function CertificatesPage() {
             render: (_, record) => supplierName(data, record.supplier_id),
           },
           {
+            title: '证书名称',
+            dataIndex: 'cert_name',
+            width: 200,
+            ellipsis: true,
+            render: (_, record) => certificateDisplayName(record),
+          },
+          {
             title: '证书类别',
             dataIndex: 'cert_category',
             width: 120,
+            render: value => getCertCategoryKind(value),
           },
           {
             title: '证书编号',

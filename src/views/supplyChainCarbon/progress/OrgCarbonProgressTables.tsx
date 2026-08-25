@@ -1,6 +1,7 @@
 /**
  * @description 进度追踪看板 - 组织碳范围一/范围二表格
  */
+import { Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useMemo } from 'react';
 
@@ -8,13 +9,14 @@ import { HorizontalDragTable } from '@/components/HorizontalDragTable';
 import { FormLabelWithNote } from '@/components/ModifyNote';
 import {
   listOrgCarbonProgress,
+  type CarbonTargetStatus,
   type OrgCarbonProgressRow,
 } from '@/views/supplyChainCarbon/data/demo-supply-chain';
 import type { DemoData } from '@/views/supplyChainCarbon/data/demo-data';
 import styles from '@/views/supplyChainCarbon/styles.module.less';
 
 const ORG_CARBON_TABLES_NOTE =
-  '组织碳展示2个表格，范围一、范围二各一个：供应商名称、上一年度排放量、减排比例、目标排放量、1月实际排放量……12月实际排放量、汇总实际排放量、目标达成率。';
+  '组织碳范围一、范围二分别计算：同期目标排放量=年度目标排放量×已填报月份数÷12；目标偏差率=（累计实际排放量-同期目标排放量）÷同期目标排放量×100%；累计实际排放量不高于同期目标时为已达标；减排目标完成度=（同期基准排放量-累计实际排放量）÷（同期基准排放量-同期目标排放量）×100%。';
 
 const MONTH_LABELS = Array.from({ length: 12 }, (_, index) => `${index + 1}月`);
 
@@ -25,7 +27,9 @@ const ORG_COLUMN_WIDTH = {
   targetEmission: 200,
   monthlyActual: 200,
   totalActual: 220,
-  achievementRate: 140,
+  deviationRate: 160,
+  targetStatus: 120,
+  reductionProgress: 190,
 } as const;
 
 const ORG_TABLE_SCROLL_X =
@@ -35,10 +39,18 @@ const ORG_TABLE_SCROLL_X =
   ORG_COLUMN_WIDTH.targetEmission +
   ORG_COLUMN_WIDTH.monthlyActual * 12 +
   ORG_COLUMN_WIDTH.totalActual +
-  ORG_COLUMN_WIDTH.achievementRate;
+  ORG_COLUMN_WIDTH.deviationRate +
+  ORG_COLUMN_WIDTH.targetStatus +
+  ORG_COLUMN_WIDTH.reductionProgress;
 
 function columnTitle(label: string) {
   return label;
+}
+
+function renderTargetStatus(status: CarbonTargetStatus) {
+  if (status === 'achieved') return <Tag color='green'>已达标</Tag>;
+  if (status === 'not_achieved') return <Tag color='red'>未达标</Tag>;
+  return <Tag>暂无数据</Tag>;
 }
 
 function buildColumns(): ColumnsType<OrgCarbonProgressRow> {
@@ -88,9 +100,31 @@ function buildColumns(): ColumnsType<OrgCarbonProgressRow> {
       align: 'center',
     },
     {
-      title: columnTitle('目标达成率（%）'),
-      dataIndex: 'achievement_rate',
-      width: ORG_COLUMN_WIDTH.achievementRate,
+      title: columnTitle('目标偏差率（%）'),
+      dataIndex: 'deviation_rate',
+      width: ORG_COLUMN_WIDTH.deviationRate,
+      align: 'center',
+      render: value =>
+        value == null ? (
+          '-'
+        ) : (
+          <span style={{ color: value <= 0 ? '#389e0d' : '#cf1322' }}>
+            {value > 0 ? '+' : ''}
+            {value}%
+          </span>
+        ),
+    },
+    {
+      title: '达标状态',
+      dataIndex: 'target_status',
+      width: ORG_COLUMN_WIDTH.targetStatus,
+      align: 'center',
+      render: renderTargetStatus,
+    },
+    {
+      title: columnTitle('减排目标完成度（%）'),
+      dataIndex: 'reduction_progress',
+      width: ORG_COLUMN_WIDTH.reductionProgress,
       align: 'center',
       render: value => (value == null ? '-' : `${value}%`),
     },

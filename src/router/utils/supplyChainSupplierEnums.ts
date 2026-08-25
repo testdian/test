@@ -11,6 +11,7 @@ export enum SupplyChainSupplierRouteMaps {
   progressCreate = '/sys/supplierPortal/progress/create',
   progressInfo = '/sys/supplierPortal/progress/:id',
   questionnaire = '/sys/supplierPortal/questionnaire',
+  questionnaireInfo = '/sys/supplierPortal/questionnaire/:id',
   questionnaireFill = '/sys/supplierPortal/questionnaire/:id/fill',
   certificates = '/sys/supplierPortal/certificates',
   training = '/sys/supplierPortal/training',

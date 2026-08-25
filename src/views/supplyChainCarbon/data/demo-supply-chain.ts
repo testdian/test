@@ -55,6 +55,44 @@ export interface DemoReductionTarget {
   product_carbon?: ProductCarbonTarget;
 }
 
+type TargetEmissionSource = Pick<
+  DemoReductionTarget,
+  'categories' | 'org_carbon' | 'product_carbon'
+>;
+
+function emissionNumber(value?: number) {
+  return value == null ? '-' : String(value);
+}
+
+export function formatTargetEmission(target?: TargetEmissionSource | null) {
+  if (!target) return '-';
+  const categories = target.categories || [];
+  const includeOrg = categories.includes('org') || !!target.org_carbon;
+  const includeProduct =
+    categories.includes('product') || !!target.product_carbon;
+  const segments: string[] = [];
+
+  if (includeOrg) {
+    segments.push(
+      `组织碳，范围一，${emissionNumber(
+        target.org_carbon?.scope1_target_emission,
+      )}t`,
+      `组织碳，范围二，${emissionNumber(
+        target.org_carbon?.scope2_target_emission,
+      )}t`,
+    );
+  }
+  if (includeProduct) {
+    segments.push(
+      `产品碳，${emissionNumber(
+        target.product_carbon?.target_footprint,
+      )}tCO₂e/功能单位`,
+    );
+  }
+
+  return segments.join('；') || '-';
+}
+
 export interface DemoReductionPlan {
   id: number;
   target_id: number;
@@ -65,6 +103,18 @@ export interface DemoReductionPlan {
   reduce_this_month?: 'yes' | 'no';
   /** 当月实际排放量（tCO2e） */
   actual_emission?: number;
+  /** 组织碳：范围一当月实际排放量（tCO2e） */
+  scope1_actual_emission?: number;
+  /** 组织碳：范围一当月减排量（tCO2e） */
+  scope1_monthly_reduction?: number;
+  /** 组织碳：范围二当月实际排放量（tCO2e） */
+  scope2_actual_emission?: number;
+  /** 组织碳：范围二当月减排量（tCO2e） */
+  scope2_monthly_reduction?: number;
+  /** 产品碳：当月实际产品碳足迹（tCO2e/功能单位） */
+  actual_product_footprint?: number;
+  /** 产品碳：当月实际减排量（tCO2e/功能单位） */
+  product_monthly_reduction?: number;
   /** 减排类别：组织碳 / 产品碳 */
   reduction_category?: ReductionCategory;
   measures: string;
@@ -104,7 +154,12 @@ export interface PlanWithSupplier extends DemoReductionPlan {
   suppliers: Pick<DemoSupplier, 'id' | 'name' | 'srm_code'>;
   reduction_targets?: Pick<
     DemoReductionTarget,
-    'id' | 'target_value' | 'baseline_year'
+    | 'id'
+    | 'target_value'
+    | 'baseline_year'
+    | 'categories'
+    | 'org_carbon'
+    | 'product_carbon'
   >;
 }
 
@@ -133,14 +188,39 @@ export function enrichTarget(
   };
 }
 
+export function resolveReductionPlanCategory(
+  plan: Pick<
+    DemoReductionPlan,
+    | 'reduction_category'
+    | 'scope1_actual_emission'
+    | 'scope2_actual_emission'
+    | 'actual_product_footprint'
+  >,
+  target?: Pick<DemoReductionTarget, 'categories'>,
+): ReductionCategory | undefined {
+  if (plan.reduction_category) return plan.reduction_category;
+  if (target?.categories?.length === 1) return target.categories[0];
+  if (plan.actual_product_footprint != null) return 'product';
+  if (
+    plan.scope1_actual_emission != null ||
+    plan.scope2_actual_emission != null
+  ) {
+    return 'org';
+  }
+  return undefined;
+}
+
 export function enrichPlan(
   data: DemoData,
   plan: DemoReductionPlan,
 ): PlanWithSupplier {
   const target = data.reductionTargets.find(item => item.id === plan.target_id);
-  const supplier = data.demoSuppliers.find(item => item.id === plan.supplier_id);
+  const supplier = data.demoSuppliers.find(
+    item => item.id === plan.supplier_id,
+  );
   return {
     ...plan,
+    reduction_category: resolveReductionPlanCategory(plan, target),
     suppliers: {
       id: plan.supplier_id,
       name: supplierName(data, plan.supplier_id),
@@ -151,6 +231,9 @@ export function enrichPlan(
           id: target.id,
           target_value: target.target_value,
           baseline_year: target.baseline_year,
+          categories: target.categories,
+          org_carbon: target.org_carbon,
+          product_carbon: target.product_carbon,
         }
       : undefined,
   };
@@ -221,8 +304,36 @@ export interface OrgCarbonProgressRow {
   reduction_ratio?: number;
   target_emission?: number;
   monthly_actual: number[];
-  total_actual: number;
-  achievement_rate?: number;
+  total_actual?: number;
+  reported_month_count: number;
+  period_target?: number;
+  deviation_rate?: number;
+  target_status: CarbonTargetStatus;
+  reduction_progress?: number;
+}
+
+export type CarbonTargetStatus = 'achieved' | 'not_achieved' | 'no_data';
+
+function percentage(numerator?: number, denominator?: number) {
+  if (numerator == null || denominator == null || denominator === 0) {
+    return undefined;
+  }
+  return Number(((numerator / denominator) * 100).toFixed(1));
+}
+
+function reportedMonthCount(values: number[]) {
+  for (let index = values.length - 1; index >= 0; index -= 1) {
+    if (values[index] != null) return index + 1;
+  }
+  return 0;
+}
+
+function resolveCarbonTargetStatus(
+  actual?: number,
+  target?: number,
+): CarbonTargetStatus {
+  if (actual == null || target == null) return 'no_data';
+  return actual <= target ? 'achieved' : 'not_achieved';
 }
 
 function generateMonthlyActual(
@@ -230,12 +341,12 @@ function generateMonthlyActual(
   scope: 'scope1' | 'scope2',
   targetEmission?: number,
 ): number[] {
+  if (supplierId === 3) return [];
   const monthlyTarget = (targetEmission ?? 0) / 12;
   return Array.from({ length: 12 }, (_, index) => {
     const offset = scope === 'scope1' ? 1 : 2;
     const factor =
-      0.82 +
-      ((supplierId * 7 + index * 3 + offset * 5) % 28) / 100;
+      0.82 + ((supplierId * 7 + index * 3 + offset * 5) % 28) / 100;
     return Number((monthlyTarget * factor).toFixed(2));
   });
 }
@@ -257,8 +368,10 @@ export function listOrgCarbonProgress(
           supplierName(data, target.supplier_id)
             .toLowerCase()
             .includes(keyword) ||
-          (data.demoSuppliers.find(item => item.id === target.supplier_id)
-            ?.srm_code || '')
+          (
+            data.demoSuppliers.find(item => item.id === target.supplier_id)
+              ?.srm_code || ''
+          )
             .toLowerCase()
             .includes(keyword)),
     )
@@ -284,13 +397,31 @@ export function listOrgCarbonProgress(
         scope,
         targetEmission,
       );
-      const totalActual = Number(
-        monthlyActual.reduce((sum, value) => sum + value, 0).toFixed(2),
-      );
-      const achievementRate =
-        targetEmission && targetEmission > 0
-          ? Number(((totalActual / targetEmission) * 100).toFixed(1))
+      const monthCount = reportedMonthCount(monthlyActual);
+      const totalActual =
+        monthCount > 0
+          ? Number(
+              monthlyActual.reduce((sum, value) => sum + value, 0).toFixed(2),
+            )
           : undefined;
+      const periodTarget =
+        targetEmission != null && monthCount > 0
+          ? Number(((targetEmission * monthCount) / 12).toFixed(2))
+          : undefined;
+      const periodBaseline =
+        prevEmission != null && monthCount > 0
+          ? Number(((prevEmission * monthCount) / 12).toFixed(2))
+          : undefined;
+      const deviationRate = percentage(
+        periodTarget != null ? totalActual! - periodTarget : undefined,
+        periodTarget,
+      );
+      const reductionProgress = percentage(
+        periodBaseline != null ? periodBaseline - totalActual! : undefined,
+        periodBaseline != null && periodTarget != null
+          ? periodBaseline - periodTarget
+          : undefined,
+      );
 
       return {
         id: `${scope}-${target.id}`,
@@ -302,15 +433,19 @@ export function listOrgCarbonProgress(
         target_emission: targetEmission,
         monthly_actual: monthlyActual,
         total_actual: totalActual,
-        achievement_rate: achievementRate,
+        reported_month_count: monthCount,
+        period_target: periodTarget,
+        deviation_rate: deviationRate,
+        target_status: resolveCarbonTargetStatus(totalActual, periodTarget),
+        reduction_progress: reductionProgress,
       };
     });
 }
 
 export interface OrgCarbonChartRow {
   supplier_name: string;
-  scope1_target: number;
-  scope2_target: number;
+  scope1_period_target: number;
+  scope2_period_target: number;
   scope1_actual: number;
   scope2_actual: number;
 }
@@ -338,8 +473,8 @@ export function listOrgCarbonChartData(
     if (!supplierMap.has(supplierName)) {
       supplierMap.set(supplierName, {
         supplier_name: supplierName,
-        scope1_target: 0,
-        scope2_target: 0,
+        scope1_period_target: 0,
+        scope2_period_target: 0,
         scope1_actual: 0,
         scope2_actual: 0,
       });
@@ -349,14 +484,14 @@ export function listOrgCarbonChartData(
 
   scope1Rows.forEach(row => {
     const current = ensureRow(row.supplier_name);
-    current.scope1_target += row.target_emission ?? 0;
-    current.scope1_actual += row.total_actual;
+    current.scope1_period_target += row.period_target ?? 0;
+    current.scope1_actual += row.total_actual ?? 0;
   });
 
   scope2Rows.forEach(row => {
     const current = ensureRow(row.supplier_name);
-    current.scope2_target += row.target_emission ?? 0;
-    current.scope2_actual += row.total_actual;
+    current.scope2_period_target += row.period_target ?? 0;
+    current.scope2_actual += row.total_actual ?? 0;
   });
 
   return Array.from(supplierMap.values());
@@ -372,8 +507,10 @@ export interface ProductCarbonProgressRow {
   reduction_ratio?: number;
   target_footprint?: number;
   monthly_actual: number[];
-  total_actual: number;
-  achievement_rate?: number;
+  latest_actual?: number;
+  deviation_rate?: number;
+  target_status: CarbonTargetStatus;
+  reduction_progress?: number;
 }
 
 function generateMonthlyProductFootprint(
@@ -381,13 +518,21 @@ function generateMonthlyProductFootprint(
   targetId: number,
   targetFootprint?: number,
 ): number[] {
+  if (targetId === 9) return [];
   const base = targetFootprint ?? 0;
   return Array.from({ length: 12 }, (_, index) => {
     const factor =
-      0.84 +
-      ((supplierId * 5 + targetId * 3 + index * 4) % 26) / 100;
+      0.84 + ((supplierId * 5 + targetId * 3 + index * 4) % 26) / 100;
     return Number((base * factor).toFixed(2));
   });
+}
+
+function latestProductFootprint(values: number[]): number | undefined {
+  for (let index = values.length - 1; index >= 0; index -= 1) {
+    const value = values[index];
+    if (value != null) return value;
+  }
+  return undefined;
 }
 
 export function listProductCarbonProgress(
@@ -416,12 +561,17 @@ export function listProductCarbonProgress(
           data.demoSuppliers.find(item => item.id === target.supplier_id)
             ?.srm_code || ''
         ).toLowerCase();
-        if (!name.includes(supplierKeyword) && !code.includes(supplierKeyword)) {
+        if (
+          !name.includes(supplierKeyword) &&
+          !code.includes(supplierKeyword)
+        ) {
           return false;
         }
       }
       if (productKeyword) {
-        const product = (target.product_carbon.product_name || '').toLowerCase();
+        const product = (
+          target.product_carbon.product_name || ''
+        ).toLowerCase();
         if (!product.includes(productKeyword)) {
           return false;
         }
@@ -439,15 +589,21 @@ export function listProductCarbonProgress(
         target.id,
         targetFootprint,
       );
-      const totalActual = Number(
-        monthlyActual.reduce((sum, value) => sum + value, 0).toFixed(2),
+      const latestActual = latestProductFootprint(monthlyActual);
+      const deviationRate = percentage(
+        latestActual != null && targetFootprint != null
+          ? latestActual - targetFootprint
+          : undefined,
+        targetFootprint,
       );
-      const annualTarget =
-        targetFootprint != null ? targetFootprint * 12 : undefined;
-      const achievementRate =
-        annualTarget && annualTarget > 0
-          ? Number(((totalActual / annualTarget) * 100).toFixed(1))
-          : undefined;
+      const reductionProgress = percentage(
+        product.prev_footprint != null && latestActual != null
+          ? product.prev_footprint - latestActual
+          : undefined,
+        product.prev_footprint != null && targetFootprint != null
+          ? product.prev_footprint - targetFootprint
+          : undefined,
+      );
 
       return {
         id: `product-${target.id}`,
@@ -459,8 +615,10 @@ export function listProductCarbonProgress(
         reduction_ratio: product.reduction_ratio,
         target_footprint: targetFootprint,
         monthly_actual: monthlyActual,
-        total_actual: totalActual,
-        achievement_rate: achievementRate,
+        latest_actual: latestActual,
+        deviation_rate: deviationRate,
+        target_status: resolveCarbonTargetStatus(latestActual, targetFootprint),
+        reduction_progress: reductionProgress,
       };
     });
 }
@@ -503,11 +661,26 @@ export function modifyReductionTarget(
   return generateMonthlyPlansForTarget(next, targetId);
 }
 
-function defaultMonthlyPlanName(month: number) {
-  return `${month}月减排计划`;
+function defaultMonthlyPlanName(month: number, category: ReductionCategory) {
+  const categoryLabel = category === 'org' ? '组织碳' : '产品碳';
+  return `${month}月${categoryLabel}减排计划`;
 }
 
-/** 目标确认或修改后，为对应目标补齐 1–12 月减排计划（初始状态：待填报） */
+function targetPlanCategories(
+  target: DemoReductionTarget,
+): ReductionCategory[] {
+  const configured = target.categories?.filter(
+    (category, index, categories) => categories.indexOf(category) === index,
+  );
+  if (configured?.length) return configured;
+
+  const inferred: ReductionCategory[] = [];
+  if (target.org_carbon) inferred.push('org');
+  if (target.product_carbon) inferred.push('product');
+  return inferred.length ? inferred : ['org'];
+}
+
+/** 目标确认或修改后，按“1–12 月 × 减排类别”补齐计划（初始状态：待填报） */
 export function generateMonthlyPlansForTarget(
   data: DemoData,
   targetId: number,
@@ -523,38 +696,58 @@ export function generateMonthlyPlansForTarget(
     'approved',
     'rejected',
   ];
+  const categories = targetPlanCategories(target);
+  const claimedLegacyPlanIds = new Set<number>();
 
-  let next = data;
+  const months = Array.from({ length: 12 }, (_, index) => index + 1);
 
-  for (let month = 1; month <= 12; month += 1) {
-    const existing = existingForTarget.find(
-      plan => plan.reduction_month === month,
-    );
+  return months.reduce((monthData, month) => {
+    return categories.reduce((categoryData, category) => {
+      const exact = existingForTarget.find(
+        plan =>
+          plan.reduction_month === month &&
+          plan.reduction_category === category,
+      );
+      const legacy = exact
+        ? undefined
+        : existingForTarget.find(
+            plan =>
+              plan.reduction_month === month &&
+              !plan.reduction_category &&
+              !claimedLegacyPlanIds.has(plan.id),
+          );
+      const existing = exact || legacy;
 
-    if (existing) {
-      if (lockedStatuses.includes(existing.status)) continue;
-      if (existing.status === 'to_fill' || existing.status === 'draft') {
-        next = updateReductionPlan(next, existing.id, {
+      if (legacy) claimedLegacyPlanIds.add(legacy.id);
+
+      if (existing) {
+        const basePayload = {
+          reduction_category: category,
+          plan_name:
+            existing.plan_name || defaultMonthlyPlanName(month, category),
+        };
+        if (lockedStatuses.includes(existing.status)) {
+          return updateReductionPlan(categoryData, existing.id, basePayload);
+        }
+        return updateReductionPlan(categoryData, existing.id, {
+          ...basePayload,
           status: 'to_fill',
-          plan_name: existing.plan_name || defaultMonthlyPlanName(month),
           submitted_at: null,
         });
       }
-      continue;
-    }
 
-    next = addReductionPlan(next, {
-      target_id: targetId,
-      supplier_id: target.supplier_id,
-      plan_name: defaultMonthlyPlanName(month),
-      reduction_month: month,
-      measures: '',
-      status: 'to_fill',
-      submitted_at: null,
-    });
-  }
-
-  return next;
+      return addReductionPlan(categoryData, {
+        target_id: targetId,
+        supplier_id: target.supplier_id,
+        plan_name: defaultMonthlyPlanName(month, category),
+        reduction_month: month,
+        reduction_category: category,
+        measures: '',
+        status: 'to_fill',
+        submitted_at: null,
+      });
+    }, monthData);
+  }, data);
 }
 
 export function reviewReductionPlan(
@@ -861,6 +1054,10 @@ export function seedReductionPlans(): DemoReductionPlan[] {
       actual_emission: 1250.5,
       reduction_category: 'org',
       monthly_reduction: 320,
+      scope1_actual_emission: 460.2,
+      scope1_monthly_reduction: 110,
+      scope2_actual_emission: 790.3,
+      scope2_monthly_reduction: 210,
       measures:
         '1. 屋顶光伏扩容 2MW\n2. 外购绿电协议续签\n3. 高耗能设备变频改造',
       time_nodes: '2025年Q1启动，Q4完成主体改造',
@@ -881,6 +1078,10 @@ export function seedReductionPlans(): DemoReductionPlan[] {
       actual_emission: 980,
       reduction_category: 'org',
       monthly_reduction: 45,
+      scope1_actual_emission: 360,
+      scope1_monthly_reduction: 18,
+      scope2_actual_emission: 620,
+      scope2_monthly_reduction: 27,
       measures: '提升再生锂、再生钴使用比例，建立供应商追溯台账。',
       time_nodes: '2025年Q2–Q3',
       expected_reduction: '180吨',
@@ -913,6 +1114,10 @@ export function seedReductionPlans(): DemoReductionPlan[] {
       actual_emission: 560,
       reduction_category: 'org',
       monthly_reduction: 60,
+      scope1_actual_emission: 220,
+      scope1_monthly_reduction: 25,
+      scope2_actual_emission: 340,
+      scope2_monthly_reduction: 35,
       measures: '天然气锅炉低氮燃烧器改造。',
       time_nodes: '2025年Q1',
       expected_reduction: '60吨',
@@ -1031,6 +1236,10 @@ export function seedReductionPlans(): DemoReductionPlan[] {
       supplier_id: 3,
       plan_name: '原料运输路线优化',
       reduction_month: 3,
+      reduce_this_month: 'yes',
+      reduction_category: 'product',
+      actual_product_footprint: 8.2,
+      product_monthly_reduction: 0.4,
       measures: '合并短途运输班次，减少空驶里程。',
       time_nodes: '2025年Q3',
       expected_reduction: '35吨',

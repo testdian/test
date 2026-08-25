@@ -11,7 +11,10 @@ import { Page } from '@/components/Page';
 import { TableActions } from '@/components/Table/TableActions';
 import { SupplyChainSupplierRouteMaps } from '@/router/utils/supplyChainSupplierEnums';
 import { StatusTag } from '@/views/supplyChainCarbon/components/StatusTag';
-import { listTargets } from '@/views/supplyChainCarbon/data/demo-supply-chain';
+import {
+  formatTargetEmission,
+  listTargets,
+} from '@/views/supplyChainCarbon/data/demo-supply-chain';
 import { SUPPLIER_TARGET_STATUS_BADGES } from '@/views/supplyChainCarbon/data/status-badges';
 import { useDemoStore } from '@/views/supplyChainCarbon/hooks/useDemoStore';
 import { useUserRole } from '@/views/supplyChainCarbon/hooks/useUserRole';
@@ -103,7 +106,12 @@ export default function SupplierTargetsPage() {
           onShowSizeChange: (_, size) => onPageSizeChange(size),
         }}
         columns={[
-          { title: '目标值', dataIndex: 'target_value', ellipsis: true },
+          {
+            title: '目标排放量',
+            width: 420,
+            ellipsis: true,
+            render: (_, record) => formatTargetEmission(record),
+          },
           {
             title: '目标年度',
             dataIndex: 'baseline_year',

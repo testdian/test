@@ -33,7 +33,7 @@ const defaultFilters: HomeFilters = {
 };
 
 const HOME_PAGE_NOTE =
-  '数据看板上方增加一个主页菜单：列表展示线上培训管理模块配置的资料名称、内容摘要，点击可查看详情。';
+  '管理员端与供应商端主页保持一致：列表展示线上培训管理模块配置的资料名称、内容摘要、更新人、更新时间，点击查看后进入相同样式的培训资料详情页。';
 const HOME_SEARCH_NOTE = '搜索项：资料名称，文本框，模糊搜索';
 const HOME_UPDATED_BY_NOTE = '列表在更新时间左侧增加字段：更新人';
 
@@ -92,6 +92,7 @@ export default function HomePage() {
       SupplyChainSupplierRouteMaps.trainingInfo
         .replace(':pageTypeInfo', PageTypeInfo.show)
         .replace(':id', String(id)),
+      { state: { from: 'home' } },
     );
   };
 

@@ -33,7 +33,7 @@ export const supplyChainSupplierRoutes: Routes[] = [
     meta: {
       ...supplierMeta('主页', 'icon-icon-gongzuotai'),
       prototypeMenuNote:
-        '数据看板上方增加一个主页菜单：列表展示线上培训管理模块配置的资料名称、内容摘要，点击可查看详情。',
+        '供应商主页与管理员主页保持一致：列表展示线上培训管理模块配置的资料名称、内容摘要、更新人、更新时间；点击查看后使用与管理员端一致的培训资料详情页面。',
     },
     orderNum: 851,
     component: lazy(() => import('@views/home')),
@@ -44,9 +44,7 @@ export const supplyChainSupplierRoutes: Routes[] = [
           showInMenu: false,
           title: () => routeTypeNameRender('培训资料'),
         },
-        component: lazy(
-          () => import('@views/supplyChainCarbon/supplier/training/Info'),
-        ),
+        component: lazy(() => import('@views/supplyChainCarbon/training/Info')),
       },
     ],
   },
@@ -95,6 +93,13 @@ export const supplyChainSupplierRoutes: Routes[] = [
       () => import('@views/supplyChainCarbon/supplier/questionnaire'),
     ),
     children: [
+      {
+        path: SupplyChainSupplierRouteMaps.questionnaireInfo,
+        meta: { showInMenu: false, title: () => '调研填报任务详情' },
+        component: lazy(
+          () => import('@views/supplyChainCarbon/supplier/questionnaire/Info'),
+        ),
+      },
       {
         path: SupplyChainSupplierRouteMaps.questionnaireFill,
         meta: { showInMenu: false, title: () => '调研填报' },

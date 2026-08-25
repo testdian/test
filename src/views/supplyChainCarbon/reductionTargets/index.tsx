@@ -2,7 +2,7 @@
  * @description 减排目标管理
  */
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, message, Modal, Select, Space, Table } from 'antd';
+import { Button, message, Modal, Space, Table } from 'antd';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,16 +11,14 @@ import { SearchInputWithNote } from '@/components/ModifyNote/SearchInputWithNote
 import { SelectWithNote } from '@/components/ModifyNote/SelectWithNote';
 import { Page } from '@/components/Page';
 import { TableActions } from '@/components/Table/TableActions';
-import {
-  PAGE_TYPE_VAR,
-  PageTypeInfo,
-} from '@/router/utils/enums';
+import { PAGE_TYPE_VAR, PageTypeInfo } from '@/router/utils/enums';
 import { SupplyChainRefRouteMaps } from '@/router/utils/supplyChainRefEnums';
 import { PageActionLabel } from '@/views/supplyChainCarbon/components/PageActionLabel';
 import { StatusTag } from '@/views/supplyChainCarbon/components/StatusTag';
 import {
   canEditReductionTarget,
   canPushReductionTarget,
+  formatTargetEmission,
   listTargets,
   pushReductionTarget,
   type TargetWithSupplier,
@@ -181,16 +179,18 @@ export default function ReductionTargetsPage() {
             dataIndex: ['suppliers', 'name'],
             render: v => v || '-',
           },
-          { title: '目标值', dataIndex: 'target_value' },
+          {
+            title: '目标排放量',
+            width: 420,
+            render: (_, record) => formatTargetEmission(record),
+          },
           {
             title: '目标年度',
             dataIndex: 'baseline_year',
             render: v => v ?? '-',
           },
           {
-            title: (
-              <FormLabelWithNote label='状态' note={TARGET_STATUS_NOTE} />
-            ),
+            title: <FormLabelWithNote label='状态' note={TARGET_STATUS_NOTE} />,
             dataIndex: 'status',
             render: status => (
               <StatusTag status={status} map={TARGET_STATUS_BADGES} />

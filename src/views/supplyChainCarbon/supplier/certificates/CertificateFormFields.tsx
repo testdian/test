@@ -10,6 +10,7 @@ import {
   CERT_ATTACHMENT_MAX_FILES,
   CERT_ATTACHMENT_TIP,
   CERT_CATEGORY_KIND_OPTIONS,
+  isCertificateDateRangeValid,
   MAX_CERT_TEXT_LENGTH,
   SUPPLIER_CERT_FORM_NOTE,
   validateAttachmentFile,
@@ -36,6 +37,29 @@ export function CertificateFormFields({
           <Input disabled />
         </Form.Item>
       )}
+
+      <Form.Item
+        name='cert_name'
+        label='证书名称'
+        rules={
+          readOnly
+            ? undefined
+            : [
+                { required: true, whitespace: true, message: '请输入证书名称' },
+                {
+                  max: MAX_CERT_TEXT_LENGTH,
+                  message: `不超过${MAX_CERT_TEXT_LENGTH}个字符`,
+                },
+              ]
+        }
+      >
+        <Input
+          maxLength={MAX_CERT_TEXT_LENGTH}
+          showCount
+          placeholder='请输入证书名称'
+          disabled={readOnly}
+        />
+      </Form.Item>
 
       <Form.Item
         name='category_kind'
@@ -82,7 +106,12 @@ export function CertificateFormFields({
         rules={
           readOnly
             ? undefined
-            : [{ max: MAX_CERT_TEXT_LENGTH, message: `不超过${MAX_CERT_TEXT_LENGTH}个字符` }]
+            : [
+                {
+                  max: MAX_CERT_TEXT_LENGTH,
+                  message: `不超过${MAX_CERT_TEXT_LENGTH}个字符`,
+                },
+              ]
         }
       >
         <Input
@@ -99,7 +128,12 @@ export function CertificateFormFields({
         rules={
           readOnly
             ? undefined
-            : [{ max: MAX_CERT_TEXT_LENGTH, message: `不超过${MAX_CERT_TEXT_LENGTH}个字符` }]
+            : [
+                {
+                  max: MAX_CERT_TEXT_LENGTH,
+                  message: `不超过${MAX_CERT_TEXT_LENGTH}个字符`,
+                },
+              ]
         }
       >
         <Input
@@ -121,7 +155,26 @@ export function CertificateFormFields({
       <Form.Item
         name='expired_at'
         label='有效期至'
-        rules={[{ required: !readOnly, message: '请选择有效期至' }]}
+        dependencies={['issued_at']}
+        rules={
+          readOnly
+            ? undefined
+            : [
+                { required: true, message: '请选择有效期至' },
+                {
+                  validator: async (
+                    _,
+                    expiredAt?: CertificateFormValues['expired_at'],
+                  ) => {
+                    const issuedAt = form.getFieldValue('issued_at');
+                    if (isCertificateDateRangeValid(issuedAt, expiredAt)) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('签发日期需小于有效期'));
+                  },
+                },
+              ]
+        }
       >
         <DatePicker style={{ width: '100%' }} disabled={readOnly} />
       </Form.Item>
@@ -163,9 +216,7 @@ export function CertificateFormFields({
             return false;
           }}
         >
-          {!readOnly && (
-            <Button icon={<UploadOutlined />}>上传附件</Button>
-          )}
+          {!readOnly && <Button icon={<UploadOutlined />}>上传附件</Button>}
         </Upload>
       </Form.Item>
     </>

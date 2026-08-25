@@ -67,6 +67,25 @@ export async function downloadStoredAttachment(
   URL.revokeObjectURL(url);
 }
 
+export async function getCertificateAttachmentBlob(
+  attachment: CertificateAttachment,
+  cert?: Pick<CarbonCertificate, 'cert_no' | 'cert_category' | 'supplier_id'>,
+) {
+  const stored = await getCertAttachmentFile(attachment.id);
+  return (
+    stored ||
+    new Blob(
+      [
+        `演示附件：${attachment.name}\n`,
+        cert?.cert_category ? `类别：${cert.cert_category}\n` : '',
+        cert?.cert_no ? `编号：${cert.cert_no}\n` : '',
+        '说明：当前为演示数据占位文件，实际上传后会导出真实附件。\n',
+      ],
+      { type: attachment.mime_type || 'text/plain' },
+    )
+  );
+}
+
 export async function downloadCertificateAttachment(
   attachment: CertificateAttachment,
   cert?: Pick<CarbonCertificate, 'cert_no' | 'cert_category' | 'supplier_id'>,

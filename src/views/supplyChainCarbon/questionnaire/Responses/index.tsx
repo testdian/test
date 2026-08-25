@@ -1,13 +1,11 @@
 /**
  * @description 问卷回复
  */
-import { DownloadOutlined } from '@ant-design/icons';
-import { Button, Col, Row, Space, Table, message } from 'antd';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { FormActions } from '@/components/FormActions';
 import { Page } from '@/components/Page';
-import { TableActions } from '@/components/Table/TableActions';
 import { SupplyChainRefRouteMaps } from '@/router/utils/supplyChainRefEnums';
 import { FormFieldInputs } from '@/views/supplyChainCarbon/components/FormFieldInputs';
 import { StatusTag } from '@/views/supplyChainCarbon/components/StatusTag';
@@ -35,16 +33,19 @@ export default function QuestionnaireResponsesPage() {
     return questionnaireDetail(data, source);
   }, [data, questionnaireId]);
 
+  const submittedSuppliers = useMemo(
+    () => detail?.suppliers.filter(item => item.status === 'submitted') || [],
+    [detail],
+  );
+
+  useEffect(() => {
+    if (selectedSupplierId != null || submittedSuppliers.length === 0) return;
+    setSelectedSupplierId(submittedSuppliers[0].id);
+  }, [selectedSupplierId, submittedSuppliers]);
+
   const selectedSupplier = detail?.suppliers.find(
     item => item.id === selectedSupplierId,
   );
-
-  const submittedSuppliers =
-    detail?.suppliers.filter(item => item.status === 'submitted') || [];
-
-  const handleExport = () => {
-    message.info('导出功能开发中');
-  };
 
   if (!ready) return null;
   if (!detail) {
@@ -52,156 +53,112 @@ export default function QuestionnaireResponsesPage() {
   }
 
   return (
-    <Page title='查看问卷回复'>
-      <div style={{ marginBottom: 16 }}>
-        <Button
-          type='link'
-          style={{ paddingLeft: 0 }}
-          onClick={() =>
-            navigate(
-              SupplyChainRefRouteMaps.questionnaireInfo.replace(
-                ':id',
-                String(questionnaireId),
-              ),
-            )
-          }
-        >
-          返回任务详情
-        </Button>
-      </div>
-
-      <div style={{ marginBottom: 16 }}>
-        <div style={{ fontSize: 16, fontWeight: 500 }}>{detail.name}</div>
-        <div style={{ marginTop: 4, color: 'rgba(0,0,0,0.45)' }}>
+    <Page title='查看问卷回复' wrapperClass='marginBottomFormActionsHeight'>
+      <div className={styles.questionnaireResponsesSummary}>
+        <div className={styles.questionnaireResponsesTitle}>{detail.name}</div>
+        <div className={styles.questionnaireResponsesMeta}>
           共 {detail.suppliers.length} 家供应商，已回复{' '}
           {submittedSuppliers.length} 家
         </div>
       </div>
 
-      <Space style={{ marginBottom: 16 }}>
-        <Button
-          icon={<DownloadOutlined />}
-          disabled={submittedSuppliers.length === 0}
-          onClick={handleExport}
-        >
-          导出全部已回复（{submittedSuppliers.length}）
-        </Button>
-      </Space>
-
-      <Row gutter={16}>
-        <Col span={14}>
-          <div className={styles.pageSection}>
-            <div className={styles.sectionTitle}>供应商回复列表</div>
-            <Table
-              rowKey='id'
-              pagination={false}
-              dataSource={detail.suppliers}
-              rowClassName={record =>
-                selectedSupplierId === record.id ? 'ant-table-row-selected' : ''
-              }
-              columns={[
-                {
-                  title: '序号',
-                  width: 64,
-                  render: (_, __, index) => index + 1,
-                },
-                {
-                  title: '供应商',
-                  render: (_, record) =>
-                    record.supplier?.name || supplierName(data, record.id),
-                },
-                {
-                  title: '提交状态',
-                  dataIndex: 'status',
-                  render: status => (
+      <div className={styles.questionnaireResponsesLayout}>
+        <aside className={styles.questionnaireResponsesSidebar}>
+          <div className={styles.questionnaireResponsesSidebarHeader}>
+            供应商回复列表
+          </div>
+          <div className={styles.questionnaireResponsesSupplierList}>
+            {detail.suppliers.map((item, index) => {
+              const submitted = item.status === 'submitted';
+              const active = selectedSupplierId === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type='button'
+                  className={[
+                    styles.questionnaireResponsesSupplierItem,
+                    active
+                      ? styles.questionnaireResponsesSupplierItemActive
+                      : '',
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
+                  disabled={!submitted}
+                  onClick={() => setSelectedSupplierId(item.id)}
+                >
+                  <div className={styles.questionnaireResponsesSupplierMain}>
+                    <span
+                      className={styles.questionnaireResponsesSupplierIndex}
+                    >
+                      {index + 1}
+                    </span>
+                    <span className={styles.questionnaireResponsesSupplierName}>
+                      {item.supplier?.name || supplierName(data, item.id)}
+                    </span>
+                  </div>
+                  <div className={styles.questionnaireResponsesSupplierMeta}>
                     <StatusTag
-                      status={status === 'submitted' ? 'submitted' : 'pending'}
+                      status={submitted ? 'submitted' : 'pending'}
                       map={SUBMISSION_STATUS_BADGES}
                     />
-                  ),
-                },
-                {
-                  title: '提交时间',
-                  dataIndex: 'submitted_at',
-                  render: v => formatDate(v),
-                },
-                {
-                  title: '操作',
-                  width: 160,
-                  render: (_, record) =>
-                    record.status === 'submitted' ? (
-                      <TableActions
-                        menus={[
-                          {
-                            key: 'detail',
-                            label: '查看详情',
-                            onClick: () => setSelectedSupplierId(record.id),
-                          },
-                          {
-                            key: 'export',
-                            label: '导出 Excel',
-                            onClick: handleExport,
-                          },
-                        ]}
-                      />
-                    ) : (
-                      '-'
-                    ),
-                },
-              ]}
-            />
-          </div>
-        </Col>
-        <Col span={10}>
-          <div className={styles.pageSection}>
-            <div className={styles.sectionTitle}>回复详情</div>
-            {selectedSupplier ? (
-              <div>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    marginBottom: 16,
-                  }}
-                >
-                  <div>
-                    <div style={{ fontWeight: 500 }}>
-                      {selectedSupplier.supplier?.name ||
-                        supplierName(data, selectedSupplier.id)}
-                    </div>
-                    <div style={{ fontSize: 13, color: 'rgba(0,0,0,0.45)' }}>
-                      提交时间：{formatDate(selectedSupplier.submitted_at)}
-                    </div>
+                    <span>
+                      {submitted ? formatDate(item.submitted_at) : '-'}
+                    </span>
                   </div>
-                  <Button
-                    size='small'
-                    icon={<DownloadOutlined />}
-                    onClick={handleExport}
-                  >
-                    导出
-                  </Button>
-                </div>
-                <FormFieldInputs
-                  fields={detail.form_fields}
-                  sections={detail.form_sections}
-                  values={selectedSupplier.answers || {}}
-                  readOnly
-                />
-              </div>
-            ) : (
-              <div
-                style={{
-                  padding: 48,
-                  textAlign: 'center',
-                  color: 'rgba(0,0,0,0.45)',
-                }}
-              >
-                请在左侧选择已提交的供应商查看回复详情
+                </button>
+              );
+            })}
+          </div>
+        </aside>
+
+        <section className={styles.questionnaireResponsesDetail}>
+          <div className={styles.questionnaireResponsesDetailHeader}>
+            <div className={styles.sectionTitle}>回复详情</div>
+            {selectedSupplier && (
+              <div className={styles.questionnaireResponsesSelectedSupplier}>
+                <span>
+                  {selectedSupplier.supplier?.name ||
+                    supplierName(data, selectedSupplier.id)}
+                </span>
+                <span>
+                  提交时间：{formatDate(selectedSupplier.submitted_at)}
+                </span>
               </div>
             )}
           </div>
-        </Col>
-      </Row>
+
+          {selectedSupplier ? (
+            <div className={styles.questionnaireResponsesForm}>
+              <FormFieldInputs
+                fields={detail.form_fields}
+                sections={detail.form_sections}
+                values={selectedSupplier.answers || {}}
+                readOnly
+              />
+            </div>
+          ) : (
+            <div className={styles.questionnaireResponsesEmpty}>
+              暂无已提交的供应商回复
+            </div>
+          )}
+        </section>
+      </div>
+
+      <FormActions
+        place='center'
+        buttons={[
+          {
+            title: '返回',
+            onClick: async () =>
+              navigate(
+                SupplyChainRefRouteMaps.questionnaireInfo.replace(
+                  ':id',
+                  String(questionnaireId),
+                ),
+              ),
+          },
+        ]}
+      />
     </Page>
   );
 }

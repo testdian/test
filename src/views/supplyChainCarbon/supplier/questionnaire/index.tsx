@@ -1,17 +1,15 @@
 /**
  * @description 供应商 - 调研填报任务
  */
-import { Button, Input, Modal, Select, Space, Table } from 'antd';
+import { Button, Input, Select, Space, Table } from 'antd';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Page } from '@/components/Page';
 import { TableActions } from '@/components/Table/TableActions';
 import { SupplyChainSupplierRouteMaps } from '@/router/utils/supplyChainSupplierEnums';
-import { QuestionnaireFormPreview } from '@/views/supplyChainCarbon/components/QuestionnaireFormPreview';
 import { StatusTag } from '@/views/supplyChainCarbon/components/StatusTag';
 import {
-  questionnaireDetail,
   questionnaireListItem,
   resolveQuestionnaireStatus,
 } from '@/views/supplyChainCarbon/data/demo-questionnaires';
@@ -36,7 +34,6 @@ export default function SupplierQuestionnairePage() {
     taskStatus: 'all',
     submitStatus: 'all',
   });
-  const [viewTarget, setViewTarget] = useState<number | null>(null);
 
   const questionnaires = useMemo(() => {
     if (supplierId <= 0) return [];
@@ -74,20 +71,6 @@ export default function SupplierQuestionnairePage() {
     onPageSizeChange,
     resetPage,
   } = usePagination(questionnaires);
-
-  const viewDetail = useMemo(() => {
-    if (viewTarget == null) return null;
-    const source = data.questionnaires.find(q => q.id === viewTarget);
-    if (!source) return null;
-    return questionnaireDetail(data, source);
-  }, [data, viewTarget]);
-
-  const viewAnswers =
-    viewTarget != null
-      ? data.questionnaires.find(q => q.id === viewTarget)?.supplier_answers?.[
-          supplierId
-        ] || {}
-      : {};
 
   if (!isLoaded || !ready) return null;
 
@@ -171,7 +154,6 @@ export default function SupplierQuestionnairePage() {
             dataIndex: 'organization',
             render: v => v || '-',
           },
-          { title: '字段数', dataIndex: 'field_count', width: 80 },
           {
             title: '任务状态',
             dataIndex: 'status',
@@ -207,7 +189,13 @@ export default function SupplierQuestionnairePage() {
                   {
                     key: 'view',
                     label: '查看',
-                    onClick: () => setViewTarget(record.id),
+                    onClick: () =>
+                      navigate(
+                        SupplyChainSupplierRouteMaps.questionnaireInfo.replace(
+                          ':id',
+                          String(record.id),
+                        ),
+                      ),
                   },
                   ...(record.status === 'published' &&
                   record.submit_status !== 'submitted'
@@ -231,29 +219,6 @@ export default function SupplierQuestionnairePage() {
           },
         ]}
       />
-
-      <Modal
-        title={viewDetail?.name || '任务详情'}
-        open={viewTarget != null}
-        onCancel={() => setViewTarget(null)}
-        footer={null}
-        width={880}
-      >
-        {viewDetail && (
-          <div className={styles.fieldEditorPreview}>
-            <QuestionnaireFormPreview
-              title={viewDetail.name}
-              organization={viewDetail.organization}
-              deadline={formatDate(viewDetail.deadline)}
-              description={viewDetail.description}
-              fields={viewDetail.form_fields}
-              sections={viewDetail.form_sections}
-              values={viewAnswers}
-              disabled
-            />
-          </div>
-        )}
-      </Modal>
     </Page>
   );
 }

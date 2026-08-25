@@ -21,6 +21,7 @@ import { formatDate, usePagination } from '@/views/supplyChainCarbon/utils';
 import {
   attachmentsFromFileList,
   applyCertificateVersionUpdate,
+  certificateDisplayName,
   certToFormValues,
   createCertificateRecord,
   matchCertCategoryFilter,
@@ -34,7 +35,7 @@ import { CertificateFormFields } from './CertificateFormFields';
 
 type ModalMode = 'create' | 'edit';
 
-const SUPPLIER_CERT_TABLE_SCROLL_X = 1210;
+const SUPPLIER_CERT_TABLE_SCROLL_X = 1410;
 
 const FILTER_CATEGORIES = [
   { label: '全部类别', value: 'all' },
@@ -54,6 +55,7 @@ function buildCertPayload(
 
   return {
     supplier_id: supplierId,
+    cert_name: values.cert_name?.trim() || '',
     cert_category: certCategory,
     cert_type: `${certCategory}证书`,
     cert_no: certNo,
@@ -76,7 +78,9 @@ export default function SupplierCertificatesPage() {
   const [modalMode, setModalMode] = useState<ModalMode | null>(null);
   const [activeCert, setActiveCert] = useState<CarbonCertificate | null>(null);
   const [viewCert, setViewCert] = useState<CarbonCertificate | null>(null);
-  const [versionCert, setVersionCert] = useState<CarbonCertificate | null>(null);
+  const [versionCert, setVersionCert] = useState<CarbonCertificate | null>(
+    null,
+  );
   const [submitting, setSubmitting] = useState(false);
   const [form] = Form.useForm<CertificateFormValues>();
 
@@ -88,7 +92,8 @@ export default function SupplierCertificatesPage() {
       }
       const info = getExpiryInfo(cert.expired_at);
       if (applied.expiry === 'soon' && info.level !== 'soon') return false;
-      if (applied.expiry === 'expired' && info.level !== 'expired') return false;
+      if (applied.expiry === 'expired' && info.level !== 'expired')
+        return false;
       return true;
     });
   }, [data.certificates, supplierId, applied]);
@@ -249,9 +254,26 @@ export default function SupplierCertificatesPage() {
           onShowSizeChange: (_, size) => onPageSizeChange(size),
         }}
         columns={[
+          {
+            title: '证书名称',
+            dataIndex: 'cert_name',
+            width: 200,
+            ellipsis: true,
+            render: (_, record) => certificateDisplayName(record),
+          },
           { title: '证书类别', dataIndex: 'cert_category', width: 120 },
-          { title: '证书编号', dataIndex: 'cert_no', width: 180, ellipsis: true },
-          { title: '签发机构', dataIndex: 'issuer', width: 200, ellipsis: true },
+          {
+            title: '证书编号',
+            dataIndex: 'cert_no',
+            width: 180,
+            ellipsis: true,
+          },
+          {
+            title: '签发机构',
+            dataIndex: 'issuer',
+            width: 200,
+            ellipsis: true,
+          },
           {
             title: '有效期至',
             dataIndex: 'expired_at',

@@ -1,8 +1,8 @@
 /**
  * @description 减排方案详情 / 计划审核
  */
-import { Input, Modal, message } from 'antd';
-import { useMemo, useState } from 'react';
+import { Form, Input, Modal, message } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { FormActions } from '@/components/FormActions';
@@ -12,19 +12,20 @@ import { SupplyChainRefRouteMaps } from '@/router/utils/supplyChainRefEnums';
 import { StatusTag } from '@/views/supplyChainCarbon/components/StatusTag';
 import {
   enrichPlan,
+  formatTargetEmission,
   reviewReductionPlan,
 } from '@/views/supplyChainCarbon/data/demo-supply-chain';
 import { PLAN_STATUS_BADGES } from '@/views/supplyChainCarbon/data/status-badges';
 import { useDemoStore } from '@/views/supplyChainCarbon/hooks/useDemoStore';
 import styles from '@/views/supplyChainCarbon/styles.module.less';
-import { formatDate } from '@/views/supplyChainCarbon/utils';
+import { SupplierPlanFormFields } from '@/views/supplyChainCarbon/supplier/plans/SupplierPlanFormFields';
+import {
+  planToFormValues,
+  SUPPLIER_PLAN_FORM_NOTE,
+  type SupplierPlanFormValues,
+} from '@/views/supplyChainCarbon/supplier/plans/plan-form';
 
-function formatReductionMonth(month?: number) {
-  return month ? `${month}月` : '-';
-}
-
-const PLAN_REVIEW_ACTION_NOTE =
-  '点击审核进入页面进行审核通过或驳回操作。';
+const PLAN_REVIEW_ACTION_NOTE = `点击审核进入页面进行审核通过或驳回操作。${SUPPLIER_PLAN_FORM_NOTE}`;
 
 export default function PlanInfoPage() {
   const { id } = useParams<{ id: string }>();
@@ -34,6 +35,7 @@ export default function PlanInfoPage() {
   const { data, update, ready } = useDemoStore();
   const [rejectOpen, setRejectOpen] = useState(false);
   const [rejectComment, setRejectComment] = useState('');
+  const [form] = Form.useForm<SupplierPlanFormValues>();
 
   const isReview =
     (location.state as { review?: boolean } | null)?.review === true;
@@ -42,6 +44,11 @@ export default function PlanInfoPage() {
     const raw = data.reductionPlans.find(item => item.id === planId);
     return raw ? enrichPlan(data, raw) : null;
   }, [data, planId]);
+
+  useEffect(() => {
+    if (!plan) return;
+    form.setFieldsValue(planToFormValues(plan));
+  }, [form, plan]);
 
   const handleApprove = () => {
     if (!plan) return;
@@ -86,82 +93,34 @@ export default function PlanInfoPage() {
       }
       wrapperClass='marginBottomFormActionsHeight'
     >
-      <div className={styles.detailHeader}>
-        <span />
+      <div className={`${styles.detailHeader} ${styles.detailHeaderStart}`}>
         <StatusTag status={plan.status} map={PLAN_STATUS_BADGES} />
       </div>
-      <div className={styles.detailGrid}>
-        <div className={styles.detailItem}>
-          <span className={styles.detailLabel}>供应商名称</span>
-          <span className={styles.detailValue}>{plan.suppliers?.name}</span>
-        </div>
-        <div className={styles.detailItem}>
-          <span className={styles.detailLabel}>目标值</span>
-          <span className={styles.detailValue}>
-            {plan.reduction_targets?.target_value || '-'}
-          </span>
-        </div>
-        <div className={styles.detailItem}>
-          <span className={styles.detailLabel}>目标年度</span>
-          <span className={styles.detailValue}>
-            {plan.reduction_targets?.baseline_year ?? '-'}
-          </span>
-        </div>
-        <div className={styles.detailItem}>
-          <span className={styles.detailLabel}>减排方案名称</span>
-          <span className={styles.detailValue}>{plan.plan_name}</span>
-        </div>
-        <div className={styles.detailItem}>
-          <span className={styles.detailLabel}>减排月份</span>
-          <span className={styles.detailValue}>
-            {formatReductionMonth(plan.reduction_month)}
-          </span>
-        </div>
-        <div className={styles.detailItem}>
-          <span className={styles.detailLabel}>提交时间</span>
-          <span className={styles.detailValue}>
-            {formatDate(plan.submitted_at)}
-          </span>
-        </div>
-        <div className={styles.detailItem}>
-          <span className={styles.detailLabel}>预期减排量</span>
-          <span className={styles.detailValue}>
-            {plan.expected_reduction || '-'}
-          </span>
-        </div>
-        <div className={styles.detailItem}>
-          <span className={styles.detailLabel}>负责人</span>
-          <span className={styles.detailValue}>
-            {plan.responsible_person || '-'}
-          </span>
-        </div>
-        <div className={styles.detailItem}>
-          <span className={styles.detailLabel}>审核时间</span>
-          <span className={styles.detailValue}>
-            {formatDate(plan.reviewed_at)}
-          </span>
-        </div>
-        <div className={styles.detailItem} style={{ gridColumn: '1 / -1' }}>
-          <span className={styles.detailLabel}>减排措施</span>
-          <span
-            className={styles.detailValue}
-            style={{ whiteSpace: 'pre-wrap' }}
-          >
-            {plan.measures}
-          </span>
-        </div>
-        <div className={styles.detailItem} style={{ gridColumn: '1 / -1' }}>
-          <span className={styles.detailLabel}>时间节点</span>
-          <span className={styles.detailValue}>{plan.time_nodes || '-'}</span>
-        </div>
-        {plan.status === 'rejected' && (
-          <div className={styles.detailItem} style={{ gridColumn: '1 / -1' }}>
-            <span className={styles.detailLabel}>审核意见</span>
-            <span className={styles.detailValue}>
-              {plan.review_comment || '-'}
-            </span>
-          </div>
-        )}
+      <div className={`${styles.formPage} ${styles.formReadOnly}`}>
+        <Form
+          form={form}
+          layout='vertical'
+          disabled
+          initialValues={planToFormValues(plan)}
+        >
+          <SupplierPlanFormFields
+            form={form}
+            supplierName={plan.suppliers?.name}
+            targetEmission={formatTargetEmission(plan.reduction_targets)}
+            targetYear={plan.reduction_targets?.baseline_year}
+            reductionMonth={plan.reduction_month}
+            readOnly
+          />
+          {plan.status === 'rejected' && (
+            <Form.Item label='审核意见'>
+              <Input.TextArea
+                value={plan.review_comment || '-'}
+                rows={3}
+                disabled
+              />
+            </Form.Item>
+          )}
+        </Form>
       </div>
 
       <FormActions

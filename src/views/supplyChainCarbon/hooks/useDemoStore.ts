@@ -76,27 +76,27 @@ function loadDemoData(): DemoData {
         return [...seeds, ...custom];
       })(),
       reductionTargets: (() => {
-        const items = (parsed.reductionTargets || defaults.reductionTargets).map(
-          item => {
-            const fallback = defaults.reductionTargets.find(
-              seed => seed.id === item.id,
-            );
-            return {
-              ...item,
-              status:
-                item.status === 'pending'
-                  ? 'draft'
-                  : item.status === 'rejected'
-                    ? 'draft'
-                    : item.status,
-              categories: item.categories?.length
-                ? item.categories
-                : fallback?.categories,
-              org_carbon: item.org_carbon ?? fallback?.org_carbon,
-              product_carbon: item.product_carbon ?? fallback?.product_carbon,
-            };
-          },
-        );
+        const items = (
+          parsed.reductionTargets || defaults.reductionTargets
+        ).map(item => {
+          const fallback = defaults.reductionTargets.find(
+            seed => seed.id === item.id,
+          );
+          return {
+            ...item,
+            status:
+              item.status === 'pending'
+                ? 'draft'
+                : item.status === 'rejected'
+                ? 'draft'
+                : item.status,
+            categories: item.categories?.length
+              ? item.categories
+              : fallback?.categories,
+            org_carbon: item.org_carbon ?? fallback?.org_carbon,
+            product_carbon: item.product_carbon ?? fallback?.product_carbon,
+          };
+        });
         const existingIds = new Set(items.map(item => item.id));
         const missing = defaults.reductionTargets.filter(
           item => !existingIds.has(item.id),
@@ -117,7 +117,37 @@ function loadDemoData(): DemoData {
                 item.reduction_month ?? fallback?.reduction_month,
               reduce_this_month:
                 item.reduce_this_month ?? fallback?.reduce_this_month,
-              actual_emission: item.actual_emission ?? fallback?.actual_emission,
+              actual_emission:
+                item.actual_emission ?? fallback?.actual_emission,
+              scope1_actual_emission:
+                item.scope1_actual_emission ??
+                fallback?.scope1_actual_emission ??
+                (item.reduction_category === 'org'
+                  ? item.actual_emission
+                  : undefined),
+              scope1_monthly_reduction:
+                item.scope1_monthly_reduction ??
+                fallback?.scope1_monthly_reduction ??
+                (item.reduction_category === 'org'
+                  ? item.monthly_reduction
+                  : undefined),
+              scope2_actual_emission:
+                item.scope2_actual_emission ?? fallback?.scope2_actual_emission,
+              scope2_monthly_reduction:
+                item.scope2_monthly_reduction ??
+                fallback?.scope2_monthly_reduction,
+              actual_product_footprint:
+                item.actual_product_footprint ??
+                fallback?.actual_product_footprint ??
+                (item.reduction_category === 'product'
+                  ? item.actual_emission
+                  : undefined),
+              product_monthly_reduction:
+                item.product_monthly_reduction ??
+                fallback?.product_monthly_reduction ??
+                (item.reduction_category === 'product'
+                  ? item.monthly_reduction
+                  : undefined),
               reduction_category:
                 item.reduction_category ?? fallback?.reduction_category,
               monthly_reduction:

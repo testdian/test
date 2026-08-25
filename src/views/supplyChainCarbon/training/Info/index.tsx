@@ -13,9 +13,11 @@ import { Page } from '@/components/Page';
 import { PageTypeInfo, RouteMaps } from '@/router/utils/enums';
 import { routeTypeNameRender } from '@/router/utils/index';
 import { SupplyChainRefRouteMaps } from '@/router/utils/supplyChainRefEnums';
+import { SupplyChainSupplierRouteMaps } from '@/router/utils/supplyChainSupplierEnums';
 import {
   readStoredUserRole,
   ROLE_INFO,
+  useUserRole,
 } from '@/views/supplyChainCarbon/hooks/useUserRole';
 import { useDemoStore } from '@/views/supplyChainCarbon/hooks/useDemoStore';
 import styles from '@/views/supplyChainCarbon/styles.module.less';
@@ -63,6 +65,7 @@ function TrainingRichEditor({
 export default function TrainingInfoPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isAdmin } = useUserRole();
   const { pageTypeInfo, id } = useParams<{
     pageTypeInfo: PageTypeInfo;
     id: string;
@@ -102,7 +105,8 @@ export default function TrainingInfoPage() {
       type: training?.type || '培训资料',
       summary: values.summary.trim(),
       content: values.content,
-      attachment_name: training?.attachment_name || `${values.title.trim()}.html`,
+      attachment_name:
+        training?.attachment_name || `${values.title.trim()}.html`,
       attachments: training?.attachments || [],
       status: 'published' as const,
       applicable: 'all',
@@ -134,10 +138,16 @@ export default function TrainingInfoPage() {
     navigate(SupplyChainRefRouteMaps.training);
   };
 
-  const backPath =
-    isShow && (location.state as { from?: string } | null)?.from === 'home'
+  const fromHome =
+    isShow && (location.state as { from?: string } | null)?.from === 'home';
+  let backPath: string = isAdmin
+    ? SupplyChainRefRouteMaps.training
+    : SupplyChainSupplierRouteMaps.training;
+  if (fromHome) {
+    backPath = isAdmin
       ? RouteMaps.home
-      : SupplyChainRefRouteMaps.training;
+      : SupplyChainSupplierRouteMaps.workbench;
+  }
 
   if (!ready) return null;
   if (!isAdd && !training) {

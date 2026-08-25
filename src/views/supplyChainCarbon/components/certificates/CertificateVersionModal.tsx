@@ -6,7 +6,10 @@ import { Button, Modal, Space, Table, message } from 'antd';
 import { ModifyNote } from '@/components/ModifyNote';
 import { downloadCertificateAttachment } from '@/views/supplyChainCarbon/data/cert-attachments';
 import type { CarbonCertificate } from '@/views/supplyChainCarbon/data/demo-data';
-import { SUPPLIER_CERT_VERSION_NOTE } from '@/views/supplyChainCarbon/supplier/certificates/certificate-form';
+import {
+  certificateDisplayName,
+  SUPPLIER_CERT_VERSION_NOTE,
+} from '@/views/supplyChainCarbon/supplier/certificates/certificate-form';
 import { formatDate } from '@/views/supplyChainCarbon/utils';
 
 type CertificateVersionModalProps = {
@@ -31,7 +34,7 @@ export function CertificateVersionModal({
       open={open}
       footer={null}
       onCancel={onClose}
-      width={820}
+      width={980}
       destroyOnClose
     >
       {cert ? (
@@ -41,6 +44,13 @@ export function CertificateVersionModal({
           dataSource={cert.versions}
           columns={[
             { title: '版本', dataIndex: 'version', render: v => `v${v}` },
+            {
+              title: '证书名称',
+              dataIndex: 'cert_name',
+              width: 180,
+              ellipsis: true,
+              render: value => value || certificateDisplayName(cert),
+            },
             { title: '证书编号', dataIndex: 'cert_no' },
             { title: '签发机构', dataIndex: 'issuer', ellipsis: true },
             {

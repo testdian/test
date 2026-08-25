@@ -168,6 +168,7 @@ export interface CertificateAttachment {
 
 export interface CertificateVersion {
   version: number;
+  cert_name?: string;
   file_name: string;
   uploaded_at: string;
   cert_no: string;
@@ -179,6 +180,7 @@ export interface CertificateVersion {
 export interface CarbonCertificate {
   id: number;
   supplier_id: number;
+  cert_name?: string;
   cert_category: string;
   cert_type: string;
   cert_no: string;
@@ -692,6 +694,7 @@ export function defaultDemoData(): DemoData {
       {
         id: 1,
         supplier_id: 1,
+        cert_name: '2024年度组织温室气体核查证书',
         cert_category: '组织碳核查',
         cert_type: '组织碳核查证书',
         cert_no: 'ORG-2024-001',
@@ -719,6 +722,7 @@ export function defaultDemoData(): DemoData {
         versions: [
           {
             version: 1,
+            cert_name: '2024年度组织温室气体核查证书',
             file_name: '组织碳证书.pdf',
             uploaded_at: '2024-06-01',
             cert_no: 'ORG-2024-001',
@@ -749,6 +753,7 @@ export function defaultDemoData(): DemoData {
       {
         id: 2,
         supplier_id: 1,
+        cert_name: 'G360-A动力电池包产品碳足迹认证证书',
         cert_category: '产品碳足迹',
         cert_type: '产品碳足迹认证',
         cert_no: 'PCF-2024-008',
@@ -769,6 +774,7 @@ export function defaultDemoData(): DemoData {
         versions: [
           {
             version: 1,
+            cert_name: 'G360-A动力电池包产品碳足迹认证证书',
             file_name: '产品碳证书.pdf',
             uploaded_at: '2024-09-01',
             cert_no: 'PCF-2024-008',
@@ -792,6 +798,7 @@ export function defaultDemoData(): DemoData {
       {
         id: 3,
         supplier_id: 2,
+        cert_name: 'ISO 14064-1温室气体核查认证证书',
         cert_category: 'ISO认证',
         cert_type: 'ISO 14064-1 证书',
         cert_no: 'ISO-2024-112',
@@ -812,6 +819,7 @@ export function defaultDemoData(): DemoData {
         versions: [
           {
             version: 1,
+            cert_name: 'ISO 14064-1温室气体核查认证证书',
             file_name: 'ISO14064证书_v1.pdf',
             uploaded_at: '2023-03-15',
             cert_no: 'ISO-2023-112',
@@ -828,6 +836,7 @@ export function defaultDemoData(): DemoData {
           },
           {
             version: 2,
+            cert_name: 'ISO 14064-1温室气体核查认证证书',
             file_name: 'ISO14064证书.pdf',
             uploaded_at: '2024-03-15',
             cert_no: 'ISO-2024-112',
@@ -851,6 +860,7 @@ export function defaultDemoData(): DemoData {
       {
         id: 4,
         supplier_id: 2,
+        cert_name: '2025年度组织碳核查证书',
         cert_category: '组织碳核查',
         cert_type: '组织碳核查证书',
         cert_no: 'ORG-2025-015',
@@ -871,6 +881,7 @@ export function defaultDemoData(): DemoData {
         versions: [
           {
             version: 1,
+            cert_name: '2025年度组织碳核查证书',
             file_name: '组织碳核查_待审.pdf',
             uploaded_at: '2025-01-10',
             cert_no: 'ORG-2025-015',
@@ -894,6 +905,7 @@ export function defaultDemoData(): DemoData {
       {
         id: 5,
         supplier_id: 3,
+        cert_name: '2024年度绿电使用证明',
         cert_category: '客户指定',
         cert_type: '绿电使用证明',
         cert_no: 'GE-2024-003',
@@ -914,6 +926,7 @@ export function defaultDemoData(): DemoData {
         versions: [
           {
             version: 1,
+            cert_name: '2024年度绿电使用证明',
             file_name: '绿电证明.pdf',
             uploaded_at: '2024-11-01',
             cert_no: 'GE-2024-003',
@@ -938,6 +951,7 @@ export function defaultDemoData(): DemoData {
       {
         id: 6,
         supplier_id: 3,
+        cert_name: 'EL-622电解液产品碳足迹认证证书',
         cert_category: '产品碳足迹',
         cert_type: '产品碳足迹认证',
         cert_no: 'PCF-2025-006',
@@ -958,6 +972,7 @@ export function defaultDemoData(): DemoData {
         versions: [
           {
             version: 1,
+            cert_name: 'EL-622电解液产品碳足迹认证证书',
             file_name: '电解液产品碳证书.pdf',
             uploaded_at: '2025-02-01',
             cert_no: 'PCF-2025-006',

@@ -1,7 +1,7 @@
 /**
  * @description 计划审核
  */
-import { Button, Select, Space, Table } from 'antd';
+import { Button, Space, Table } from 'antd';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,6 +13,7 @@ import { TableActions } from '@/components/Table/TableActions';
 import { SupplyChainRefRouteMaps } from '@/router/utils/supplyChainRefEnums';
 import { StatusTag } from '@/views/supplyChainCarbon/components/StatusTag';
 import {
+  formatTargetEmission,
   listPlans,
   type PlanWithSupplier,
 } from '@/views/supplyChainCarbon/data/demo-supply-chain';
@@ -20,6 +21,7 @@ import { PLAN_STATUS_BADGES } from '@/views/supplyChainCarbon/data/status-badges
 import { useDemoStore } from '@/views/supplyChainCarbon/hooks/useDemoStore';
 import styles from '@/views/supplyChainCarbon/styles.module.less';
 import { formatDate, usePagination } from '@/views/supplyChainCarbon/utils';
+import { PLAN_CATEGORY_LABELS } from '@/views/supplyChainCarbon/supplier/plans/plan-form';
 
 type PlanFilters = {
   supplierKeyword: string;
@@ -34,12 +36,12 @@ const defaultFilters: PlanFilters = {
 };
 
 const PLAN_REVIEW_NOTE =
-  '计划审核是当管理员为供应商设定减排目标后，自动生成了12个月的任务，供应商需要按月更新减排方案给管理员进行审核。';
+  '计划审核是当管理员为供应商设定减排目标后，按“1-12月 × 减排类别”自动生成任务；目标同时包含组织碳和产品碳时，每个月分别生成两条计划，供应商按月、按类别填报后提交管理员审核。';
 const PLAN_SUPPLIER_SEARCH_NOTE = '搜索项：供应商名称/编码，模糊搜索';
 const PLAN_MONTH_SEARCH_NOTE = '减排月份，下拉选项，1-12月，支持多选';
 const PLAN_STATUS_SEARCH_NOTE = '审核状态';
 const PLAN_LIST_FIELDS_NOTE =
-  '列表字段：供应商名称、目标值、目标年度、减排方案名称、减排月份、提交时间、审核状态';
+  '列表字段：供应商名称、目标排放量、目标年度、减排方案名称、减排类别、减排月份、提交时间、审核状态';
 const PLAN_OPERATION_NOTE =
   '审核状态和操作对应关系：待审核—审核、查看；已通过—查看；已驳回—查看。点击审核进入页面进行审核通过或驳回操作。';
 
@@ -197,9 +199,11 @@ export default function PlansPage() {
             render: v => v || '-',
           },
           {
-            title: '目标值',
-            dataIndex: ['reduction_targets', 'target_value'],
-            render: v => v || '-',
+            title: '目标排放量',
+            width: 420,
+            ellipsis: true,
+            render: (_, record) =>
+              formatTargetEmission(record.reduction_targets),
           },
           {
             title: '目标年度',
@@ -210,6 +214,13 @@ export default function PlansPage() {
             title: '减排方案名称',
             dataIndex: 'plan_name',
             render: v => v || '-',
+          },
+          {
+            title: '减排类别',
+            dataIndex: 'reduction_category',
+            width: 100,
+            render: (category: keyof typeof PLAN_CATEGORY_LABELS | undefined) =>
+              category ? PLAN_CATEGORY_LABELS[category] : '-',
           },
           {
             title: '减排月份',

@@ -10,7 +10,7 @@ import type { DemoData } from '@/views/supplyChainCarbon/data/demo-data';
 import styles from '@/views/supplyChainCarbon/styles.module.less';
 
 const ORG_CARBON_CHART_NOTE =
-  '组织碳表格上方增加1个图表，分组柱状图，横轴是供应商名称，纵轴是2个，1个是目标排放量、1个是实际排放量，其中目标排放量和实际排放量都是可以堆叠的，如果这个供应商的减排目标既有范围一也有范围二则为堆叠的柱子。';
+  '组织碳图表比较同期目标排放量与截至当前填报月份的累计实际排放量；范围一、范围二分别堆叠展示，避免用部分月份实际值直接对比全年目标。';
 
 type OrgCarbonProgressChartProps = {
   data: DemoData;
@@ -38,10 +38,10 @@ export function OrgCarbonProgressChart({
       },
       legend: {
         data: [
-          '范围一（目标排放量）',
-          '范围二（目标排放量）',
-          '范围一（实际排放量）',
-          '范围二（实际排放量）',
+          '范围一（同期目标排放量）',
+          '范围二（同期目标排放量）',
+          '范围一（累计实际排放量）',
+          '范围二（累计实际排放量）',
         ],
         top: 8,
         left: 'center',
@@ -77,27 +77,31 @@ export function OrgCarbonProgressChart({
       },
       series: [
         {
-          name: '范围一（目标排放量）',
+          name: '范围一（同期目标排放量）',
           type: 'bar',
           stack: 'target',
           emphasis: { focus: 'series' },
           data: chartData.map(item =>
-            item.scope1_target > 0 ? item.scope1_target : undefined,
+            item.scope1_period_target > 0
+              ? item.scope1_period_target
+              : undefined,
           ),
           itemStyle: { color: '#5470C6' },
         },
         {
-          name: '范围二（目标排放量）',
+          name: '范围二（同期目标排放量）',
           type: 'bar',
           stack: 'target',
           emphasis: { focus: 'series' },
           data: chartData.map(item =>
-            item.scope2_target > 0 ? item.scope2_target : undefined,
+            item.scope2_period_target > 0
+              ? item.scope2_period_target
+              : undefined,
           ),
           itemStyle: { color: '#91B4F5' },
         },
         {
-          name: '范围一（实际排放量）',
+          name: '范围一（累计实际排放量）',
           type: 'bar',
           stack: 'actual',
           emphasis: { focus: 'series' },
@@ -107,7 +111,7 @@ export function OrgCarbonProgressChart({
           itemStyle: { color: '#EE8A44' },
         },
         {
-          name: '范围二（实际排放量）',
+          name: '范围二（累计实际排放量）',
           type: 'bar',
           stack: 'actual',
           emphasis: { focus: 'series' },

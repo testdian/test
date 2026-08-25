@@ -5,12 +5,12 @@ import ReactECharts from 'echarts-for-react';
 import { useMemo } from 'react';
 
 import { FormLabelWithNote } from '@/components/ModifyNote';
-import { listProductCarbonProgress } from '@/views/supplyChainCarbon/data/demo-supply-chain';
 import type { DemoData } from '@/views/supplyChainCarbon/data/demo-data';
+import { listProductCarbonProgress } from '@/views/supplyChainCarbon/data/demo-supply-chain';
 import styles from '@/views/supplyChainCarbon/styles.module.less';
 
 const PRODUCT_CARBON_CHART_NOTE =
-  '产品碳表格上方增加一个图表，分组柱状图，横轴是供应商名称-产品名称，纵轴是2个，1个目标产品碳足迹、1个实际产品碳足迹。';
+  '产品碳表格上方增加一个图表，分组柱状图，横轴是供应商名称-产品名称，纵轴是2个，1个目标产品碳足迹、1个实际产品碳足迹；实际产品碳足迹使用1—12月中月份最晚的有效数值。';
 
 type ProductCarbonProgressChartProps = {
   data: DemoData;
@@ -35,7 +35,7 @@ export function ProductCarbonProgressChart({
     return rows.map(row => ({
       category: `${row.supplier_name}-${row.product_name || '-'}`,
       targetFootprint: row.target_footprint ?? 0,
-      actualFootprint: Number((row.total_actual / 12).toFixed(2)),
+      actualFootprint: row.latest_actual ?? 0,
     }));
   }, [data, supplierKeyword, productKeyword, targetYear]);
 

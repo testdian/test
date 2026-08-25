@@ -1,20 +1,22 @@
 /**
  * @description 进度追踪看板 - 产品碳进度表格
  */
+import { Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useMemo } from 'react';
 
 import { HorizontalDragTable } from '@/components/HorizontalDragTable';
 import { FormLabelWithNote } from '@/components/ModifyNote';
+import type { DemoData } from '@/views/supplyChainCarbon/data/demo-data';
 import {
   listProductCarbonProgress,
+  type CarbonTargetStatus,
   type ProductCarbonProgressRow,
 } from '@/views/supplyChainCarbon/data/demo-supply-chain';
-import type { DemoData } from '@/views/supplyChainCarbon/data/demo-data';
 import styles from '@/views/supplyChainCarbon/styles.module.less';
 
 const PRODUCT_CARBON_TABLE_NOTE =
-  '产品碳展示1个表格：供应商名称、产品名称、上一年度产品碳足迹、减排比例、目标产品碳足迹、1月实际产品碳足迹……12月实际产品碳足迹、汇总实际产品碳足迹、目标达成率。';
+  '产品碳以1—12月中月份最晚的有效产品碳足迹为最新值：目标偏差率=（最新产品碳足迹-目标产品碳足迹）÷目标产品碳足迹×100%；最新产品碳足迹不高于目标值时为已达标；减排目标完成度=（上一年度产品碳足迹-最新产品碳足迹）÷（上一年度产品碳足迹-目标产品碳足迹）×100%。';
 
 const MONTH_LABELS = Array.from({ length: 12 }, (_, index) => `${index + 1}月`);
 
@@ -25,8 +27,10 @@ const PRODUCT_COLUMN_WIDTH = {
   reductionRatio: 120,
   targetFootprint: 280,
   monthlyActual: 280,
-  totalActual: 300,
-  achievementRate: 140,
+  latestActual: 280,
+  deviationRate: 160,
+  targetStatus: 120,
+  reductionProgress: 190,
 } as const;
 
 const PRODUCT_TABLE_SCROLL_X =
@@ -36,11 +40,19 @@ const PRODUCT_TABLE_SCROLL_X =
   PRODUCT_COLUMN_WIDTH.reductionRatio +
   PRODUCT_COLUMN_WIDTH.targetFootprint +
   PRODUCT_COLUMN_WIDTH.monthlyActual * 12 +
-  PRODUCT_COLUMN_WIDTH.totalActual +
-  PRODUCT_COLUMN_WIDTH.achievementRate;
+  PRODUCT_COLUMN_WIDTH.latestActual +
+  PRODUCT_COLUMN_WIDTH.deviationRate +
+  PRODUCT_COLUMN_WIDTH.targetStatus +
+  PRODUCT_COLUMN_WIDTH.reductionProgress;
 
 function columnTitle(label: string) {
   return label;
+}
+
+function renderTargetStatus(status: CarbonTargetStatus) {
+  if (status === 'achieved') return <Tag color='green'>已达标</Tag>;
+  if (status === 'not_achieved') return <Tag color='red'>未达标</Tag>;
+  return <Tag>暂无数据</Tag>;
 }
 
 function buildColumns(): ColumnsType<ProductCarbonProgressRow> {
@@ -90,15 +102,38 @@ function buildColumns(): ColumnsType<ProductCarbonProgressRow> {
     },
     ...monthlyColumns,
     {
-      title: columnTitle('汇总实际产品碳足迹（tCO₂e/功能单位）'),
-      dataIndex: 'total_actual',
-      width: PRODUCT_COLUMN_WIDTH.totalActual,
+      title: columnTitle('最新产品碳足迹（tCO₂e/功能单位）'),
+      dataIndex: 'latest_actual',
+      width: PRODUCT_COLUMN_WIDTH.latestActual,
       align: 'center',
+      render: value => (value == null ? '-' : value),
     },
     {
-      title: columnTitle('目标达成率（%）'),
-      dataIndex: 'achievement_rate',
-      width: PRODUCT_COLUMN_WIDTH.achievementRate,
+      title: columnTitle('目标偏差率（%）'),
+      dataIndex: 'deviation_rate',
+      width: PRODUCT_COLUMN_WIDTH.deviationRate,
+      align: 'center',
+      render: value =>
+        value == null ? (
+          '-'
+        ) : (
+          <span style={{ color: value <= 0 ? '#389e0d' : '#cf1322' }}>
+            {value > 0 ? '+' : ''}
+            {value}%
+          </span>
+        ),
+    },
+    {
+      title: '达标状态',
+      dataIndex: 'target_status',
+      width: PRODUCT_COLUMN_WIDTH.targetStatus,
+      align: 'center',
+      render: renderTargetStatus,
+    },
+    {
+      title: columnTitle('减排目标完成度（%）'),
+      dataIndex: 'reduction_progress',
+      width: PRODUCT_COLUMN_WIDTH.reductionProgress,
       align: 'center',
       render: value => (value == null ? '-' : `${value}%`),
     },

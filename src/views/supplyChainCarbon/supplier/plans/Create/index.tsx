@@ -13,6 +13,7 @@ import { StatusTag } from '@/views/supplyChainCarbon/components/StatusTag';
 import {
   canSupplierEditPlan,
   enrichPlan,
+  formatTargetEmission,
   updateReductionPlan,
 } from '@/views/supplyChainCarbon/data/demo-supply-chain';
 import { PLAN_STATUS_BADGES } from '@/views/supplyChainCarbon/data/status-badges';
@@ -20,13 +21,13 @@ import { useDemoStore } from '@/views/supplyChainCarbon/hooks/useDemoStore';
 import { useUserRole } from '@/views/supplyChainCarbon/hooks/useUserRole';
 import styles from '@/views/supplyChainCarbon/styles.module.less';
 
+import { SupplierPlanFormFields } from '../SupplierPlanFormFields';
 import {
   formValuesToPlanPayload,
   planToFormValues,
   SUPPLIER_PLAN_FORM_NOTE,
   type SupplierPlanFormValues,
 } from '../plan-form';
-import { SupplierPlanFormFields } from '../SupplierPlanFormFields';
 
 export default function SupplierPlanCreatePage() {
   const navigate = useNavigate();
@@ -59,9 +60,9 @@ export default function SupplierPlanCreatePage() {
 
   const handleSubmit = async () => {
     if (!editingPlan || !canSupplierEditPlan(editingPlan.status)) return;
-    const values = await form.validateFields();
-    setSubmitting(true);
     try {
+      const values = await form.validateFields();
+      setSubmitting(true);
       const today = new Date().toISOString().slice(0, 10);
       const payload = formValuesToPlanPayload(values);
       update(d =>
@@ -73,6 +74,17 @@ export default function SupplierPlanCreatePage() {
       );
       message.success('计划已提交审核');
       navigate(SupplyChainSupplierRouteMaps.plans);
+    } catch (error) {
+      const validationError = error as {
+        errorFields?: { name: (string | number)[] }[];
+      };
+      const firstField = validationError.errorFields?.[0]?.name;
+      if (firstField) {
+        form.scrollToField(firstField, { behavior: 'smooth', block: 'center' });
+        message.warning('请完善必填项后再提交审核');
+      } else {
+        message.error('提交审核失败，请重试');
+      }
     } finally {
       setSubmitting(false);
     }
@@ -100,9 +112,10 @@ export default function SupplierPlanCreatePage() {
         <Form form={form} layout='vertical'>
           <SupplierPlanFormFields
             form={form}
-            targetValue={editingPlan.reduction_targets?.target_value || '-'}
+            targetEmission={formatTargetEmission(editingPlan.reduction_targets)}
             targetYear={editingPlan.reduction_targets?.baseline_year}
             reductionMonth={editingPlan.reduction_month}
+            supplierName={editingPlan.suppliers?.name}
           />
         </Form>
       </div>
