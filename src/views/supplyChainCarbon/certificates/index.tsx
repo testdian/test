@@ -2,7 +2,7 @@
  * @description 碳资质认证
  */
 import { DownloadOutlined } from '@ant-design/icons';
-import { Select, Table, Tag, message } from 'antd';
+import { Button, Select, Table, Tag, message } from 'antd';
 import JSZip from 'jszip';
 import { useMemo, useState } from 'react';
 
@@ -82,6 +82,10 @@ export default function CertificatesPage() {
   const { data, ready } = useDemoStore();
   const [category, setCategory] = useState('all');
   const [expiry, setExpiry] = useState('all');
+  const [appliedFilters, setAppliedFilters] = useState({
+    category: 'all',
+    expiry: 'all',
+  });
   const [viewCert, setViewCert] = useState<CarbonCertificate | null>(null);
   const [versionCert, setVersionCert] = useState<CarbonCertificate | null>(
     null,
@@ -90,14 +94,16 @@ export default function CertificatesPage() {
 
   const list = useMemo(() => {
     return data.certificates.filter(c => {
-      if (!matchCertCategoryFilter(c.cert_category, category)) return false;
+      if (!matchCertCategoryFilter(c.cert_category, appliedFilters.category)) {
+        return false;
+      }
       const exp = getExpiryInfo(c.expired_at).label;
-      if (expiry === 'valid' && exp !== '有效') return false;
-      if (expiry === 'soon' && exp !== '即将到期') return false;
-      if (expiry === 'expired' && exp !== '已过期') return false;
+      if (appliedFilters.expiry === 'valid' && exp !== '有效') return false;
+      if (appliedFilters.expiry === 'soon' && exp !== '即将到期') return false;
+      if (appliedFilters.expiry === 'expired' && exp !== '已过期') return false;
       return true;
     });
-  }, [data.certificates, category, expiry]);
+  }, [data.certificates, appliedFilters]);
 
   const {
     paginatedItems,
@@ -198,10 +204,7 @@ export default function CertificatesPage() {
       <div className={styles.filterBar}>
         <Select
           value={category}
-          onChange={v => {
-            setCategory(v);
-            setCurrentPage(1);
-          }}
+          onChange={setCategory}
           style={{ width: 176 }}
           options={[
             { label: '全部类别', value: 'all' },
@@ -210,10 +213,7 @@ export default function CertificatesPage() {
         />
         <Select
           value={expiry}
-          onChange={v => {
-            setExpiry(v);
-            setCurrentPage(1);
-          }}
+          onChange={setExpiry}
           style={{ width: 176 }}
           options={[
             { label: '全部到期状态', value: 'all' },
@@ -222,6 +222,25 @@ export default function CertificatesPage() {
             { label: '已过期', value: 'expired' },
           ]}
         />
+        <Button
+          type='primary'
+          onClick={() => {
+            setAppliedFilters({ category, expiry });
+            setCurrentPage(1);
+          }}
+        >
+          查询
+        </Button>
+        <Button
+          onClick={() => {
+            setCategory('all');
+            setExpiry('all');
+            setAppliedFilters({ category: 'all', expiry: 'all' });
+            setCurrentPage(1);
+          }}
+        >
+          重置
+        </Button>
       </div>
 
       <Table
