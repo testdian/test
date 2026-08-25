@@ -1,6 +1,8 @@
 /**
  * @description 问卷回复
  */
+import { DownloadOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -11,6 +13,10 @@ import { FormFieldInputs } from '@/views/supplyChainCarbon/components/FormFieldI
 import { StatusTag } from '@/views/supplyChainCarbon/components/StatusTag';
 import { supplierName } from '@/views/supplyChainCarbon/data/demo-data';
 import { questionnaireDetail } from '@/views/supplyChainCarbon/data/demo-questionnaires';
+import {
+  downloadAllSupplierQuestionnaireExcels,
+  downloadSupplierQuestionnaireExcel,
+} from '@/views/supplyChainCarbon/data/questionnaire-export';
 import { SUBMISSION_STATUS_BADGES } from '@/views/supplyChainCarbon/data/status-badges';
 import { useDemoStore } from '@/views/supplyChainCarbon/hooks/useDemoStore';
 import styles from '@/views/supplyChainCarbon/styles.module.less';
@@ -52,13 +58,36 @@ export default function QuestionnaireResponsesPage() {
     return <Page title='查看问卷回复'>未找到该调研填报任务</Page>;
   }
 
+  const exportPayload = (item: (typeof detail.suppliers)[number]) => ({
+    taskName: detail.name,
+    supplierName: item.supplier?.name || supplierName(data, item.id),
+    organization: detail.organization,
+    deadline: detail.deadline,
+    submittedAt: item.submitted_at,
+    fields: detail.form_fields,
+    answers: item.answers || {},
+  });
+
   return (
     <Page title='查看问卷回复' wrapperClass='marginBottomFormActionsHeight'>
       <div className={styles.questionnaireResponsesSummary}>
         <div className={styles.questionnaireResponsesTitle}>{detail.name}</div>
-        <div className={styles.questionnaireResponsesMeta}>
-          共 {detail.suppliers.length} 家供应商，已回复{' '}
-          {submittedSuppliers.length} 家
+        <div className={styles.questionnaireResponsesSummaryActions}>
+          <div className={styles.questionnaireResponsesMeta}>
+            共 {detail.suppliers.length} 家供应商，已回复{' '}
+            {submittedSuppliers.length} 家
+          </div>
+          <Button
+            icon={<DownloadOutlined />}
+            disabled={submittedSuppliers.length === 0}
+            onClick={() =>
+              downloadAllSupplierQuestionnaireExcels(
+                submittedSuppliers.map(exportPayload),
+              )
+            }
+          >
+            批量导出
+          </Button>
         </div>
       </div>
 
@@ -71,20 +100,35 @@ export default function QuestionnaireResponsesPage() {
             {detail.suppliers.map((item, index) => {
               const submitted = item.status === 'submitted';
               const active = selectedSupplierId === item.id;
+              const currentSupplierName =
+                item.supplier?.name || supplierName(data, item.id);
               return (
-                <button
+                <div
                   key={item.id}
-                  type='button'
                   className={[
                     styles.questionnaireResponsesSupplierItem,
                     active
                       ? styles.questionnaireResponsesSupplierItemActive
                       : '',
+                    !submitted
+                      ? styles.questionnaireResponsesSupplierItemDisabled
+                      : '',
                   ]
                     .filter(Boolean)
                     .join(' ')}
-                  disabled={!submitted}
-                  onClick={() => setSelectedSupplierId(item.id)}
+                  role='button'
+                  tabIndex={submitted ? 0 : -1}
+                  aria-disabled={!submitted}
+                  onClick={() => {
+                    if (submitted) setSelectedSupplierId(item.id);
+                  }}
+                  onKeyDown={event => {
+                    if (!submitted) return;
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      setSelectedSupplierId(item.id);
+                    }
+                  }}
                 >
                   <div className={styles.questionnaireResponsesSupplierMain}>
                     <span
@@ -93,19 +137,39 @@ export default function QuestionnaireResponsesPage() {
                       {index + 1}
                     </span>
                     <span className={styles.questionnaireResponsesSupplierName}>
-                      {item.supplier?.name || supplierName(data, item.id)}
+                      {currentSupplierName}
                     </span>
                   </div>
                   <div className={styles.questionnaireResponsesSupplierMeta}>
-                    <StatusTag
-                      status={submitted ? 'submitted' : 'pending'}
-                      map={SUBMISSION_STATUS_BADGES}
-                    />
-                    <span>
-                      {submitted ? formatDate(item.submitted_at) : '-'}
-                    </span>
+                    <div
+                      className={styles.questionnaireResponsesSupplierStatus}
+                    >
+                      <StatusTag
+                        status={submitted ? 'submitted' : 'pending'}
+                        map={SUBMISSION_STATUS_BADGES}
+                      />
+                      <span>
+                        {submitted ? formatDate(item.submitted_at) : '-'}
+                      </span>
+                    </div>
+                    {submitted && (
+                      <Button
+                        type='link'
+                        size='small'
+                        icon={<DownloadOutlined />}
+                        className={styles.questionnaireResponsesExportButton}
+                        onClick={event => {
+                          event.stopPropagation();
+                          downloadSupplierQuestionnaireExcel(
+                            exportPayload(item),
+                          );
+                        }}
+                      >
+                        导出
+                      </Button>
+                    )}
                   </div>
-                </button>
+                </div>
               );
             })}
           </div>

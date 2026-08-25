@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import {
   defaultDemoData,
@@ -6,6 +6,14 @@ import {
   normalizeFormTemplate,
   type DemoData,
 } from '../data/demo-data';
+
+const DEMO_STORE_UPDATED_EVENT = 'supply-chain-demo-store-updated';
+
+function notifyDemoStoreUpdated() {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event(DEMO_STORE_UPDATED_EVENT));
+  }
+}
 
 function loadDemoData(): DemoData {
   if (typeof window === 'undefined') return defaultDemoData();
@@ -254,24 +262,34 @@ function loadDemoData(): DemoData {
 
 export function useDemoStore() {
   const [data, setData] = useState<DemoData>(defaultDemoData);
+  const dataRef = useRef(data);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setData(loadDemoData());
+    const refresh = () => {
+      const loaded = loadDemoData();
+      dataRef.current = loaded;
+      setData(loaded);
+    };
+    refresh();
     setReady(true);
+    window.addEventListener(DEMO_STORE_UPDATED_EVENT, refresh);
+    return () => window.removeEventListener(DEMO_STORE_UPDATED_EVENT, refresh);
   }, []);
 
   const save = useCallback((next: DemoData) => {
-    setData(next);
+    dataRef.current = next;
     localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(next));
+    setData(next);
+    notifyDemoStoreUpdated();
   }, []);
 
   const update = useCallback((fn: (d: DemoData) => DemoData) => {
-    setData(prev => {
-      const next = fn(prev);
-      localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(next));
-      return next;
-    });
+    const next = fn(dataRef.current);
+    dataRef.current = next;
+    localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(next));
+    setData(next);
+    notifyDemoStoreUpdated();
   }, []);
 
   return { data, save, update, ready };
