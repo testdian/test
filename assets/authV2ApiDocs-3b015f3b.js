@@ -1,0 +1,1 @@
+import{aZ as r}from"./index-f58eef23.js";const o=r,u=({},e)=>{let t="/auth/token/logout";return o.request({url:t,method:"GET",...e})},n=({},e)=>{let t="/auth/token/refresh";return o.request({url:t,method:"GET",...e})};export{n as a,u as g};

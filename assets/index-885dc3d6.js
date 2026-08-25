@@ -1,0 +1,1 @@
+import{r as t}from"./index-f58eef23.js";import{b as m}from"./systemV2ApiDocs-ff99a2b4.js";const l=()=>{const[o,r]=t.useState([]);return t.useEffect(()=>{m({pageNum:1,pageSize:99999}).then(({data:e})=>{var s;r(((s=e==null?void 0:e.data)==null?void 0:s.list)||[])})},[]),o};export{l as u};

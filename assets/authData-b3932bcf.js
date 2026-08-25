@@ -1,1 +1,0 @@
-import{a7 as o}from"./index-6db3c538.js";const e=t=>o({url:"/computation/authData/data/source/tree",method:"GET",params:t}),a=t=>o({url:"/auth/token/forgot/captcha",method:"GET",params:t}),s=t=>o({url:"/auth/token/forgot/modifyPassword",method:"POST",data:t});export{e as a,a as g,s as p};
