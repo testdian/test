@@ -1,1 +1,0 @@
-import{g as n,a}from"./index-53250807.js";import{g as r}from"./DownOutlined-9c8a5808.js";const e=n(a),i=r(e,"popupAlign",void 0,"picker");e._InternalPanelDoNotUseOrYouWillBeFired=i;const o=r(e.RangePicker,"popupAlign",void 0,"picker");e._InternalRangePanelDoNotUseOrYouWillBeFired=o;e.generatePicker=n;const P=e;export{P as D};

@@ -1,1 +1,0 @@
-import{j as s}from"./index-f58eef23.js";import{s as a}from"./styles.module-4203319c.js";function i({icon:e,children:n}){return s.jsxs("div",{className:a.pageActionLabel,children:[s.jsx("span",{className:a.pageActionIcon,children:e}),s.jsx("span",{children:n})]})}export{i as P};

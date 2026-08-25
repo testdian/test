@@ -1,0 +1,1 @@
+import{a as e,m as o,e as r}from"./SchemaField-661188a9.js";import"./index-cdb5e2d8.js";import{P as t}from"./index-45d58ffe.js";import{C as a}from"./index-5319a032.js";var p=e(a,o({value:"checked",onInput:"onChange"})),m=e(a.Group,o({dataSource:"options"}),r(t.Select,{mode:"tags"})),i=Object.assign(p,{__ANT_CHECKBOX:!0,Group:m});export{i as C};
