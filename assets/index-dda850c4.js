@@ -1,1 +1,0 @@
-import{j as s}from"./index-d2d8b863.js";const e="index-module_division_c7VI9Y",o="index-module_titleH4_-ZDnZ9",t={division:e,titleH4:o},l=()=>s.jsx("div",{className:t.division,children:s.jsx("div",{})}),r=({children:i,style:n})=>s.jsx("h4",{style:n||{},className:t.titleH4,children:i}),c=i=>s.jsx("span",{children:i.text});export{l as D,r as H,c as M};
