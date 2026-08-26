@@ -2,7 +2,7 @@
  * @description 问卷回复
  */
 import { DownloadOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { Button, Input, Modal, message } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -12,7 +12,10 @@ import { SupplyChainRefRouteMaps } from '@/router/utils/supplyChainRefEnums';
 import { FormFieldInputs } from '@/views/supplyChainCarbon/components/FormFieldInputs';
 import { StatusTag } from '@/views/supplyChainCarbon/components/StatusTag';
 import { supplierName } from '@/views/supplyChainCarbon/data/demo-data';
-import { questionnaireDetail } from '@/views/supplyChainCarbon/data/demo-questionnaires';
+import {
+  questionnaireDetail,
+  rejectQuestionnaireAnswers,
+} from '@/views/supplyChainCarbon/data/demo-questionnaires';
 import {
   downloadAllSupplierQuestionnaireExcels,
   downloadSupplierQuestionnaireExcel,
@@ -26,10 +29,12 @@ export default function QuestionnaireResponsesPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const questionnaireId = Number(id);
-  const { data, ready } = useDemoStore();
+  const { data, update, ready } = useDemoStore();
   const [selectedSupplierId, setSelectedSupplierId] = useState<number | null>(
     null,
   );
+  const [rejectSupplierId, setRejectSupplierId] = useState<number | null>(null);
+  const [rejectReason, setRejectReason] = useState('');
 
   const detail = useMemo(() => {
     const source = data.questionnaires.find(
@@ -43,15 +48,45 @@ export default function QuestionnaireResponsesPage() {
     () => detail?.suppliers.filter(item => item.status === 'submitted') || [],
     [detail],
   );
+  const repliedSuppliers = useMemo(
+    () => detail?.suppliers.filter(item => item.status !== 'pending') || [],
+    [detail],
+  );
 
   useEffect(() => {
-    if (selectedSupplierId != null || submittedSuppliers.length === 0) return;
-    setSelectedSupplierId(submittedSuppliers[0].id);
-  }, [selectedSupplierId, submittedSuppliers]);
+    if (selectedSupplierId != null || repliedSuppliers.length === 0) return;
+    setSelectedSupplierId(repliedSuppliers[0].id);
+  }, [selectedSupplierId, repliedSuppliers]);
 
   const selectedSupplier = detail?.suppliers.find(
     item => item.id === selectedSupplierId,
   );
+  const rejectSupplier = detail?.suppliers.find(
+    item => item.id === rejectSupplierId,
+  );
+
+  const closeRejectModal = () => {
+    setRejectSupplierId(null);
+    setRejectReason('');
+  };
+
+  const handleReject = () => {
+    const reason = rejectReason.trim();
+    if (!rejectSupplier || !reason) {
+      message.error('请输入驳回原因');
+      return;
+    }
+    update(current =>
+      rejectQuestionnaireAnswers(
+        current,
+        questionnaireId,
+        rejectSupplier.id,
+        reason,
+      ),
+    );
+    message.success('问卷已驳回，供应商可修改后重新提交');
+    closeRejectModal();
+  };
 
   if (!ready) return null;
   if (!detail) {
@@ -75,7 +110,7 @@ export default function QuestionnaireResponsesPage() {
         <div className={styles.questionnaireResponsesSummaryActions}>
           <div className={styles.questionnaireResponsesMeta}>
             共 {detail.suppliers.length} 家供应商，已回复{' '}
-            {submittedSuppliers.length} 家
+            {repliedSuppliers.length} 家
           </div>
           <Button
             icon={<DownloadOutlined />}
@@ -99,6 +134,7 @@ export default function QuestionnaireResponsesPage() {
           <div className={styles.questionnaireResponsesSupplierList}>
             {detail.suppliers.map((item, index) => {
               const submitted = item.status === 'submitted';
+              const replied = item.status !== 'pending';
               const active = selectedSupplierId === item.id;
               const currentSupplierName =
                 item.supplier?.name || supplierName(data, item.id);
@@ -110,20 +146,20 @@ export default function QuestionnaireResponsesPage() {
                     active
                       ? styles.questionnaireResponsesSupplierItemActive
                       : '',
-                    !submitted
+                    !replied
                       ? styles.questionnaireResponsesSupplierItemDisabled
                       : '',
                   ]
                     .filter(Boolean)
                     .join(' ')}
                   role='button'
-                  tabIndex={submitted ? 0 : -1}
-                  aria-disabled={!submitted}
+                  tabIndex={replied ? 0 : -1}
+                  aria-disabled={!replied}
                   onClick={() => {
-                    if (submitted) setSelectedSupplierId(item.id);
+                    if (replied) setSelectedSupplierId(item.id);
                   }}
                   onKeyDown={event => {
-                    if (!submitted) return;
+                    if (!replied) return;
                     if (event.key === 'Enter' || event.key === ' ') {
                       event.preventDefault();
                       setSelectedSupplierId(item.id);
@@ -145,30 +181,48 @@ export default function QuestionnaireResponsesPage() {
                       className={styles.questionnaireResponsesSupplierStatus}
                     >
                       <StatusTag
-                        status={submitted ? 'submitted' : 'pending'}
+                        status={item.status}
                         map={SUBMISSION_STATUS_BADGES}
                       />
                       <span>
-                        {submitted ? formatDate(item.submitted_at) : '-'}
+                        {replied ? formatDate(item.submitted_at) : '-'}
                       </span>
                     </div>
-                    {submitted && (
-                      <Button
-                        type='link'
-                        size='small'
-                        icon={<DownloadOutlined />}
-                        className={styles.questionnaireResponsesExportButton}
-                        onClick={event => {
-                          event.stopPropagation();
-                          downloadSupplierQuestionnaireExcel(
-                            exportPayload(item),
-                          );
-                        }}
-                      >
-                        导出
-                      </Button>
-                    )}
                   </div>
+                  {replied && (
+                    <div
+                      className={styles.questionnaireResponsesSupplierActions}
+                    >
+                        <Button
+                          type='link'
+                          size='small'
+                          icon={<DownloadOutlined />}
+                          className={styles.questionnaireResponsesExportButton}
+                          onClick={event => {
+                            event.stopPropagation();
+                            downloadSupplierQuestionnaireExcel(
+                              exportPayload(item),
+                            );
+                          }}
+                        >
+                          导出
+                        </Button>
+                        {submitted && (
+                          <Button
+                            danger
+                            type='link'
+                            size='small'
+                            onClick={event => {
+                              event.stopPropagation();
+                              setRejectSupplierId(item.id);
+                              setRejectReason('');
+                            }}
+                          >
+                            驳回修改
+                          </Button>
+                        )}
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -207,6 +261,34 @@ export default function QuestionnaireResponsesPage() {
           )}
         </section>
       </div>
+
+      <Modal
+        title='驳回问卷修改'
+        open={rejectSupplierId != null}
+        okText='确认驳回'
+        cancelText='取消'
+        okButtonProps={{ danger: true }}
+        onOk={handleReject}
+        onCancel={closeRejectModal}
+        destroyOnClose
+      >
+        <div style={{ marginBottom: 12 }}>
+          供应商：
+          {rejectSupplier?.supplier?.name ||
+            (rejectSupplier ? supplierName(data, rejectSupplier.id) : '-')}
+        </div>
+        <div style={{ marginBottom: 8 }}>
+          <span style={{ color: '#ff4d4f' }}>*</span> 驳回原因
+        </div>
+        <Input.TextArea
+          value={rejectReason}
+          onChange={event => setRejectReason(event.target.value)}
+          placeholder='请输入需要供应商修改的内容及原因'
+          maxLength={500}
+          showCount
+          autoSize={{ minRows: 4, maxRows: 8 }}
+        />
+      </Modal>
 
       <FormActions
         place='center'

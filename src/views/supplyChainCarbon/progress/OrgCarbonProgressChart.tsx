@@ -10,7 +10,7 @@ import type { DemoData } from '@/views/supplyChainCarbon/data/demo-data';
 import styles from '@/views/supplyChainCarbon/styles.module.less';
 
 const ORG_CARBON_CHART_NOTE =
-  '组织碳图表比较同期目标排放量与截至当前填报月份的累计实际排放量；范围一、范围二分别堆叠展示，避免用部分月份实际值直接对比全年目标。';
+  '组织碳图表比较同期目标排放量与审核通过月份的累计实际排放量；范围一、范围二分别堆叠展示，避免用部分月份实际值直接对比全年目标。';
 
 type OrgCarbonProgressChartProps = {
   data: DemoData;

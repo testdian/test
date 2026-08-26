@@ -57,6 +57,14 @@ export function questionnaireListItem(q: DemoQuestionnaire) {
   };
 }
 
+export function latestQuestionnaireRejection(
+  questionnaire: DemoQuestionnaire,
+  supplierId: number,
+) {
+  const records = questionnaire.supplier_rejections?.[supplierId] || [];
+  return records[records.length - 1] || null;
+}
+
 export function questionnaireDetail(data: DemoData, q: DemoQuestionnaire) {
   return {
     ...questionnaireListItem(q),
@@ -66,10 +74,50 @@ export function questionnaireDetail(data: DemoData, q: DemoQuestionnaire) {
       id: supplierId,
       status: q.supplier_status[supplierId] || 'pending',
       submitted_at:
-        q.supplier_status[supplierId] === 'submitted' ? q.created_at : null,
+        q.supplier_status[supplierId] !== 'pending' ? q.created_at : null,
       supplier: { id: supplierId, name: supplierName(data, supplierId) },
       answers: q.supplier_answers?.[supplierId] || {},
+      latest_rejection: latestQuestionnaireRejection(q, supplierId),
     })),
+  };
+}
+
+export function rejectQuestionnaireAnswers(
+  data: DemoData,
+  questionnaireId: number,
+  supplierId: number,
+  reason: string,
+): DemoData {
+  const rejectedAt = new Date().toISOString();
+  return {
+    ...data,
+    questionnaires: data.questionnaires.map(questionnaire => {
+      if (
+        questionnaire.id !== questionnaireId ||
+        questionnaire.supplier_status[supplierId] !== 'submitted'
+      ) {
+        return questionnaire;
+      }
+      const history = questionnaire.supplier_rejections?.[supplierId] || [];
+      return {
+        ...questionnaire,
+        supplier_status: {
+          ...questionnaire.supplier_status,
+          [supplierId]: 'rejected' as const,
+        },
+        supplier_rejections: {
+          ...questionnaire.supplier_rejections,
+          [supplierId]: [
+            ...history,
+            {
+              reason,
+              rejected_at: rejectedAt,
+              rejected_by: '管理员',
+            },
+          ],
+        },
+      };
+    }),
   };
 }
 
@@ -163,6 +211,7 @@ export function publishQuestionnaire(
             status: 'published' as const,
             supplier_ids: supplierIds,
             supplier_status,
+            supplier_rejections: {},
           }
         : q,
     ),
@@ -187,7 +236,7 @@ export function submitQuestionnaireAnswers(
     )?.id;
 
   const submittedAt = new Date().toISOString().slice(0, 10);
-  const hasResearch = data.researchSubmissions.some(
+  const existingResearch = data.researchSubmissions.find(
     item => item.task_id === questionnaireId && item.supplier_id === supplierId,
   );
 
@@ -210,7 +259,16 @@ export function submitQuestionnaireAnswers(
     ),
   };
 
-  if (templateId && !hasResearch) {
+  if (templateId && existingResearch) {
+    next = {
+      ...next,
+      researchSubmissions: next.researchSubmissions.map(item =>
+        item.id === existingResearch.id
+          ? { ...item, values: answers, submitted_at: submittedAt }
+          : item,
+      ),
+    };
+  } else if (templateId) {
     const researchId =
       next.nextId.researchSub ?? next.researchSubmissions.length + 1;
     next = {

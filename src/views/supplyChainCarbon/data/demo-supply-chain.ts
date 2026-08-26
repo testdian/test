@@ -303,7 +303,7 @@ export interface OrgCarbonProgressRow {
   prev_emission?: number;
   reduction_ratio?: number;
   target_emission?: number;
-  monthly_actual: number[];
+  monthly_actual: Array<number | undefined>;
   total_actual?: number;
   reported_month_count: number;
   period_target?: number;
@@ -321,11 +321,8 @@ function percentage(numerator?: number, denominator?: number) {
   return Number(((numerator / denominator) * 100).toFixed(1));
 }
 
-function reportedMonthCount(values: number[]) {
-  for (let index = values.length - 1; index >= 0; index -= 1) {
-    if (values[index] != null) return index + 1;
-  }
-  return 0;
+function approvedMonthCount(values: Array<number | undefined>) {
+  return values.filter(value => value != null).length;
 }
 
 function resolveCarbonTargetStatus(
@@ -336,19 +333,67 @@ function resolveCarbonTargetStatus(
   return actual <= target ? 'achieved' : 'not_achieved';
 }
 
-function generateMonthlyActual(
-  supplierId: number,
-  scope: 'scope1' | 'scope2',
-  targetEmission?: number,
-): number[] {
-  if (supplierId === 3) return [];
-  const monthlyTarget = (targetEmission ?? 0) / 12;
-  return Array.from({ length: 12 }, (_, index) => {
-    const offset = scope === 'scope1' ? 1 : 2;
-    const factor =
-      0.82 + ((supplierId * 7 + index * 3 + offset * 5) % 28) / 100;
-    return Number((monthlyTarget * factor).toFixed(2));
+function isTrackableTarget(target: DemoReductionTarget) {
+  return target.status === 'confirmed' || target.status === 'modified';
+}
+
+function planTimestamp(plan: DemoReductionPlan) {
+  const value =
+    plan.reviewed_at || plan.updated_at || plan.submitted_at || plan.created_at;
+  const timestamp = new Date(value).getTime();
+  return Number.isNaN(timestamp) ? 0 : timestamp;
+}
+
+function latestApprovedPlansByMonth(
+  data: DemoData,
+  target: DemoReductionTarget,
+  category: ReductionCategory,
+) {
+  const plans = new Map<number, DemoReductionPlan>();
+
+  data.reductionPlans.forEach(plan => {
+    const month = plan.reduction_month;
+    if (
+      plan.target_id !== target.id ||
+      plan.supplier_id !== target.supplier_id ||
+      plan.status !== 'approved' ||
+      month == null ||
+      !Number.isInteger(month) ||
+      month < 1 ||
+      month > 12 ||
+      resolveReductionPlanCategory(plan, target) !== category
+    ) {
+      return;
+    }
+
+    const current = plans.get(month);
+    if (
+      !current ||
+      planTimestamp(plan) > planTimestamp(current) ||
+      (planTimestamp(plan) === planTimestamp(current) && plan.id > current.id)
+    ) {
+      plans.set(month, plan);
+    }
   });
+
+  return plans;
+}
+
+function approvedMonthlyValues(
+  data: DemoData,
+  target: DemoReductionTarget,
+  category: ReductionCategory,
+  valueOf: (plan: DemoReductionPlan) => number | undefined,
+): Array<number | undefined> {
+  const values: Array<number | undefined> = Array.from(
+    { length: 12 },
+    () => undefined,
+  );
+  latestApprovedPlansByMonth(data, target, category).forEach((plan, month) => {
+    const value = valueOf(plan);
+    if (value != null && Number.isFinite(value)) values[month - 1] = value;
+  });
+  return values;
 }
 
 export function listOrgCarbonProgress(
@@ -361,6 +406,7 @@ export function listOrgCarbonProgress(
   return data.reductionTargets
     .filter(
       target =>
+        isTrackableTarget(target) &&
         target.categories?.includes('org') &&
         target.org_carbon &&
         (targetYear === 'all' || target.baseline_year === targetYear) &&
@@ -392,16 +438,18 @@ export function listOrgCarbonProgress(
         scope === 'scope1'
           ? org.scope1_target_emission
           : org.scope2_target_emission;
-      const monthlyActual = generateMonthlyActual(
-        target.supplier_id,
-        scope,
-        targetEmission,
+      const monthlyActual = approvedMonthlyValues(data, target, 'org', plan =>
+        scope === 'scope1'
+          ? plan.scope1_actual_emission
+          : plan.scope2_actual_emission,
       );
-      const monthCount = reportedMonthCount(monthlyActual);
+      const monthCount = approvedMonthCount(monthlyActual);
       const totalActual =
         monthCount > 0
           ? Number(
-              monthlyActual.reduce((sum, value) => sum + value, 0).toFixed(2),
+              monthlyActual
+                .reduce((sum, value) => sum + (value ?? 0), 0)
+                .toFixed(2),
             )
           : undefined;
       const periodTarget =
@@ -506,28 +554,16 @@ export interface ProductCarbonProgressRow {
   prev_footprint?: number;
   reduction_ratio?: number;
   target_footprint?: number;
-  monthly_actual: number[];
+  monthly_actual: Array<number | undefined>;
   latest_actual?: number;
   deviation_rate?: number;
   target_status: CarbonTargetStatus;
   reduction_progress?: number;
 }
 
-function generateMonthlyProductFootprint(
-  supplierId: number,
-  targetId: number,
-  targetFootprint?: number,
-): number[] {
-  if (targetId === 9) return [];
-  const base = targetFootprint ?? 0;
-  return Array.from({ length: 12 }, (_, index) => {
-    const factor =
-      0.84 + ((supplierId * 5 + targetId * 3 + index * 4) % 26) / 100;
-    return Number((base * factor).toFixed(2));
-  });
-}
-
-function latestProductFootprint(values: number[]): number | undefined {
+function latestProductFootprint(
+  values: Array<number | undefined>,
+): number | undefined {
   for (let index = values.length - 1; index >= 0; index -= 1) {
     const value = values[index];
     if (value != null) return value;
@@ -549,7 +585,11 @@ export function listProductCarbonProgress(
 
   return data.reductionTargets
     .filter(target => {
-      if (!target.categories?.includes('product') || !target.product_carbon) {
+      if (
+        !isTrackableTarget(target) ||
+        !target.categories?.includes('product') ||
+        !target.product_carbon
+      ) {
         return false;
       }
       if (targetYear !== 'all' && target.baseline_year !== targetYear) {
@@ -584,10 +624,11 @@ export function listProductCarbonProgress(
       );
       const product = target.product_carbon!;
       const targetFootprint = product.target_footprint;
-      const monthlyActual = generateMonthlyProductFootprint(
-        target.supplier_id,
-        target.id,
-        targetFootprint,
+      const monthlyActual = approvedMonthlyValues(
+        data,
+        target,
+        'product',
+        plan => plan.actual_product_footprint,
       );
       const latestActual = latestProductFootprint(monthlyActual);
       const deviationRate = percentage(

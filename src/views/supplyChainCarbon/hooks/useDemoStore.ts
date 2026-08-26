@@ -199,6 +199,8 @@ function loadDemoData(): DemoData {
                 ...fallback?.supplier_answers,
                 ...item.supplier_answers,
               },
+              supplier_rejections:
+                item.supplier_rejections ?? fallback?.supplier_rejections ?? {},
             };
           },
         );
@@ -233,11 +235,10 @@ function loadDemoData(): DemoData {
             };
           },
         );
-        const existingIds = new Set(items.map(item => item.id));
-        const missing = defaults.certificates.filter(
-          item => !existingIds.has(item.id),
-        );
-        return missing.length ? [...items, ...missing] : items;
+        // Certificates can be deleted by suppliers. Do not re-seed missing
+        // default records, otherwise a deleted certificate would reappear on
+        // the supplier and administrator pages after the store refreshes.
+        return items;
       })(),
       trainings: (() => {
         const items = (parsed.trainings || defaults.trainings).map(item => {

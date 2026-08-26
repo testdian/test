@@ -16,7 +16,7 @@ import {
 import styles from '@/views/supplyChainCarbon/styles.module.less';
 
 const PRODUCT_CARBON_TABLE_NOTE =
-  '产品碳以1—12月中月份最晚的有效产品碳足迹为最新值：目标偏差率=（最新产品碳足迹-目标产品碳足迹）÷目标产品碳足迹×100%；最新产品碳足迹不高于目标值时为已达标；减排目标完成度=（上一年度产品碳足迹-最新产品碳足迹）÷（上一年度产品碳足迹-目标产品碳足迹）×100%。';
+  '产品碳以1—12月中月份最晚的审核通过有效产品碳足迹为最新值：目标偏差率=（最新产品碳足迹-目标产品碳足迹）÷目标产品碳足迹×100%；最新产品碳足迹不高于目标值时为已达标；减排目标完成度=（上一年度产品碳足迹-最新产品碳足迹）÷（上一年度产品碳足迹-目标产品碳足迹）×100%；分母为0时显示“—”。';
 
 const MONTH_LABELS = Array.from({ length: 12 }, (_, index) => `${index + 1}月`);
 
@@ -62,7 +62,7 @@ function buildColumns(): ColumnsType<ProductCarbonProgressRow> {
       dataIndex: 'monthly_actual',
       width: PRODUCT_COLUMN_WIDTH.monthlyActual,
       align: 'center',
-      render: (values: number[]) => values?.[index] ?? '-',
+      render: (values: Array<number | undefined>) => values?.[index] ?? '—',
     }));
 
   return [
@@ -77,28 +77,28 @@ function buildColumns(): ColumnsType<ProductCarbonProgressRow> {
       dataIndex: 'product_name',
       fixed: 'left',
       width: PRODUCT_COLUMN_WIDTH.productName,
-      render: value => value || '-',
+      render: value => value || '—',
     },
     {
       title: columnTitle('上一年度产品碳足迹（tCO₂e/功能单位）'),
       dataIndex: 'prev_footprint',
       width: PRODUCT_COLUMN_WIDTH.prevFootprint,
       align: 'center',
-      render: value => (value == null ? '-' : value),
+      render: value => (value == null ? '—' : value),
     },
     {
       title: columnTitle('减排比例（%）'),
       dataIndex: 'reduction_ratio',
       width: PRODUCT_COLUMN_WIDTH.reductionRatio,
       align: 'center',
-      render: value => (value == null ? '-' : `${value}%`),
+      render: value => (value == null ? '—' : `${value}%`),
     },
     {
       title: columnTitle('目标产品碳足迹（tCO₂e/功能单位）'),
       dataIndex: 'target_footprint',
       width: PRODUCT_COLUMN_WIDTH.targetFootprint,
       align: 'center',
-      render: value => (value == null ? '-' : value),
+      render: value => (value == null ? '—' : value),
     },
     ...monthlyColumns,
     {
@@ -106,7 +106,7 @@ function buildColumns(): ColumnsType<ProductCarbonProgressRow> {
       dataIndex: 'latest_actual',
       width: PRODUCT_COLUMN_WIDTH.latestActual,
       align: 'center',
-      render: value => (value == null ? '-' : value),
+      render: value => (value == null ? '—' : value),
     },
     {
       title: columnTitle('目标偏差率（%）'),
@@ -115,7 +115,7 @@ function buildColumns(): ColumnsType<ProductCarbonProgressRow> {
       align: 'center',
       render: value =>
         value == null ? (
-          '-'
+          '—'
         ) : (
           <span style={{ color: value <= 0 ? '#389e0d' : '#cf1322' }}>
             {value > 0 ? '+' : ''}
@@ -135,7 +135,7 @@ function buildColumns(): ColumnsType<ProductCarbonProgressRow> {
       dataIndex: 'reduction_progress',
       width: PRODUCT_COLUMN_WIDTH.reductionProgress,
       align: 'center',
-      render: value => (value == null ? '-' : `${value}%`),
+      render: value => (value == null ? '—' : `${value}%`),
     },
   ];
 }

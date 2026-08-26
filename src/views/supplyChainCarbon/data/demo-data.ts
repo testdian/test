@@ -215,6 +215,12 @@ export interface DemoQuestion {
   sort_order: number;
 }
 
+export interface QuestionnaireRejectionRecord {
+  reason: string;
+  rejected_at: string;
+  rejected_by: string;
+}
+
 export interface DemoQuestionnaire {
   id: number;
   name: string;
@@ -228,8 +234,9 @@ export interface DemoQuestionnaire {
   form_sections?: FormSectionMeta[];
   form_fields: FormField[];
   supplier_ids: number[];
-  supplier_status: Record<number, 'pending' | 'submitted'>;
+  supplier_status: Record<number, 'pending' | 'submitted' | 'rejected'>;
   supplier_answers: Record<number, Record<string, string | number>>;
+  supplier_rejections?: Record<number, QuestionnaireRejectionRecord[]>;
 }
 
 export interface DemoData {

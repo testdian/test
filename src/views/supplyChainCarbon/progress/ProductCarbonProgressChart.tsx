@@ -10,7 +10,7 @@ import { listProductCarbonProgress } from '@/views/supplyChainCarbon/data/demo-s
 import styles from '@/views/supplyChainCarbon/styles.module.less';
 
 const PRODUCT_CARBON_CHART_NOTE =
-  '产品碳表格上方增加一个图表，分组柱状图，横轴是供应商名称-产品名称，纵轴是2个，1个目标产品碳足迹、1个实际产品碳足迹；实际产品碳足迹使用1—12月中月份最晚的有效数值。';
+  '产品碳表格上方增加一个图表，分组柱状图，横轴是供应商名称-产品名称，纵轴是2个，1个目标产品碳足迹、1个实际产品碳足迹；实际产品碳足迹使用1—12月中月份最晚的审核通过有效数值。';
 
 type ProductCarbonProgressChartProps = {
   data: DemoData;

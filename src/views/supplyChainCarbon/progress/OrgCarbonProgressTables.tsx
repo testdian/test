@@ -16,7 +16,7 @@ import type { DemoData } from '@/views/supplyChainCarbon/data/demo-data';
 import styles from '@/views/supplyChainCarbon/styles.module.less';
 
 const ORG_CARBON_TABLES_NOTE =
-  '组织碳范围一、范围二分别计算：同期目标排放量=年度目标排放量×已填报月份数÷12；目标偏差率=（累计实际排放量-同期目标排放量）÷同期目标排放量×100%；累计实际排放量不高于同期目标时为已达标；减排目标完成度=（同期基准排放量-累计实际排放量）÷（同期基准排放量-同期目标排放量）×100%。';
+  '组织碳范围一、范围二分别计算：已审核通过月份数记为k；同期基准排放量=上一年度排放量÷12×k；同期目标排放量=年度目标排放量÷12×k；累计实际排放量为上述k个月审核通过数据之和；目标偏差率=（累计实际排放量-同期目标排放量）÷同期目标排放量×100%；累计实际排放量不高于同期目标时为已达标；减排目标完成度=（同期基准排放量-累计实际排放量）÷（同期基准排放量-同期目标排放量）×100%。k为0或分母为0时显示“—”。';
 
 const MONTH_LABELS = Array.from({ length: 12 }, (_, index) => `${index + 1}月`);
 
@@ -60,7 +60,7 @@ function buildColumns(): ColumnsType<OrgCarbonProgressRow> {
       dataIndex: 'monthly_actual',
       width: ORG_COLUMN_WIDTH.monthlyActual,
       align: 'center',
-      render: (values: number[]) => values?.[index] ?? '-',
+      render: (values: Array<number | undefined>) => values?.[index] ?? '—',
     }),
   );
 
@@ -76,21 +76,21 @@ function buildColumns(): ColumnsType<OrgCarbonProgressRow> {
       dataIndex: 'prev_emission',
       width: ORG_COLUMN_WIDTH.prevEmission,
       align: 'center',
-      render: value => (value == null ? '-' : value),
+      render: value => (value == null ? '—' : value),
     },
     {
       title: columnTitle('减排比例（%）'),
       dataIndex: 'reduction_ratio',
       width: ORG_COLUMN_WIDTH.reductionRatio,
       align: 'center',
-      render: value => (value == null ? '-' : `${value}%`),
+      render: value => (value == null ? '—' : `${value}%`),
     },
     {
       title: columnTitle('目标排放量（tCO₂e）'),
       dataIndex: 'target_emission',
       width: ORG_COLUMN_WIDTH.targetEmission,
       align: 'center',
-      render: value => (value == null ? '-' : value),
+      render: value => (value == null ? '—' : value),
     },
     ...monthlyColumns,
     {
@@ -106,7 +106,7 @@ function buildColumns(): ColumnsType<OrgCarbonProgressRow> {
       align: 'center',
       render: value =>
         value == null ? (
-          '-'
+          '—'
         ) : (
           <span style={{ color: value <= 0 ? '#389e0d' : '#cf1322' }}>
             {value > 0 ? '+' : ''}
@@ -126,7 +126,7 @@ function buildColumns(): ColumnsType<OrgCarbonProgressRow> {
       dataIndex: 'reduction_progress',
       width: ORG_COLUMN_WIDTH.reductionProgress,
       align: 'center',
-      render: value => (value == null ? '-' : `${value}%`),
+      render: value => (value == null ? '—' : `${value}%`),
     },
   ];
 }

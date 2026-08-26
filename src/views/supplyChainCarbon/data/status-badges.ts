@@ -59,11 +59,13 @@ export const QUESTIONNAIRE_SUBMIT_STATUS_BADGES: Record<
 > = {
   pending: statusBadge('warning', '待填写'),
   submitted: statusBadge('success', '已提交'),
+  rejected: statusBadge('danger', '已驳回'),
 };
 
 export const SUBMISSION_STATUS_BADGES: Record<string, StatusBadgeConfig> = {
   submitted: statusBadge('success', '已提交'),
   pending: statusBadge('warning', '未提交'),
+  rejected: statusBadge('danger', '已驳回'),
 };
 
 export const TRAINING_STATUS_BADGES: Record<string, StatusBadgeConfig> = {

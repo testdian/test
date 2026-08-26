@@ -1,7 +1,7 @@
 /**
  * @description 供应商 - 调研填报任务
  */
-import { Button, Input, Select, Space, Table } from 'antd';
+import { Button, Input, Modal, Select, Space, Table } from 'antd';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,6 +10,7 @@ import { TableActions } from '@/components/Table/TableActions';
 import { SupplyChainSupplierRouteMaps } from '@/router/utils/supplyChainSupplierEnums';
 import { StatusTag } from '@/views/supplyChainCarbon/components/StatusTag';
 import {
+  latestQuestionnaireRejection,
   questionnaireListItem,
   resolveQuestionnaireStatus,
 } from '@/views/supplyChainCarbon/data/demo-questionnaires';
@@ -45,6 +46,7 @@ export default function SupplierQuestionnairePage() {
       .map(q => ({
         ...questionnaireListItem(q),
         submit_status: q.supplier_status[supplierId] || 'pending',
+        latest_rejection: latestQuestionnaireRejection(q, supplierId),
       }))
       .filter(q => {
         if (applied.name && !q.name.includes(applied.name)) return false;
@@ -101,6 +103,7 @@ export default function SupplierQuestionnairePage() {
             { label: '全部提交状态', value: 'all' },
             { label: '待填写', value: 'pending' },
             { label: '已提交', value: 'submitted' },
+            { label: '已驳回', value: 'rejected' },
           ]}
         />
         <Space>
@@ -182,7 +185,7 @@ export default function SupplierQuestionnairePage() {
           {
             title: '操作',
             fixed: 'right',
-            width: 160,
+            width: 260,
             render: (_, record) => (
               <TableActions
                 menus={[
@@ -197,8 +200,9 @@ export default function SupplierQuestionnairePage() {
                         ),
                       ),
                   },
-                  ...(record.status === 'published' &&
-                  record.submit_status !== 'submitted'
+                  ...((record.status === 'published' &&
+                    record.submit_status === 'pending') ||
+                  record.submit_status === 'rejected'
                     ? [
                         {
                           key: 'fill',
@@ -210,6 +214,33 @@ export default function SupplierQuestionnairePage() {
                                 String(record.id),
                               ),
                             ),
+                        },
+                      ]
+                    : []),
+                  ...(record.submit_status === 'rejected' &&
+                  record.latest_rejection
+                    ? [
+                        {
+                          key: 'rejection-reason',
+                          label: '查看驳回原因',
+                          onClick: () =>
+                            Modal.info({
+                              title: '查看驳回原因',
+                              okText: '知道了',
+                              content: (
+                                <div>
+                                  <div style={{ marginBottom: 8 }}>
+                                    {record.latest_rejection.reason}
+                                  </div>
+                                  <div style={{ color: '#8c8c8c' }}>
+                                    驳回时间：
+                                    {formatDate(
+                                      record.latest_rejection.rejected_at,
+                                    )}
+                                  </div>
+                                </div>
+                              ),
+                            }),
                         },
                       ]
                     : []),

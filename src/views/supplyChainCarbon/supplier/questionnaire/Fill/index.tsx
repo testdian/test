@@ -2,7 +2,7 @@
  * @description 供应商 - 调研填报
  */
 import { message } from 'antd';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { FormActions } from '@/components/FormActions';
@@ -40,12 +40,18 @@ export default function SupplierQuestionnaireFillPage() {
   const displayStatus = questionnaire
     ? resolveQuestionnaireStatus(questionnaire)
     : null;
+  const submitStatus = questionnaire?.supplier_status[supplierId] || 'pending';
 
   const canFill =
     questionnaire &&
-    displayStatus === 'published' &&
     questionnaire.supplier_ids.includes(supplierId) &&
-    (questionnaire.supplier_status[supplierId] || 'pending') !== 'submitted';
+    ((displayStatus === 'published' && submitStatus === 'pending') ||
+      submitStatus === 'rejected');
+
+  useEffect(() => {
+    if (!questionnaire) return;
+    setValues(questionnaire.supplier_answers?.[supplierId] || {});
+  }, [questionnaire, supplierId]);
 
   const handleSubmit = async () => {
     if (!questionnaire || !canFill) return;

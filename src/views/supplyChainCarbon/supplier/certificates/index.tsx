@@ -139,6 +139,28 @@ export default function SupplierCertificatesPage() {
     setViewCert(cert);
   };
 
+  const deleteCertificate = (cert: CarbonCertificate) => {
+    Modal.confirm({
+      title: '确认删除该证书？',
+      content: `删除“${certificateDisplayName(
+        cert,
+      )}”后，管理员端将同步删除且无法恢复。`,
+      okText: '删除',
+      okButtonProps: { danger: true },
+      cancelText: '取消',
+      onOk: () => {
+        update(d => ({
+          ...d,
+          certificates: d.certificates.filter(
+            item =>
+              !(item.id === cert.id && item.supplier_id === supplierId),
+          ),
+        }));
+        message.success('证书已删除，管理员端已同步更新');
+      },
+    });
+  };
+
   const handleSave = async () => {
     const values = await form.validateFields();
     const certCategory = resolveCertCategory(
@@ -265,7 +287,7 @@ export default function SupplierCertificatesPage() {
           {
             title: '证书编号',
             dataIndex: 'cert_no',
-            width: 180,
+            width: 220,
             ellipsis: true,
           },
           {
@@ -321,6 +343,11 @@ export default function SupplierCertificatesPage() {
                     key: 'version',
                     label: '版本',
                     onClick: () => setVersionCert(record),
+                  },
+                  {
+                    key: 'delete',
+                    label: '删除',
+                    onClick: () => deleteCertificate(record),
                   },
                 ]}
               />
